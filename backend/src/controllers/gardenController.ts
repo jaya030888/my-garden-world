@@ -4,14 +4,14 @@ import { prisma } from '../lib/prisma.js';
 
 const placeItemSchema = z.object({
   itemId: z.string().min(1, 'Item ID is required'),
-  gridX: z.number().int().min(0).max(7),
-  gridY: z.number().int().min(0).max(7),
+  gridX: z.number().int().min(0).max(15),
+  gridY: z.number().int().min(0).max(15),
   rotation: z.number().int().default(0),
 });
 
 const moveItemSchema = z.object({
-  gridX: z.number().int().min(0).max(7),
-  gridY: z.number().int().min(0).max(7),
+  gridX: z.number().int().min(0).max(15),
+  gridY: z.number().int().min(0).max(15),
 });
 
 export async function getGardenLayout(req: Request, res: Response, next: NextFunction): Promise<void> {

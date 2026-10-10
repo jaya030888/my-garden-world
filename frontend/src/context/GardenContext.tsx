@@ -173,8 +173,8 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const placeGardenItem = async (itemId: string, x: number, y: number) => {
-    const targetX = Math.max(0, Math.min(7, x));
-    const targetY = Math.max(0, Math.min(7, y));
+    const targetX = Math.max(0, Math.min(15, x));
+    const targetY = Math.max(0, Math.min(15, y));
 
     if (isAuthenticated) {
       const res = await api.placeGardenItem(itemId, targetX, targetY, 0);
@@ -206,8 +206,8 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const moveGardenItem = async (instanceId: string, x: number, y: number) => {
-    const targetX = Math.max(0, Math.min(7, x));
-    const targetY = Math.max(0, Math.min(7, y));
+    const targetX = Math.max(0, Math.min(15, x));
+    const targetY = Math.max(0, Math.min(15, y));
 
     if (isAuthenticated) {
       await api.moveGardenItem(instanceId, targetX, targetY);
@@ -419,10 +419,20 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
     await db.discoveries.put(discovery);
     await trackQuestAction('discovery', 1);
+
+    // AI-Linked Unlocks: automatically unlock corresponding species seeds in shop
+    const labelLower = (result.topPrediction.botanicalInfo?.speciesName || result.topPrediction.label).toLowerCase();
+    const shopItems = await db.shopItems.toArray();
+    for (const item of shopItems) {
+      if (!item.unlocked && (item.id.includes(labelLower) || item.name.toLowerCase().includes(labelLower))) {
+        await db.shopItems.update(item.id, { unlocked: true });
+      }
+    }
+
     await awardEconomyRewards(
       REWARD_VALUES.IDENTIFY_PLANT.coins,
       REWARD_VALUES.IDENTIFY_PLANT.xp,
-      `Identified ${result.topPrediction.botanicalInfo?.speciesName || result.topPrediction.label}`,
+      `AI Discovery: Identified ${result.topPrediction.botanicalInfo?.speciesName || result.topPrediction.label} & Unlocked Special Seeds!`,
       'discovery_reward'
     );
     await refreshData();

@@ -55,6 +55,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     gardenItems,
     shopCatalog,
     placeGardenItem,
+    moveGardenItem,
     rotateGardenItem,
     removeGardenItem,
     logPlantCare
@@ -210,15 +211,33 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
       return;
     }
 
-    // Default select / place mode
-    if (existing) {
-      setSelectedCell({ x, y });
-    } else {
-      if (selectedInventoryItem) {
+    // Default select / place / move mode
+    if (selectedInventoryItem) {
+      if (!existing) {
         cozyAudio.playPlacementSound();
         await placeGardenItem(selectedInventoryItem.id, x, y);
       }
-      setSelectedCell(null);
+      return;
+    }
+
+    if (existing) {
+      // Toggle select this item
+      if (selectedCell?.x === x && selectedCell?.y === y) {
+        setSelectedCell(null);
+      } else {
+        setSelectedCell({ x, y });
+        cozyAudio.playPlacementSound();
+      }
+    } else {
+      // If we already have a placed item selected and tap an empty tile, move it there!
+      const currentSelectedPlaced = selectedCell ? getPlacedItemAt(selectedCell.x, selectedCell.y) : null;
+      if (currentSelectedPlaced) {
+        cozyAudio.playPlacementSound();
+        await moveGardenItem(currentSelectedPlaced.instanceId, x, y);
+        setSelectedCell({ x, y });
+      } else {
+        setSelectedCell(null);
+      }
     }
   };
 

@@ -20,8 +20,9 @@
     "test:frontend": "npm --prefix frontend test",
     "test:backend": "npm --prefix backend test",
     "test:ai": "cd ai-service && pytest tests/ -v",
-    "test:all": "npm --prefix frontend test && npm --prefix backend test",
+    "prisma:generate": "npm --prefix backend run prisma:generate",
     "prisma:migrate": "npm --prefix backend run prisma:migrate",
+    "prisma:deploy": "npm --prefix backend run prisma:deploy",
     "prisma:seed": "npm --prefix backend run prisma:seed"
   }
 }

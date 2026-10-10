@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Camera,
   Upload,
@@ -7,14 +6,12 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sun,
-  ShieldCheck,
-  ShieldAlert,
   Leaf,
   BookmarkPlus,
   PlusCircle,
   HelpCircle,
-  Clock,
-  Droplet
+  Info,
+  Edit3
 } from 'lucide-react';
 import { identifyPlant, ModelLoadingProgress } from '../ai/plantClassifier';
 import { IdentificationResult } from '../types';
@@ -22,14 +19,19 @@ import { useGarden } from '../context/GardenContext';
 
 const SAMPLE_TEST_IMAGES = [
   {
-    name: 'English Daisy',
-    url: 'https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?w=600&q=80',
+    name: 'French Marigold',
+    url: 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80',
     type: 'Flower'
   },
   {
-    name: 'Monstera Deliciosa',
-    url: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&q=80',
-    type: 'Houseplant'
+    name: 'English Daisy',
+    url: 'https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?w=600&q=80',
+    type: 'Wildflower'
+  },
+  {
+    name: 'Golden Sunflower',
+    url: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80',
+    type: 'Annual'
   },
   {
     name: 'Wild Rosehip',
@@ -37,9 +39,9 @@ const SAMPLE_TEST_IMAGES = [
     type: 'Wild Shrub'
   },
   {
-    name: 'Golden Sunflower',
-    url: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80',
-    type: 'Annual'
+    name: 'Monstera Pot',
+    url: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&q=80',
+    type: 'Container Plant'
   }
 ];
 
@@ -52,6 +54,8 @@ export const DiscoverPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [isAddedToPlants, setIsAddedToPlants] = useState(false);
+  const [customPlantName, setCustomPlantName] = useState('');
+  const [isEditingCustomName, setIsEditingCustomName] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -61,6 +65,8 @@ export const DiscoverPage: React.FC = () => {
     setResult(null);
     setIsSaved(false);
     setIsAddedToPlants(false);
+    setCustomPlantName('');
+    setIsEditingCustomName(false);
     setActiveTab('scanner');
 
     try {
@@ -90,29 +96,41 @@ export const DiscoverPage: React.FC = () => {
 
   const handleSaveDiscovery = async () => {
     if (!result || isSaved) return;
-    await saveDiscovery(result);
+    const finalResult: IdentificationResult = {
+      ...result,
+      userAssignedSpecies: customPlantName || undefined,
+      notes: customPlantName ? `User assigned label: ${customPlantName}` : undefined
+    };
+    await saveDiscovery(finalResult);
     setIsSaved(true);
   };
 
   const handleAddToMyPlants = async () => {
     if (!result || isAddedToPlants) return;
     const botanical = result.topPrediction.botanicalInfo;
+    const plantName = customPlantName || botanical?.speciesName || result.topPrediction.label;
+    const speciesName = customPlantName || botanical?.scientificName || 'Unspecified Cultivar';
+
     await addPlantRecord({
-      name: botanical?.speciesName || result.topPrediction.label,
-      species: botanical?.speciesName || result.topPrediction.label,
-      scientificName: botanical?.scientificName,
+      name: plantName,
+      species: speciesName,
+      scientificName: botanical?.scientificName || (customPlantName ? customPlantName : undefined),
       family: botanical?.family,
       acquiredDate: new Date().toISOString(),
       primaryPhotoUrl: result.imageUrl,
       location: 'indoor',
       sunlightNeeds: 'indirect_bright',
       waterFrequencyDays: 7,
-      notes: `Identified via Open AI Vision (${result.modelName}) with ${(result.topPrediction.score * 100).toFixed(1)}% confidence.`
+      notes: result.topPrediction.isVerifiedSpecies
+        ? `Identified via Open AI Vision (${result.modelName}) with ${(result.topPrediction.score * 100).toFixed(1)}% confidence.`
+        : `Custom plant record created from scan. Model raw output: ${result.topPrediction.label} (${(result.topPrediction.score * 100).toFixed(1)}%).`
     });
     setIsAddedToPlants(true);
   };
 
   const topBotanical = result?.topPrediction.botanicalInfo;
+  const isVerified = result?.topPrediction.isVerifiedSpecies;
+  const isContainerObject = result?.topPrediction.detectionType === 'container_object';
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
@@ -122,13 +140,13 @@ export const DiscoverPage: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-100/80 border border-forest-200 text-forest-800 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-forest-600" />
-            <span>On-Device Vision AI</span>
+            <span>Open-Weight Vision AI</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-forest-950">
             Botanical Plant Explorer
           </h1>
           <p className="text-stone-600 text-xs sm:text-sm">
-            Scan any botanical specimen with 100% private, client-side neural vision inference.
+            Scan plants with on-device neural vision inference and verified botanical taxonomy.
           </p>
         </div>
 
@@ -244,47 +262,79 @@ export const DiscoverPage: React.FC = () => {
             </div>
           )}
 
-          {/* Result Card */}
+          {/* Honest Result Card */}
           {result && (
             <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 shadow-xs space-y-6">
               <div className="flex flex-col md:flex-row items-start gap-6">
                 
                 {/* Image Preview */}
-                <div className="w-full md:w-56 h-56 rounded-2xl overflow-hidden border border-forest-100/80 shrink-0 bg-stone-100">
-                  <img src={result.imageUrl} alt="Identified Plant" className="w-full h-full object-cover" />
+                <div className="w-full md:w-60 h-60 rounded-2xl overflow-hidden border border-forest-100/80 shrink-0 bg-stone-100">
+                  <img src={result.imageUrl} alt="Scan Result" className="w-full h-full object-cover" />
                 </div>
 
                 {/* Identification Details */}
-                <div className="flex-1 space-y-4">
+                <div className="flex-1 space-y-4 w-full">
+                  
+                  {/* Status Badges */}
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-bold flex items-center gap-1.5">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                      {(result.topPrediction.score * 100).toFixed(1)}% Confidence
-                    </span>
+                    {isVerified ? (
+                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-bold flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        Verified Species Match ({result.confidenceTier.toUpperCase()})
+                      </span>
+                    ) : isContainerObject ? (
+                      <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                        Container / Pot Detected (Unconfirmed Plant)
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200 text-xs font-bold flex items-center gap-1.5">
+                        <HelpCircle className="w-3.5 h-3.5 text-stone-500" />
+                        Unconfirmed Plant Species
+                      </span>
+                    )}
 
                     <span className="text-stone-400 text-xs font-mono">
-                      {result.inferenceTimeMs.toFixed(0)} ms latency
+                      {result.inferenceTimeMs.toFixed(0)} ms • {result.modelName.split('/').pop()}
                     </span>
                   </div>
 
+                  {/* Title & Scientific Taxonomy */}
                   <div>
                     <h2 className="text-xl sm:text-2xl font-extrabold font-display text-forest-950">
-                      {topBotanical?.speciesName || result.topPrediction.label}
+                      {customPlantName || (isVerified ? topBotanical?.speciesName : result.topPrediction.label)}
                     </h2>
-                    {topBotanical?.scientificName && (
-                      <p className="text-xs text-stone-500 italic mt-0.5">{topBotanical.scientificName}</p>
+                    {isVerified && topBotanical?.scientificName ? (
+                      <p className="text-xs text-stone-500 italic mt-0.5">
+                        {topBotanical.scientificName} • {topBotanical.family}
+                      </p>
+                    ) : (
+                      <p className="text-xs text-amber-800 font-medium mt-0.5">
+                        Model Output: <span className="font-mono">{result.topPrediction.label}</span> ({(result.topPrediction.score * 100).toFixed(1)}% softmax score)
+                      </p>
                     )}
                   </div>
 
-                  {topBotanical?.description && (
+                  {/* Explanation / Botanical Description */}
+                  {isVerified && topBotanical?.description ? (
                     <p className="text-xs text-stone-600 leading-relaxed">
                       {topBotanical.description}
                     </p>
+                  ) : (
+                    <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-950 space-y-2">
+                      <p className="leading-relaxed">
+                        {result.topPrediction.statusExplanation ||
+                          'The neural model detected visual characteristics associated with this class, but it does not map to a verified single botanical species.'}
+                      </p>
+                      <p className="text-[11px] text-amber-800 italic">
+                        Tip: You can manually label the cultivar below (e.g. "French Marigold") before adding it to your collection.
+                      </p>
+                    </div>
                   )}
 
-                  {/* Botanical Quick Facts */}
-                  {topBotanical && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                  {/* Verified Botanical Quick Facts */}
+                  {isVerified && topBotanical && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                       <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
                         <span className="text-[10px] text-stone-500 uppercase font-bold block">Sunlight</span>
                         <span className="font-semibold text-forest-900 capitalize">{topBotanical.sunlight}</span>
@@ -296,7 +346,7 @@ export const DiscoverPage: React.FC = () => {
                       <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
                         <span className="text-[10px] text-stone-500 uppercase font-bold block">Pet Safety</span>
                         <span className={`font-semibold ${topBotanical.petSafe ? 'text-emerald-700' : 'text-amber-700'}`}>
-                          {topBotanical.petSafe ? 'Pet Friendly' : 'Toxic to Pets'}
+                          {topBotanical.petSafe ? 'Pet Safe' : 'Keep Away'}
                         </span>
                       </div>
                       <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
@@ -306,8 +356,25 @@ export const DiscoverPage: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Manual Label Editor for Unconfirmed / Container Detections */}
+                  {(!isVerified || isEditingCustomName) && (
+                    <div className="p-3.5 rounded-2xl bg-forest-50/60 border border-forest-100/80 space-y-2 text-xs">
+                      <label className="font-bold text-forest-900 flex items-center gap-1.5">
+                        <Edit3 className="w-3.5 h-3.5 text-forest-600" />
+                        Specify Custom Plant / Cultivar Name:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. French Marigold (Tagetes patula)"
+                        value={customPlantName}
+                        onChange={e => setCustomPlantName(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-forest-200 focus:outline-none focus:ring-2 focus:ring-forest-600 text-xs"
+                      />
+                    </div>
+                  )}
+
                   {/* Action Buttons */}
-                  <div className="flex flex-wrap gap-3 pt-3">
+                  <div className="flex flex-wrap gap-3 pt-2">
                     <button
                       onClick={handleSaveDiscovery}
                       disabled={isSaved}
@@ -318,7 +385,7 @@ export const DiscoverPage: React.FC = () => {
                       }`}
                     >
                       <BookmarkPlus className="w-4 h-4 text-emerald-300" />
-                      <span>{isSaved ? 'Saved to Discoveries' : 'Save Discovery'}</span>
+                      <span>{isSaved ? 'Saved to Discoveries' : isVerified ? 'Save Discovery' : 'Save as Nature Log'}</span>
                     </button>
 
                     <button
@@ -333,7 +400,35 @@ export const DiscoverPage: React.FC = () => {
                       <PlusCircle className="w-4 h-4 text-forest-600" />
                       <span>{isAddedToPlants ? 'Added to My Plants' : 'Add to My Plants Collection'}</span>
                     </button>
+
+                    {isVerified && !isEditingCustomName && (
+                      <button
+                        onClick={() => setIsEditingCustomName(true)}
+                        className="px-3.5 py-2.5 text-stone-500 hover:text-forest-900 text-xs font-semibold"
+                      >
+                        Edit Label
+                      </button>
+                    )}
                   </div>
+
+                  {/* Alternative Candidate Predictions */}
+                  {result.alternativePredictions.length > 0 && (
+                    <div className="pt-3 border-t border-forest-100/60 text-xs space-y-1.5">
+                      <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider block">
+                        Alternative Model Candidates:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {result.alternativePredictions.map((alt, i) => (
+                          <span
+                            key={i}
+                            className="px-2.5 py-1 rounded-lg bg-stone-50 border border-stone-200/80 text-[11px] text-stone-600"
+                          >
+                            {alt.label} ({(alt.score * 100).toFixed(1)}%)
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                 </div>
 
@@ -372,10 +467,10 @@ export const DiscoverPage: React.FC = () => {
                     />
                     <div>
                       <h4 className="font-bold text-forest-950 text-sm">
-                        {disc.topPrediction.botanicalInfo?.speciesName || disc.topPrediction.label}
+                        {disc.userAssignedSpecies || disc.topPrediction.botanicalInfo?.speciesName || disc.topPrediction.label}
                       </h4>
                       <p className="text-xs text-stone-500 italic mt-0.5">
-                        {disc.topPrediction.botanicalInfo?.scientificName || 'Botanical specimen'}
+                        {disc.topPrediction.botanicalInfo?.scientificName || 'Nature Observation'}
                       </p>
                     </div>
                   </div>

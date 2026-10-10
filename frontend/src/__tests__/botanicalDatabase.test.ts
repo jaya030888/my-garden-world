@@ -1,31 +1,41 @@
 import { describe, it, expect } from 'vitest';
-import { getBotanicalInfoForLabel, BOTANICAL_DATABASE } from '../ai/botanicalDatabase';
+import {
+  evaluateModelPrediction,
+  VERIFIED_BOTANICAL_SPECIES
+} from '../ai/botanicalDatabase';
 
-describe('Botanical Knowledge Base & Classifier Mapper', () => {
-  it('correctly maps exact botanical labels like daisy', () => {
-    const info = getBotanicalInfoForLabel('daisy');
-    expect(info.speciesName).toBe('Common Daisy');
-    expect(info.scientificName).toBe('Bellis perennis');
-    expect(info.petSafe).toBe(true);
-    expect(info.difficulty).toBe('Beginner');
+describe('Botanical Knowledge Base & Classifier Taxonomy Evaluation', () => {
+  it('correctly maps verified plant species like daisy', () => {
+    const result = evaluateModelPrediction('daisy', 0.95);
+    expect(result.isVerifiedSpecies).toBe(true);
+    expect(result.detectionType).toBe('species');
+    expect(result.botanicalInfo?.speciesName).toBe('Common Daisy');
+    expect(result.botanicalInfo?.scientificName).toBe('Bellis perennis');
+    expect(result.botanicalInfo?.petSafe).toBe(true);
   });
 
-  it('correctly maps keyword matches like rosehip / rose', () => {
-    const info = getBotanicalInfoForLabel('hip, rose hip, rosehip');
-    expect(info.speciesName).toBe('Wild Rose / Rosehip');
-    expect(info.family).toBe('Rosaceae');
+  it('correctly maps verified plant species like sunflower and marigold', () => {
+    const sunflowerResult = evaluateModelPrediction('sunflower', 0.98);
+    expect(sunflowerResult.isVerifiedSpecies).toBe(true);
+    expect(sunflowerResult.botanicalInfo?.scientificName).toBe('Helianthus annuus');
+
+    const marigoldResult = evaluateModelPrediction('marigold', 0.88);
+    expect(marigoldResult.isVerifiedSpecies).toBe(true);
+    expect(marigoldResult.botanicalInfo?.scientificName).toBe('Tagetes patula');
   });
 
-  it('correctly maps potted plants and houseplants', () => {
-    const info = getBotanicalInfoForLabel('pot, flowerpot');
-    expect(info.speciesName).toBe('Potted Botanical / Houseplant');
-    expect(info.family).toBe('Araceae (Arum Family)');
+  it('correctly identifies flowerpot container as an inanimate object rather than a plant species', () => {
+    const potResult = evaluateModelPrediction('pot, flowerpot', 0.9945);
+    expect(potResult.isVerifiedSpecies).toBe(false);
+    expect(potResult.detectionType).toBe('container_object');
+    expect(potResult.botanicalInfo).toBeUndefined();
+    expect(potResult.statusExplanation).toContain('flowerpot container');
   });
 
-  it('provides safe fallback profiles for unrecognized visual labels', () => {
-    const info = getBotanicalInfoForLabel('exotic wild fern branch');
-    expect(info.speciesName).toBeDefined();
-    expect(info.sunlight).toBeDefined();
-    expect(info.ecologicalFact).toBeDefined();
+  it('correctly handles unrecognized non-botanical classes as unidentified', () => {
+    const unkResult = evaluateModelPrediction('acoustic_guitar', 0.85);
+    expect(unkResult.isVerifiedSpecies).toBe(false);
+    expect(unkResult.detectionType).toBe('unidentified');
+    expect(unkResult.botanicalInfo).toBeUndefined();
   });
 });

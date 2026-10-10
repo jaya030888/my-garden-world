@@ -1,13 +1,18 @@
-import { BotanicalInfo } from '../types';
+import { BotanicalInfo, ClassificationPrediction } from '../types';
 
-export const BOTANICAL_DATABASE: Record<string, BotanicalInfo> = {
+/**
+ * Verified Botanical Species Registry.
+ * Each entry strictly corresponds to ONE confirmed biological taxon.
+ * Verified scientific names, families, care parameters, and ecological characteristics.
+ */
+export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
   daisy: {
     speciesName: 'Common Daisy',
     commonNames: ['English Daisy', 'Lawn Daisy', 'Bruisewort'],
     scientificName: 'Bellis perennis',
     family: 'Asteraceae (Composite Family)',
-    description: 'A cheerful European native with a rosette of spoon-shaped leaves and classic white ray florets surrounding a bright yellow center disc.',
-    nativeRegion: 'Western, central and northern Europe',
+    description: 'A classic perennial herb featuring a basal rosette of spoon-shaped leaves and composite flower heads with white ray florets around a bright yellow central disc.',
+    nativeRegion: 'Western, central, and northern Europe',
     sunlight: 'Full sun to partial shade (4-6 hours direct sun)',
     watering: 'Moderate; keep soil evenly moist but well-drained. Water 1-2 times weekly.',
     soil: 'Well-draining loamy or sandy soil with neutral pH (6.0 - 7.5)',
@@ -21,229 +26,317 @@ export const BOTANICAL_DATABASE: Record<string, BotanicalInfo> = {
   },
   sunflower: {
     speciesName: 'Common Sunflower',
-    commonNames: ['Sunflower', 'Helianthus', 'Miradulce'],
+    commonNames: ['Sunflower', 'Golden Solar Bloom', 'Helianthus'],
     scientificName: 'Helianthus annuus',
-    family: 'Asteraceae',
-    description: 'A tall annual known for its giant, radiant golden flower heads that practice heliotropism (tracking the sun across the sky during early growth).',
+    family: 'Asteraceae (Composite Family)',
+    description: 'A tall, fast-growing annual recognized for its large golden flower heads that practice heliotropism (tracking the sun from east to west during early bud stages).',
     nativeRegion: 'North America',
     sunlight: 'Full direct sun (minimum 6-8 hours daily)',
     watering: 'Deep, infrequent watering once established; soak soil 1-2 inches weekly.',
     soil: 'Nutrient-rich, loose, well-draining soil with good depth for deep taproots.',
     humidity: 'Tolerates wide humidity ranges (30-70%)',
-    toxicity: 'Non-toxic to dogs, cats, and pets.',
+    toxicity: 'Non-toxic to dogs, cats, and horses (ASPCA verified).',
     petSafe: true,
     propagation: 'Direct seed sowing in warm late spring soil.',
-    ecologicalFact: 'Sunflowers are hyperaccumulators capable of phytoremediation—absorbing toxic heavy metals like lead and arsenic from polluted soils.',
+    ecologicalFact: 'Sunflowers are hyperaccumulators capable of phytoremediation—absorbing heavy metals like lead and arsenic from contaminated soils.',
     difficulty: 'Beginner',
     tags: ['Annual', 'Tall', 'Bird Feeder', 'Pollinator Magnet']
   },
-  'pot, flowerpot': {
-    speciesName: 'Potted Botanical / Houseplant',
-    commonNames: ['Container Garden Plant', 'Indoor Foliage', 'Monstera / Pothos Specimen'],
-    scientificName: 'Epipremnum aureum / Monstera deliciosa',
-    family: 'Araceae (Arum Family)',
-    description: 'A vibrant cultivated plant grown in indoor containers, characterized by lush air-purifying foliage and adaptable growth habits.',
-    nativeRegion: 'Tropical rainforest understories (Central America & SE Asia)',
-    sunlight: 'Bright indirect light; avoid harsh midday direct sun which scorches foliage.',
-    watering: 'Allow top 1-2 inches of potting mix to dry between thorough waterings.',
-    soil: 'Aerated, chunky aroid potting mix (peat/coco coir, perlite, orchid bark).',
-    humidity: 'Moderate to high (50-70% ideal)',
-    toxicity: 'Mildly toxic if ingested due to insoluble calcium oxalate crystals; keep away from curious pets.',
-    petSafe: false,
-    propagation: 'Stem cuttings rooted in clean water or sphagnum moss.',
-    ecologicalFact: 'Indoor plants increase indoor air humidity and capture fine particulate matter on leaf surfaces.',
-    difficulty: 'Beginner',
-    tags: ['Houseplant', 'Aroid', 'Air Purifying', 'Foliage']
-  },
-  'hip, rose hip, rosehip': {
+  rose: {
     speciesName: 'Wild Rose / Rosehip',
-    commonNames: ['Sweet Briar', 'Eglantine Rose', 'Dog Rose'],
-    scientificName: 'Rosa rubiginosa / Rosa canina',
-    family: 'Rosaceae',
-    description: 'A thorny deciduous shrub featuring fragrant pale pink blooms followed by nutrient-dense bright scarlet seed pods (rose hips).',
-    nativeRegion: 'Europe, Western Asia, Northwest Africa',
-    sunlight: 'Full sun to light afternoon shade (at least 6 hours direct sun)',
+    commonNames: ['Dog Rose', 'Sweet Briar', 'Wild Briar Rose'],
+    scientificName: 'Rosa canina',
+    family: 'Rosaceae (Rose Family)',
+    description: 'A thorny climbing wild shrub featuring delicate 5-petaled pale pink to white blossoms followed by nutrient-dense scarlet rosehip seed pods in autumn.',
+    nativeRegion: 'Europe, Northwest Africa, and Western Asia',
+    sunlight: 'Full sun for maximum blooms and fruit production (6+ hours)',
     watering: 'Water regularly at the root base; drought-tolerant once established.',
     soil: 'Rich, moist, well-drained loam with pH 6.0 - 6.5.',
-    humidity: 'Moderate humidity with good air circulation to deter fungal mildew.',
-    toxicity: 'Non-toxic; rose hips are packed with Vitamin C and flavonoids.',
+    humidity: 'Moderate humidity with good air circulation.',
+    toxicity: 'Non-toxic; rose hips are packed with Vitamin C and natural antioxidants.',
     petSafe: true,
     propagation: 'Hardwood cuttings in late autumn or cold-stratified seeds.',
-    ecologicalFact: 'Rose hips persist through winter, providing essential emergency sustenance for songbirds and small forest mammals.',
+    ecologicalFact: 'Rose hips persist throughout winter, providing essential emergency food for overwintering songbirds and small forest mammals.',
     difficulty: 'Intermediate',
     tags: ['Shrub', 'Edible', 'Medicinal', 'Wildlife Habitat']
   },
+  marigold: {
+    speciesName: 'French Marigold',
+    commonNames: ['Marigold', 'Tagetes', 'African Marigold'],
+    scientificName: 'Tagetes patula',
+    family: 'Asteraceae (Composite Family)',
+    description: 'A cheerful, compact annual with aromatic pinnate foliage and velvety ruff-petaled flowers in brilliant shades of yellow, orange, and mahogany red.',
+    nativeRegion: 'Mexico and Central America',
+    sunlight: 'Full direct sunlight (minimum 6 hours daily)',
+    watering: 'Moderate watering at the soil level; allow topsoil to dry slightly between waterings.',
+    soil: 'Well-draining garden soil or standard potting mix (pH 6.0 - 7.0).',
+    humidity: 'Low to moderate humidity (30-50%)',
+    toxicity: 'Mildly irritating sap; generally low toxicity but may cause minor mouth irritation if pets chew excessively.',
+    petSafe: false,
+    propagation: 'Extremely easy from seed sown in spring; germinates in 4-7 days.',
+    ecologicalFact: 'Marigold root exudates produce alpha-terthienyl, a natural nematicide that repels harmful root-knot nematodes in companion gardens.',
+    difficulty: 'Beginner',
+    tags: ['Companion Plant', 'Pest Deterrent', 'Bright Bloom', 'Easy Care']
+  },
   monstera: {
     speciesName: 'Monstera Deliciosa',
-    commonNames: ['Swiss Cheese Plant', 'Split-Leaf Philodendron', 'Fruit Salad Plant'],
+    commonNames: ['Swiss Cheese Plant', 'Split-Leaf Philodendron', 'Ceriman'],
     scientificName: 'Monstera deliciosa',
-    family: 'Araceae',
-    description: 'An iconic tropical climbing epiphyte celebrated for its dramatic glossy green leaves that develop natural fenestrations (slits and holes).',
-    nativeRegion: 'Tropical forests of Southern Mexico to Panama',
-    sunlight: 'Medium to bright indirect light.',
+    family: 'Araceae (Arum Family)',
+    description: 'An iconic tropical climbing epiphyte celebrated for its dramatic glossy green leaves that develop natural fenestrations (slits and perforations) as they mature.',
+    nativeRegion: 'Tropical rainforests of Southern Mexico to Panama',
+    sunlight: 'Medium to bright indirect light; avoid harsh midday direct sun.',
     watering: 'Water every 1-2 weeks, allowing potting mix to dry out halfway down.',
-    soil: 'Peat-based potting mix with coarse perlite and pine bark chunks.',
-    humidity: 'Appreciates 60%+ humidity; mist leaves or use a pebble tray.',
-    toxicity: 'Toxic to pets if chewed (calcium oxalate crystals cause oral irritation).',
+    soil: 'Chunky, well-aerated aroid potting mix (coco coir, perlite, orchid bark).',
+    humidity: 'High humidity (60-80% ideal); benefits from pebble trays or misting.',
+    toxicity: 'Toxic to cats and dogs if chewed due to insoluble calcium oxalate crystals.',
     petSafe: false,
-    propagation: 'Node cuttings with aerial root in water or moist moss.',
-    ecologicalFact: 'Leaf fenestrations allow tropical winds and filtered sunlight to pass through to lower forest layers without tearing the foliage.',
+    propagation: 'Stem node cuttings with aerial roots rooted in clean water or moist sphagnum.',
+    ecologicalFact: 'Natural leaf fenestrations allow torrential jungle rain and dappled understory sunlight to pass through without tearing large leaves.',
     difficulty: 'Beginner',
     tags: ['Tropical', 'Climber', 'Statement Plant', 'Aroid']
   },
   pothos: {
     speciesName: 'Golden Pothos',
-    commonNames: ["Devil's Ivy", 'Ceylon Creeper', "Hunter's Robe"],
+    commonNames: ["Devil's Ivy", 'Ceylon Creeper', 'Hunter’s Robe'],
     scientificName: 'Epipremnum aureum',
-    family: 'Araceae',
-    description: 'An exceptionally hardy trailing vine with heart-shaped emerald green leaves marbled with creamy gold variegation.',
+    family: 'Araceae (Arum Family)',
+    description: 'An exceptionally hardy trailing evergreen vine with glossy heart-shaped foliage marbled with creamy golden variegation.',
     nativeRegion: 'Mo\'orea, Society Islands (French Polynesia)',
-    sunlight: 'Low to bright indirect light; very tolerant of low light.',
-    watering: 'Water thoroughly when soil is 75% dry; drought-forgiving.',
-    soil: 'Standard well-draining houseplant potting soil.',
+    sunlight: 'Low to bright indirect light; very tolerant of lower light conditions.',
+    watering: 'Water thoroughly when top 2 inches of soil are dry; drought-forgiving.',
+    soil: 'Standard well-draining houseplant potting mix.',
     humidity: 'Thrives in normal household humidity (30-50%).',
-    toxicity: 'Mildly toxic to pets if consumed.',
+    toxicity: 'Toxic to pets if chewed (insoluble calcium oxalate crystals).',
     petSafe: false,
-    propagation: 'Extremely easy stem cutting rooting in clean water.',
-    ecologicalFact: 'Ranked in NASA Clean Air Studies for its ability to filter formaldehyde, benzene, and xylene from indoor spaces.',
+    propagation: 'Stem node cuttings rooted in clean water.',
+    ecologicalFact: 'NASA Clean Air studies identified Golden Pothos as an effective biofilter of indoor volatile organic compounds like formaldehyde and benzene.',
     difficulty: 'Beginner',
-    tags: ['Hardy', 'Trailing', 'Low Light', 'Fast Growing']
-  },
-  succulent: {
-    speciesName: 'Echeveria Elegans',
-    commonNames: ['Mexican Snowball', 'Alabaster Rose', 'Hens and Chicks'],
-    scientificName: 'Echeveria elegans',
-    family: 'Crassulaceae',
-    description: 'A compact drought-adapted succulent forming tight geometric rosettes of pale silvery-blue fleshy leaves.',
-    nativeRegion: 'Semi-desert regions of Mexico (Hidalgo)',
-    sunlight: 'Full direct sunlight (at least 6 hours of bright light)',
-    watering: '"Soak and dry" method; water only when soil is completely dry to prevent rot.',
-    soil: 'Gritty cactus/succulent mix with high pumice or coarse sand content.',
-    humidity: 'Low humidity (under 40%); sensitive to high stagnant humidity.',
-    toxicity: 'Non-toxic and pet-safe for dogs and cats.',
-    petSafe: true,
-    propagation: 'Leaf pullings or separating offsets ("chicks") from mother plant.',
-    ecologicalFact: 'Uses Crassulacean Acid Metabolism (CAM) photosynthesis, opening stomata at night to conserve precious water in arid habitats.',
-    difficulty: 'Beginner',
-    tags: ['Succulent', 'Drought-Tolerant', 'Geometric', 'Pet-Safe']
+    tags: ['Hardy', 'Trailing Vine', 'Low Light', 'Fast Growing']
   },
   lavender: {
     speciesName: 'English Lavender',
     commonNames: ['True Lavender', 'Common Lavender', 'Garden Lavender'],
     scientificName: 'Lavandula angustifolia',
     family: 'Lamiaceae (Mint Family)',
-    description: 'An aromatic evergreen sub-shrub with slender grey-green foliage and spikes of intensely fragrant purple-violet flowers.',
+    description: 'An aromatic evergreen sub-shrub with narrow grey-green leaves and spikes of intensely fragrant purple-violet flowers.',
     nativeRegion: 'Mediterranean (Spain, France, Italy)',
     sunlight: 'Full blazing sun (6-8+ hours direct sunlight daily)',
     watering: 'Low water requirement; let soil dry completely between light waterings.',
     soil: 'Well-draining, gravelly, alkaline soil (pH 6.5 - 7.5). Avoid heavy wet clay.',
     humidity: 'Low to moderate humidity; needs good wind and airflow.',
-    toxicity: 'Contains small amounts of linalool; mildly toxic in large quantities to pets.',
+    toxicity: 'Contains linalool; mildly toxic in large quantities to pets.',
     petSafe: false,
     propagation: 'Semi-hardwood cuttings taken in summer.',
     ecologicalFact: 'Essential oil compounds deter garden pests like mosquitoes and ticks while serving as a premier food source for honeybees and bumblebees.',
     difficulty: 'Intermediate',
     tags: ['Aromatic', 'Herb', 'Pollinator Haven', 'Drought-Tolerant']
   },
-  fern: {
-    speciesName: 'Boston Fern',
-    commonNames: ['Sword Fern', 'Fishbone Fern', 'Wild Boston Fern'],
-    scientificName: 'Nephrolepis exaltata',
-    family: 'Lomariopsidaceae',
-    description: 'A timeless graceful fern featuring arching, feathery fronds of bright chartreuse to emerald green.',
-    nativeRegion: 'Humid tropical swamps and forests of the Americas',
-    sunlight: 'Bright filtered indirect light or morning dappled shade.',
-    watering: 'Consistently moist soil; never let root ball dry out completely.',
-    soil: 'Rich, moisture-retentive peat potting mix amended with perlite.',
-    humidity: 'High humidity (60-80% required); loves bathroom placement or daily misting.',
-    toxicity: '100% non-toxic and pet safe (ASPCA verified).',
+  cardoon: {
+    speciesName: 'Cardoon / Artichoke Thistle',
+    commonNames: ['Cardoon', 'Artichoke Thistle', 'Wild Artichoke'],
+    scientificName: 'Cynara cardunculus',
+    family: 'Asteraceae (Composite Family)',
+    description: 'A dramatic architectural perennial thistle with deeply cut silver-grey foliage and large thistle-like violet flower heads.',
+    nativeRegion: 'Mediterranean basin',
+    sunlight: 'Full direct sunlight (6+ hours daily)',
+    watering: 'Moderate watering during growth; drought-resistant once established.',
+    soil: 'Deep, rich, well-draining garden soil.',
+    humidity: 'Low to moderate humidity.',
+    toxicity: 'Non-toxic to pets.',
     petSafe: true,
-    propagation: 'Division of rhizome runners during spring repotting.',
-    ecologicalFact: 'Ferns are ancient vascular plants that predate flowering plants by over 200 million years, reproducing via microscopic spores on frond undersides.',
+    propagation: 'By seed in spring or root crown division.',
+    ecologicalFact: 'Cardoon flowers produce abundant pollen and nectar, attracting honeybees, bumblebees, and butterflies.',
     difficulty: 'Intermediate',
-    tags: ['Ancient', 'Pet-Safe', 'High Humidity', 'Air Purifying']
+    tags: ['Architectural', 'Thistle', 'Pollinator', 'Mediterranean']
   },
-  mushroom: {
-    speciesName: 'Forest Fungi / Agaric',
-    commonNames: ['Wild Woodland Mushroom', 'Field Mushroom', 'Forest Spore Fungi'],
-    scientificName: 'Agaricus / Mycena sp.',
-    family: 'Agaricaceae',
-    description: 'A fascinating fruiting body of subterranean mycelial networks that flourishes in damp woodland leaf litter.',
-    nativeRegion: 'Temperate forest biomes worldwide',
-    sunlight: 'Damp shaded forest floors and understories.',
-    watering: 'Requires high environmental moisture and damp organic substrate.',
-    soil: 'Decomposing organic matter, leaf humus, and rich woodland soil.',
-    humidity: 'High ambient humidity (80-95%)',
-    toxicity: 'Caution: Never consume wild mushrooms without expert mycological identification.',
-    petSafe: false,
-    propagation: 'Wind-dispersed microscopic fungal spores.',
-    ecologicalFact: 'Fungal mycelium forms mycorrhizal networks—the "Wood Wide Web"—sharing water, carbon, and mineral nutrients between forest trees.',
-    difficulty: 'Expert',
-    tags: ['Fungi', 'Mycelium', 'Decomposer', 'Woodland']
+  rapeseed: {
+    speciesName: 'Rapeseed / Canola',
+    commonNames: ['Rapeseed', 'Oilseed Rape', 'Canola Flower'],
+    scientificName: 'Brassica napus',
+    family: 'Brassicaceae (Mustard Family)',
+    description: 'A bright yellow flowering member of the mustard family cultivated globally for its golden blossoms and oil-rich seeds.',
+    nativeRegion: 'Southern Europe and the Mediterranean',
+    sunlight: 'Full direct sun (6+ hours)',
+    watering: 'Moderate regular garden watering.',
+    soil: 'Moist, fertile, well-drained loamy soil.',
+    humidity: 'Moderate outdoor humidity.',
+    toxicity: 'Generally non-toxic in small amounts; avoid excessive livestock foraging.',
+    petSafe: true,
+    propagation: 'Direct seed sowing in spring or autumn.',
+    ecologicalFact: 'Mass blooming rapeseed fields provide early-season foraging corridors for wild pollinators across agricultural landscapes.',
+    difficulty: 'Beginner',
+    tags: ['Mustard Family', 'Field Flower', 'Yellow Bloom', 'Agricultural']
   }
 };
 
 /**
- * Maps a raw model classification label (e.g. from ImageNet/ViT) to the closest botanical knowledge entry.
+ * List of known ImageNet container / inanimate object classes that should NOT be
+ * falsely classified as botanical plant species.
  */
-export function getBotanicalInfoForLabel(rawLabel: string): BotanicalInfo {
+const INANIMATE_CONTAINER_LABELS = new Set([
+  'pot, flowerpot',
+  'flowerpot',
+  'pot',
+  'vase',
+  'greenhouse, nursery, glasshouse',
+  'greenhouse',
+  'tray',
+  'bucket',
+  'watering can',
+  'barrel, cask',
+  'crate'
+]);
+
+/**
+ * Evaluates raw neural classification outputs against the verified botanical taxonomy.
+ * Differentiates genuine botanical species matches from container objects and unconfirmed classes.
+ */
+export function evaluateModelPrediction(
+  rawLabel: string,
+  score: number
+): ClassificationPrediction {
   const clean = rawLabel.toLowerCase().trim();
-  
-  // Exact match
-  if (BOTANICAL_DATABASE[clean]) {
-    return BOTANICAL_DATABASE[clean];
+
+  // 1. Check if the model predicted an inanimate container or non-species object
+  if (INANIMATE_CONTAINER_LABELS.has(clean) || clean.includes('flowerpot') || clean === 'pot') {
+    return {
+      label: 'Flowerpot Container (Object)',
+      score,
+      isVerifiedSpecies: false,
+      detectionType: 'container_object',
+      statusExplanation:
+        'The vision model detected a flowerpot container rather than the specific plant species inside it. You can label and save this plant manually.'
+    };
   }
 
-  // Keyword / Substring match
-  if (clean.includes('daisy') || clean.includes('aster') || clean.includes('chamomile')) {
-    return BOTANICAL_DATABASE['daisy'];
-  }
-  if (clean.includes('sunflower') || clean.includes('rapeseed') || clean.includes('yellow')) {
-    return BOTANICAL_DATABASE['sunflower'];
-  }
-  if (clean.includes('rose') || clean.includes('hip') || clean.includes('shrub') || clean.includes('briar')) {
-    return BOTANICAL_DATABASE['hip, rose hip, rosehip'];
-  }
-  if (clean.includes('pot') || clean.includes('vase') || clean.includes('greenhouse') || clean.includes('plant')) {
-    return BOTANICAL_DATABASE['pot, flowerpot'];
-  }
-  if (clean.includes('monstera') || clean.includes('philodendron') || clean.includes('leaf') || clean.includes('aroid')) {
-    return BOTANICAL_DATABASE['monstera'];
-  }
-  if (clean.includes('pothos') || clean.includes('ivy') || clean.includes('vine')) {
-    return BOTANICAL_DATABASE['pothos'];
-  }
-  if (clean.includes('succulent') || clean.includes('cactus') || clean.includes('crassula') || clean.includes('agave')) {
-    return BOTANICAL_DATABASE['succulent'];
-  }
-  if (clean.includes('lavender') || clean.includes('mint') || clean.includes('herb') || clean.includes('salvia')) {
-    return BOTANICAL_DATABASE['lavender'];
-  }
-  if (clean.includes('fern') || clean.includes('moss') || clean.includes('spore')) {
-    return BOTANICAL_DATABASE['fern'];
-  }
-  if (clean.includes('mushroom') || clean.includes('fungus') || clean.includes('agaric') || clean.includes('bolete')) {
-    return BOTANICAL_DATABASE['mushroom'];
+  // 2. Direct species match
+  if (VERIFIED_BOTANICAL_SPECIES[clean]) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES[clean].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES[clean],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: `Verified botanical match: ${VERIFIED_BOTANICAL_SPECIES[clean].scientificName}`
+    };
   }
 
-  // Fallback enriched botanical discovery profile
-  const formattedTitle = clean.split(',')[0].trim().replace(/^\w/, c => c.toUpperCase());
+  // 3. Keyword / Substring match for verified species
+  if (clean.includes('daisy')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['daisy'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['daisy'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Bellis perennis (Common Daisy)'
+    };
+  }
+
+  if (clean.includes('sunflower')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['sunflower'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['sunflower'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Helianthus annuus (Sunflower)'
+    };
+  }
+
+  if (clean.includes('rose') || clean.includes('hip') || clean.includes('rosehip')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['rose'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['rose'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Rosa canina (Wild Rose / Rosehip)'
+    };
+  }
+
+  if (clean.includes('marigold') || clean.includes('tagetes')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['marigold'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['marigold'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Tagetes patula (French Marigold)'
+    };
+  }
+
+  if (clean.includes('cardoon')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['cardoon'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['cardoon'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Cynara cardunculus (Cardoon)'
+    };
+  }
+
+  if (clean.includes('rapeseed')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['rapeseed'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['rapeseed'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Brassica napus (Rapeseed)'
+    };
+  }
+
+  if (clean.includes('monstera')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['monstera'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['monstera'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Monstera deliciosa'
+    };
+  }
+
+  if (clean.includes('pothos')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['pothos'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['pothos'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Epipremnum aureum (Golden Pothos)'
+    };
+  }
+
+  if (clean.includes('lavender')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['lavender'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['lavender'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Lavandula angustifolia (English Lavender)'
+    };
+  }
+
+  // 4. Unconfirmed / Generic class label
+  const formattedRaw = clean.split(',')[0].trim().replace(/^\w/, c => c.toUpperCase());
   return {
-    speciesName: `${formattedTitle} Specimen`,
-    commonNames: [formattedTitle, 'Botanical Find'],
-    scientificName: `Plantae sp. (${clean.split(',')[0]})`,
-    family: 'Plantae (Plant Kingdom)',
-    description: `A distinct botanical specimen identified with visual characteristics matching ${clean}. Observed in outdoor or botanical habitat.`,
-    nativeRegion: 'Cosmopolitan distribution',
-    sunlight: 'Medium to bright natural ambient light',
-    watering: 'Check soil moisture before watering; adjust according to seasonal growth.',
-    soil: 'Well-draining, balanced potting or garden soil mix.',
-    humidity: 'Moderate ambient outdoor or indoor humidity (40-60%)',
-    toxicity: 'Research local species before allowing pets or small children to contact.',
-    petSafe: true,
-    propagation: 'Stem cuttings or seed dispersal.',
-    ecologicalFact: 'All living plants photosynthesize to fix atmospheric carbon dioxide into oxygen and biomass, anchoring terrestrial food webs.',
-    difficulty: 'Intermediate',
-    tags: ['Botanical Specimen', 'Nature Discovery', 'Photosynthetic', 'Outdoor Observation']
+    label: formattedRaw,
+    score,
+    isVerifiedSpecies: false,
+    detectionType: 'unidentified',
+    statusExplanation: `The vision model predicted class '${clean}', but this is not a verified species in the botanical database.`
   };
+}
+
+/**
+ * Backward-compatible helper for legacy callers.
+ */
+export function getBotanicalInfoForLabel(rawLabel: string): BotanicalInfo | undefined {
+  const evalResult = evaluateModelPrediction(rawLabel, 1.0);
+  return evalResult.botanicalInfo;
 }

@@ -60,8 +60,11 @@ export interface BotanicalInfo {
 
 export interface ClassificationPrediction {
   label: string;
-  score: number; // 0.0 to 1.0
+  score: number; // 0.0 to 1.0 (raw logit softmax probability)
   botanicalInfo?: BotanicalInfo;
+  isVerifiedSpecies?: boolean;
+  detectionType?: 'species' | 'container_object' | 'unidentified';
+  statusExplanation?: string;
 }
 
 export interface IdentificationResult {
@@ -75,6 +78,8 @@ export interface IdentificationResult {
   confidenceTier: 'high' | 'moderate' | 'uncertain';
   notes?: string;
   isSaved: boolean;
+  isUnidentified?: boolean;
+  userAssignedSpecies?: string;
 }
 
 export type QuestCategory = 'discovery' | 'care' | 'growth' | 'outdoor';

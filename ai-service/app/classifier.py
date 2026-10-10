@@ -63,7 +63,7 @@ class PlantClassifierService:
     def classify_image(self, image_bytes: bytes, top_k: int = 5) -> Dict[str, Any]:
         """
         Executes real image classification inference on input bytes.
-        Returns top-K predictions, confidence tier, latency, and botanical facts.
+        Returns top-K predictions, calibrated confidence tier, latency, and verified botanical facts.
         """
         if not self.is_loaded:
             self.load_model()
@@ -92,21 +92,25 @@ class PlantClassifierService:
         for prob, idx in zip(top_probs, top_indices):
             label = self.model.config.id2label[idx.item()]
             score = round(prob.item(), 4)
-            botanical_info = lookup_botanical_info(label)
+            botanical_info, is_verified, det_type, explanation = lookup_botanical_info(label)
             predictions.append({
                 "label": label,
                 "score": score,
-                "botanical_info": botanical_info
+                "botanical_info": botanical_info,
+                "is_verified_species": is_verified,
+                "detection_type": det_type,
+                "status_explanation": explanation
             })
 
         inference_time_ms = round((time.perf_counter() - start_t) * 1000, 2)
         top_prediction = predictions[0]
         top_score = top_prediction["score"]
 
-        # Honest confidence tier calibration
-        if top_score >= 0.70:
+        # Honest confidence tier calibration:
+        # Non-species object detections (like flowerpots) or unverified classes are always 'uncertain'
+        if top_prediction["is_verified_species"] and top_score >= 0.70:
             confidence_tier = "high"
-        elif top_score >= 0.35:
+        elif top_prediction["is_verified_species"] and top_score >= 0.35:
             confidence_tier = "moderate"
         else:
             confidence_tier = "uncertain"
@@ -117,7 +121,8 @@ class PlantClassifierService:
             "confidence_tier": confidence_tier,
             "top_prediction": top_prediction,
             "alternative_predictions": predictions[1:],
-            "device": str(self.device)
+            "device": str(self.device),
+            "is_unidentified": not top_prediction["is_verified_species"]
         }
 
 # Global singleton instance

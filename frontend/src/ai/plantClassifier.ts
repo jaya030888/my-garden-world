@@ -1,6 +1,6 @@
 import { pipeline, env } from '@xenova/transformers';
 import { IdentificationResult, ClassificationPrediction } from '../types';
-import { getBotanicalInfoForLabel } from './botanicalDatabase';
+import { evaluateModelPrediction } from './botanicalDatabase';
 
 // Configure transformers.js environment for browser client execution
 if (typeof window !== 'undefined') {
@@ -81,7 +81,7 @@ export async function getOrInitClassifier(
 
 /**
  * Preprocesses an image and runs genuine open-weight model inference.
- * Returns honest confidence scoring, alternative labels, and botanical enrichment.
+ * Evaluates predictions against verified botanical taxonomy with honest confidence calibration.
  */
 export async function identifyPlant(
   imageSource: string | HTMLImageElement | Blob | File,
@@ -121,23 +121,21 @@ export async function identifyPlant(
     throw new Error('Model produced no prediction classes.');
   }
 
-  // Map predictions to enriched botanical models
+  // Map predictions to verified botanical taxonomy or container/unidentified status
   const predictions: ClassificationPrediction[] = rawOutputs.map((item: any) => {
     const rawLabel = String(item.label || 'Unknown');
     const score = Number(item.score || 0);
-    const botanicalInfo = getBotanicalInfoForLabel(rawLabel);
-    return {
-      label: rawLabel,
-      score,
-      botanicalInfo
-    };
+    return evaluateModelPrediction(rawLabel, score);
   });
 
   const top = predictions[0];
+  
+  // Honest confidence calibration:
+  // Non-species object detections (like flowerpots) or unverified classes are always 'uncertain'
   let confidenceTier: 'high' | 'moderate' | 'uncertain' = 'uncertain';
-  if (top.score >= 0.70) {
+  if (top.isVerifiedSpecies && top.score >= 0.70) {
     confidenceTier = 'high';
-  } else if (top.score >= 0.35) {
+  } else if (top.isVerifiedSpecies && top.score >= 0.35) {
     confidenceTier = 'moderate';
   } else {
     confidenceTier = 'uncertain';
@@ -152,6 +150,7 @@ export async function identifyPlant(
     inferenceTimeMs,
     modelName: MODEL_ID,
     confidenceTier,
-    isSaved: false
+    isSaved: false,
+    isUnidentified: !top.isVerifiedSpecies
   };
 }

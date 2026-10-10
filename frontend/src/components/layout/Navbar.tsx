@@ -35,19 +35,38 @@ export const Navbar: React.FC = () => {
           </div>
         </Link>
 
+        {/* Navigation Links for Secondary Features */}
+        <nav className="hidden md:flex items-center gap-1.5">
+          <Link
+            to="/grow"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+          >
+            <Sprout className="w-3.5 h-3.5 text-emerald-600" />
+            <span>My Plants</span>
+          </Link>
+
+          <Link
+            to="/play"
+            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+          >
+            <Leaf className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Quests & Tasks</span>
+          </Link>
+        </nav>
+
         {/* PRIMARY CENTERPIECE: Glowing AI Scan Trigger */}
         <div className="flex items-center justify-center">
           <button
             onClick={openScanner}
-            className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 text-white font-extrabold text-xs sm:text-sm shadow-[0_4px_14px_rgba(16,185,129,0.35)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.5)] border border-emerald-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer animate-subtle-pulse"
+            className="group relative flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black text-xs sm:text-sm shadow-[0_4px_14px_rgba(16,185,129,0.35)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.5)] border-2 border-emerald-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer animate-subtle-pulse"
             title="Scan any real-world leaf, flower, or plant to unlock rare seeds & earn Flora Coins!"
           >
             <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:scale-110 transition-transform">
               <Camera className="w-3.5 h-3.5 text-emerald-100" />
               <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-400 animate-ping" />
             </div>
-            <span className="tracking-wide">Scan Plant</span>
-            <span className="hidden md:inline-flex items-center gap-0.5 text-[10px] bg-emerald-950/40 text-emerald-200 px-1.5 py-0.5 rounded-full border border-emerald-400/30 font-bold">
+            <span className="tracking-wide font-black">Scan Plant</span>
+            <span className="hidden sm:inline-flex items-center gap-0.5 text-[10px] bg-emerald-950/40 text-emerald-200 px-2 py-0.5 rounded-full border border-emerald-400/30 font-bold">
               <Sparkles className="w-2.5 h-2.5 text-amber-300" /> +50 🪙
             </span>
           </button>

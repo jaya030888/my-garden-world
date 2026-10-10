@@ -58,51 +58,12 @@ Test Files  7 passed (7)
      Tests  33 passed (33)
 
 ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
-  ✓ Botanical Knowledge Graph Database > returns complete botanical taxonomy card for common species
-  ✓ Botanical Knowledge Graph Database > correctly identifies pet-safe vs toxic species (ASPCA data)
-  ✓ Botanical Knowledge Graph Database > provides sensible fallback card for unknown plant labels
-  ✓ Botanical Knowledge Graph Database > provides actionable care recommendations
-
 ✓ src/__tests__/dataManagement.test.ts (2 tests)
-  ✓ Data Management & Backup Export Schema > exports valid JSON structure with all database tables
-  ✓ Data Management & Backup Export Schema > resets database cleanly when wiped
-
 ✓ src/__tests__/gardenLayout.test.ts (4 tests)
-  ✓ Virtual Garden Layout & Grid Placement > loads starter layout on initial setup
-  ✓ Virtual Garden Layout & Grid Placement > places an item on unoccupied 8x8 coordinate
-  ✓ Virtual Garden Layout & Grid Placement > rejects placing on already occupied tile (collision prevention)
-  ✓ Virtual Garden Layout & Grid Placement > rotates and deletes placed garden items correctly
-
 ✓ src/__tests__/plantRecordJourney.test.ts (4 tests)
-  ✓ My Plants Collection & Growth Journal Lifecycle > creates and persists a new plant record
-  ✓ My Plants Collection & Growth Journal Lifecycle > logs care activities and updates lastWateredDate timestamp
-  ✓ My Plants Collection & Growth Journal Lifecycle > records growth photos with stage labels into timeline
-  ✓ My Plants Collection & Growth Journal Lifecycle > deletes plant records cleanly from collection
-
 ✓ src/__tests__/economyService.test.ts (4 tests)
-  ✓ Game Economy & Shop Transactions > correctly calculates XP requirements across levels
-  ✓ Game Economy & Shop Transactions > awards rewards, accumulates XP and triggers level-up
-  ✓ Game Economy & Shop Transactions > successfully purchases an affordable and unlocked item
-  ✓ Game Economy & Shop Transactions > rejects purchase if coins are insufficient
-
 ✓ src/__tests__/questEngine.test.ts (4 tests)
-  ✓ Quest Engine & Duplicate Protection > initializes default daily and weekly quests
-  ✓ Quest Engine & Duplicate Protection > completes quest upon reaching target count and awards rewards
-  ✓ Quest Engine & Duplicate Protection > does not re-reward already completed quests (duplicate prevention)
-  ✓ Quest Engine & Duplicate Protection > records nature observations and awards outdoor rewards
-
 ✓ server/src/__tests__/api.test.ts (11 tests)
-  ✓ GET /api/health returns status healthy and database connected
-  ✓ POST /api/auth/register creates user and returns JWT token + 100 starter coins
-  ✓ GET /api/plants rejects unauthorized requests with 401 UNAUTHORIZED
-  ✓ GET /api/auth/me returns authenticated user profile
-  ✓ POST /api/plants creates plant and awards adoption rewards
-  ✓ GET /api/plants lists user-isolated plants
-  ✓ POST /api/shop/buy validates balance and deducts coins atomically
-  ✓ POST /api/shop/buy rejects item when level requirement is not met (403 LEVEL_TOO_LOW)
-  ✓ POST /api/garden/place places item on valid grid coordinate
-  ✓ POST /api/garden/place rejects placing on occupied coordinate (409 CELL_OCCUPIED)
-  ✓ POST /api/discoveries saves botanical identification and awards rewards
 ```
 
 ---

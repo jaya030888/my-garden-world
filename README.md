@@ -117,12 +117,25 @@ npm run dev:client
 
 ---
 
-## 🌐 Production Deployment
+## 📚 Documentation Index
 
-Refer to the complete deployment guides in:
-- [docs/deployment.md](file:///c:/Users/Jaya/Desktop/FloraQuest/my-garden-world/docs/deployment.md)
-- [docs/api-documentation.md](file:///c:/Users/Jaya/Desktop/FloraQuest/my-garden-world/docs/api-documentation.md)
-- [docs/database-migrations.md](file:///c:/Users/Jaya/Desktop/FloraQuest/my-garden-world/docs/database-migrations.md)
+All in-depth architecture, design, and API documentation files are organized in the [`docs/`](docs/) directory:
+
+| Document | Description |
+| :--- | :--- |
+| **[`docs/documentation.md`](docs/documentation.md)** | Full-stack engineering documentation, system topology, and state flow |
+| **[`docs/FINAL_VERIFICATION_REPORT.md`](docs/FINAL_VERIFICATION_REPORT.md)** | Complete end-to-end verification report & test results (33/33 tests passing) |
+| **[`docs/api-documentation.md`](docs/api-documentation.md)** | Complete REST API specification, payloads, status codes, and security |
+| **[`docs/architecture.md`](docs/architecture.md)** | High-level system architecture and component integration diagrams |
+| **[`docs/deployment.md`](docs/deployment.md)** | Production deployment guide for Vercel, Render, and Neon PostgreSQL |
+| **[`docs/database-migrations.md`](docs/database-migrations.md)** | PostgreSQL relational schema models and Prisma migration guide |
+| **[`docs/performance.md`](docs/performance.md)** | Empirical AI benchmark methodology and multi-trial latency results |
+| **[`docs/design.md`](docs/design.md)** | Design tokens, color palette, and handcrafted SVG vector artwork |
+| **[`docs/idea.md`](docs/idea.md)** | Product concept and Hacktoberfest challenge alignment |
+| **[`docs/origin.md`](docs/origin.md)** | Origin story and philosophy behind "Touch Grass" |
+| **[`docs/solution.md`](docs/solution.md)** | Solution architecture and technical specifications |
+| **[`docs/code-quality.md`](docs/code-quality.md)** | Code review guidelines and security checklist |
+| **[`docs/dev-to-submission.md`](docs/dev-to-submission.md)** | Ready-to-publish Dev.to challenge submission post |
 
 ---
 

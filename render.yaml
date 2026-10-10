@@ -1,0 +1,42 @@
+services:
+  # Component 2: Node.js + Express + Prisma REST API
+  - type: web
+    name: floraquest-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        sync: false # Set in Render Dashboard with Neon Connection String
+      - key: JWT_SECRET
+        generateValue: true
+      - key: COOKIE_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        sync: false # Set to your Vercel deployment URL (e.g. https://my-garden-world.vercel.app)
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: floraquest-ai-service
+          property: host
+
+  # Component 3: Python + FastAPI Open-Weight AI Inference Microservice
+  - type: web
+    name: floraquest-ai-service
+    env: docker
+    rootDir: ai-service
+    dockerfilePath: Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: MODEL_ID
+        value: google/vit-base-patch16-224

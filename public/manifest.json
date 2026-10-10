@@ -1,0 +1,16 @@
+{
+  "short_name": "GardenWorld",
+  "name": "My Garden World — Open-Source AI Plant Companion",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#fbf9f4",
+  "theme_color": "#1c3e2b",
+  "display": "standalone",
+  "orientation": "portrait"
+}

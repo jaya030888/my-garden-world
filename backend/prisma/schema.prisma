@@ -1,0 +1,268 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String             @id @default(uuid())
+  email        String             @unique
+  username     String             @unique
+  passwordHash String
+  level        Int                @default(1)
+  xp           Int                @default(0)
+  coins        Int                @default(100)
+  streakDays   Int                @default(1)
+  lastActiveAt DateTime           @default(now())
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  plants       Plant[]
+  growthPhotos GrowthEntry[]
+  careLogs     CareLog[]
+  discoveries  Discovery[]
+  observations Observation[]
+  questClaims  QuestClaim[]
+  inventory    UserInventory[]
+  gardenLayout GardenPlacement[]
+  transactions CoinTransaction[]
+  achievements UserAchievement[]
+
+  @@map("users")
+}
+
+model Plant {
+  id                 String        @id @default(uuid())
+  userId             String
+  name               String
+  species            String
+  scientificName     String?
+  family             String?
+  acquiredDate       DateTime      @default(now())
+  primaryPhotoUrl    String
+  location           String        @default("indoor") // indoor, outdoor, balcony, etc.
+  sunlightNeeds      String        @default("indirect_bright") // full_sun, partial_sun, indirect_bright, low_light
+  waterFrequencyDays Int           @default(7)
+  lastWateredDate    DateTime?
+  lastFertilizedDate DateTime?
+  notes              String?
+  isCustom           Boolean       @default(false)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  growthPhotos       GrowthEntry[]
+  careLogs           CareLog[]
+
+  @@index([userId])
+  @@map("plants")
+}
+
+model GrowthEntry {
+  id         String   @id @default(uuid())
+  plantId    String
+  userId     String
+  photoUrl   String
+  takenAt    DateTime @default(now())
+  stageLabel String?
+  notes      String?
+  createdAt  DateTime @default(now())
+
+  plant      Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([plantId])
+  @@index([userId])
+  @@map("growth_entries")
+}
+
+model CareLog {
+  id         String   @id @default(uuid())
+  plantId    String
+  userId     String
+  type       String   // water, fertilize, prune, repot, mist, etc.
+  timestamp  DateTime @default(now())
+  notes      String?
+  xpAwarded  Int      @default(10)
+  createdAt  DateTime @default(now())
+
+  plant      Plant    @relation(fields: [plantId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([plantId])
+  @@index([userId])
+  @@map("care_logs")
+}
+
+model Discovery {
+  id                     String   @id @default(uuid())
+  userId                 String
+  timestamp              DateTime @default(now())
+  imageUrl               String
+  topLabel               String
+  topScore               Float
+  confidenceTier         String   // high, moderate, uncertain
+  scientificName         String?
+  commonNames            String?
+  alternativePredictions Json?
+  notes                  String?
+  isSaved                Boolean  @default(false)
+  createdAt              DateTime @default(now())
+
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("discoveries")
+}
+
+model Observation {
+  id                  String   @id @default(uuid())
+  userId              String
+  timestamp           DateTime @default(now())
+  durationMinutes     Int      @default(5)
+  locationDescription String
+  floraObserved       Json     // string[]
+  sensoryNotes        String
+  weatherCondition    String?
+  coinsEarned         Int      @default(30)
+  xpEarned            Int      @default(50)
+  createdAt           DateTime @default(now())
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("observations")
+}
+
+model Quest {
+  id          String       @id // e.g. "quest-daily-discover"
+  title       String
+  description String
+  category    String       // discovery, care, growth, outdoor
+  coinsReward Int          @default(25)
+  xpReward    Int          @default(50)
+  isDaily     Boolean      @default(true)
+  targetCount Int          @default(1)
+  iconName    String       @default("compass")
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+
+  claims      QuestClaim[]
+
+  @@map("quests")
+}
+
+model QuestClaim {
+  id        String   @id @default(uuid())
+  questId   String
+  userId    String
+  periodKey String   // e.g. "2026-10-10" or "weekly-2026-41" for uniqueness per period
+  claimedAt DateTime @default(now())
+
+  quest     Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questId, periodKey])
+  @@index([userId])
+  @@index([questId])
+  @@map("quest_claims")
+}
+
+model ShopItem {
+  id            String            @id // e.g. "vp-monstera"
+  name          String
+  category      String            // plant, pot, decoration, path
+  description   String
+  price         Int
+  requiredLevel Int               @default(1)
+  iconSvg       String
+  previewColor  String
+  isAvailable   Boolean           @default(true)
+  createdAt     DateTime          @default(now())
+
+  inventory     UserInventory[]
+  placements    GardenPlacement[]
+
+  @@map("shop_items")
+}
+
+model UserInventory {
+  id         String   @id @default(uuid())
+  userId     String
+  itemId     String
+  quantity   Int      @default(1)
+  acquiredAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopItem   ShopItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemId])
+  @@index([userId])
+  @@map("user_inventory")
+}
+
+model GardenPlacement {
+  id         String   @id @default(uuid()) // instanceId
+  userId     String
+  itemId     String
+  gridX      Int      // 0 to 7
+  gridY      Int      // 0 to 7
+  rotation   Int      @default(0) // 0, 90, 180, 270
+  placedAt   DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shopItem   ShopItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gridX, gridY]) // Strict grid collision prevention at database level
+  @@index([userId])
+  @@map("garden_placements")
+}
+
+model CoinTransaction {
+  id          String   @id @default(uuid())
+  userId      String
+  amount      Int      // positive for reward, negative for expense
+  currency    String   @default("coins") // coins, xp
+  balanceAfter Int
+  type        String   // quest_reward, care_reward, discovery_reward, shop_purchase, level_reward
+  description String
+  referenceId String?
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("coin_transactions")
+}
+
+model Achievement {
+  id          String            @id // e.g. "ach-first-leaf"
+  title       String
+  description String
+  icon        String
+  category    String            // discover, grow, play, special
+  xpReward    Int               @default(50)
+  coinReward  Int               @default(25)
+  createdAt   DateTime          @default(now())
+
+  users       UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String      @id @default(uuid())
+  userId        String
+  achievementId String
+  unlockedAt    DateTime    @default(now())
+
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@map("user_achievements")
+}

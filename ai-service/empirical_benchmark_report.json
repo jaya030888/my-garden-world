@@ -1,0 +1,138 @@
+[
+  {
+    "name": "Wild Field Daisy",
+    "category": "Real Botanical Flower",
+    "expected_taxon": "Bellis perennis (Daisy)",
+    "predicted_label": "daisy",
+    "raw_softmax_score": 0.9896,
+    "confidence_tier": "high",
+    "is_verified_species": true,
+    "detection_type": "species",
+    "scientific_name": "Bellis perennis",
+    "latency_ms": 616.84,
+    "top3_classes": [
+      "daisy (99.0%)",
+      "sundial (0.1%)",
+      "pot, flowerpot (0.0%)"
+    ]
+  },
+  {
+    "name": "Garden Sunflower Bloom",
+    "category": "Real Botanical Flower",
+    "expected_taxon": "Helianthus annuus (Sunflower)",
+    "predicted_label": "monitor",
+    "raw_softmax_score": 0.5571,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 494.75,
+    "top3_classes": [
+      "monitor (55.7%)",
+      "screen, CRT screen (19.5%)",
+      "television, television system (12.8%)"
+    ]
+  },
+  {
+    "name": "Wild Rosehip Blossom",
+    "category": "Real Botanical Flower",
+    "expected_taxon": "Rosa canina (Rosehip)",
+    "predicted_label": "pot, flowerpot",
+    "raw_softmax_score": 0.19,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "container_object",
+    "scientific_name": "N/A",
+    "latency_ms": 507.16,
+    "top3_classes": [
+      "pot, flowerpot (19.0%)",
+      "hip, rose hip, rosehip (13.4%)",
+      "vase (4.1%)"
+    ]
+  },
+  {
+    "name": "Potted Indoor Monstera",
+    "category": "Potted Houseplant",
+    "expected_taxon": "Monstera deliciosa (Potted)",
+    "predicted_label": "pot, flowerpot",
+    "raw_softmax_score": 0.5966,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "container_object",
+    "scientific_name": "N/A",
+    "latency_ms": 494.16,
+    "top3_classes": [
+      "pot, flowerpot (59.7%)",
+      "vase (9.8%)",
+      "pedestal, plinth, footstall (4.9%)"
+    ]
+  },
+  {
+    "name": "Desk Planter Succulent",
+    "category": "Potted Houseplant",
+    "expected_taxon": "Crassulaceae (Planter)",
+    "predicted_label": "pot, flowerpot",
+    "raw_softmax_score": 0.661,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "container_object",
+    "scientific_name": "N/A",
+    "latency_ms": 781.5,
+    "top3_classes": [
+      "pot, flowerpot (66.1%)",
+      "vase (2.8%)",
+      "jinrikisha, ricksha, rickshaw (0.7%)"
+    ]
+  },
+  {
+    "name": "Woodland Forest Mushroom",
+    "category": "Wild Fungi (Non-Plantae)",
+    "expected_taxon": "Fungi / Wild Agaric",
+    "predicted_label": "scale, weighing machine",
+    "raw_softmax_score": 0.2362,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 708.17,
+    "top3_classes": [
+      "scale, weighing machine (23.6%)",
+      "stopwatch, stop watch (8.8%)",
+      "digital watch (7.9%)"
+    ]
+  },
+  {
+    "name": "Ceramic Coffee Mug (OOD)",
+    "category": "Inanimate Non-Plant",
+    "expected_taxon": "Non-plant (Cup/Mug)",
+    "predicted_label": "espresso",
+    "raw_softmax_score": 0.7238,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 497.44,
+    "top3_classes": [
+      "espresso (72.4%)",
+      "cup (18.4%)",
+      "coffee mug (8.8%)"
+    ]
+  },
+  {
+    "name": "Urban Office Laptop (OOD)",
+    "category": "Inanimate Non-Plant",
+    "expected_taxon": "Non-plant (Electronics)",
+    "predicted_label": "notebook, notebook computer",
+    "raw_softmax_score": 0.7222,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 575.95,
+    "top3_classes": [
+      "notebook, notebook computer (72.2%)",
+      "desktop computer (9.3%)",
+      "laptop, laptop computer (8.9%)"
+    ]
+  }
+]

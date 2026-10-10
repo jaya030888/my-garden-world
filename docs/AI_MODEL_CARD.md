@@ -1,13 +1,14 @@
 # AI Model Card: FloraQuest Botanical Vision Model
 
 ## 1. Model Overview
-- **Model Name:** FloraQuest Botanical Classifier (Fine-Tuned MobileNetV3-Large / ViT Vision Backbone)
-- **Version:** v1.0.0 (Production Release)
-- **Model Architecture:** MobileNetV3-Large with Custom Classification Head / Vision Transformer (ViT-Base-Patch16-224)
-- **Model Weights Source:** Pretrained on ImageNet-1k, Fine-Tuned on Oxford 102 Botanical Species Dataset
-- **License:** Apache 2.0 / Creative Commons Attribution (CC-BY 4.0)
+- **Model Name:** Google Vision Transformer Base (ViT-Base-Patch16-224) / Xenova ONNX ViT
+- **Version:** `google/vit-base-patch16-224` (Open-Weight Release)
+- **Model Architecture:** Vision Transformer (`ViTForImageClassification`, 12 layers, 16x16 patch size, 86.6M parameters)
+- **Model Weights Source:** Pretrained by Google Research on ImageNet-21k, fine-tuned on ImageNet-1k (1,000 general classes)
+- **License:** Apache 2.0
 - **Input Resolution:** $224 \times 224 \times 3$ RGB
-- **Supported Botanical Classes:** 102 Distinct Botanical Flower & Plant Species (including Marigolds, Sunflowers, Roses, Daisies, Petunias, Hibiscus, Lilies, Orchids, etc.)
+- **Status / Operational Mode:** Pretrained Model Only with Curated Botanical Taxonomy & Container Decoupling
+- **Training Harness:** Modular fine-tuning pipeline provided in `ai-service/training/` (Oxford 102 benchmark harness)
 
 ---
 

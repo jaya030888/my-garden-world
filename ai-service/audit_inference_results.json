@@ -1,0 +1,162 @@
+[
+  {
+    "test_case": "User Upload (media_1791623414540.png)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "web site, website, internet site, site",
+    "raw_softmax_score": 0.8196,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 544.62,
+    "alternatives": [
+      "analog clock (0.022)",
+      "screen, CRT screen (0.019)",
+      "digital clock (0.011)"
+    ]
+  },
+  {
+    "test_case": "User Upload (media_1791641973341.png)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "web site, website, internet site, site",
+    "raw_softmax_score": 0.9857,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 616.6,
+    "alternatives": [
+      "menu (0.003)",
+      "packet (0.001)",
+      "butternut squash (0.001)"
+    ]
+  },
+  {
+    "test_case": "User Upload (media_1791642272334.png)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "web site, website, internet site, site",
+    "raw_softmax_score": 0.5649,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 726.84,
+    "alternatives": [
+      "analog clock (0.024)",
+      "envelope (0.018)",
+      "digital clock (0.018)"
+    ]
+  },
+  {
+    "test_case": "User Upload (media_1791654474968.jpg)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "jigsaw puzzle",
+    "raw_softmax_score": 0.4502,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 866.25,
+    "alternatives": [
+      "lakeside, lakeshore (0.059)",
+      "monitor (0.039)",
+      "comic book (0.038)"
+    ]
+  },
+  {
+    "test_case": "User Upload (media_1791654493002.jpg)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "jigsaw puzzle",
+    "raw_softmax_score": 0.9851,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 732.9,
+    "alternatives": [
+      "comic book (0.003)",
+      "maze, labyrinth (0.002)",
+      "toyshop (0.001)"
+    ]
+  },
+  {
+    "test_case": "User Upload (media_1791655235395.png)",
+    "category": "User Uploaded Photograph",
+    "top_imagenet_label": "web site, website, internet site, site",
+    "raw_softmax_score": 0.9507,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 761.74,
+    "alternatives": [
+      "menu (0.015)",
+      "oscilloscope, scope, cathode-ray oscilloscope, CRO (0.006)",
+      "analog clock (0.002)"
+    ]
+  },
+  {
+    "test_case": "Synthesized Marigold-like Orange/Yellow Flower",
+    "category": "Synthetic Floral Image",
+    "top_imagenet_label": "flagpole, flagstaff",
+    "raw_softmax_score": 0.0961,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 715.37,
+    "alternatives": [
+      "bow (0.035)",
+      "shield, buckler (0.031)",
+      "analog clock (0.021)"
+    ]
+  },
+  {
+    "test_case": "Coffee Mug (Non-Plant OOD)",
+    "category": "Inanimate Non-Plant Object",
+    "top_imagenet_label": "flagpole, flagstaff",
+    "raw_softmax_score": 0.0819,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 874.64,
+    "alternatives": [
+      "coffee mug (0.076)",
+      "envelope (0.073)",
+      "rule, ruler (0.051)"
+    ]
+  },
+  {
+    "test_case": "Pure Random Noise (OOD)",
+    "category": "Synthetic Noise OOD",
+    "top_imagenet_label": "tray",
+    "raw_softmax_score": 0.2962,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "container_object",
+    "scientific_name": "N/A",
+    "latency_ms": 534.65,
+    "alternatives": [
+      "rubber eraser, rubber, pencil eraser (0.153)",
+      "jigsaw puzzle (0.088)",
+      "pretzel (0.055)"
+    ]
+  },
+  {
+    "test_case": "Solid Black Frame (OOD)",
+    "category": "Blank Image OOD",
+    "top_imagenet_label": "matchstick",
+    "raw_softmax_score": 0.0322,
+    "confidence_tier": "uncertain",
+    "is_verified_species": false,
+    "detection_type": "unidentified",
+    "scientific_name": "N/A",
+    "latency_ms": 504.66,
+    "alternatives": [
+      "nematode, nematode worm, roundworm (0.028)",
+      "bassoon (0.013)",
+      "oboe, hautboy, hautbois (0.013)"
+    ]
+  }
+]

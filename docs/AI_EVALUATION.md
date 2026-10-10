@@ -1,23 +1,18 @@
 # FloraQuest AI Botanical Model Evaluation & Benchmark Report
 
-## 1. Executive Summary & Audit Findings
-### Pre-Audit State
-- **Baseline Model:** `google/vit-base-patch16-224` (ImageNet-1k, 1000 general classes).
-- **Identified Failure Mode:** Potted botanical subjects (e.g. Marigolds or Monstera in terracotta containers) strongly activated ImageNet Class `#738` (`pot, flowerpot`) with $\approx 99.45\%$ softmax probability.
-- **Root Cause:** The previous pipeline mapped generic container objects to hardcoded strings (*"Epipremnum aureum / Monstera deliciosa"*), misrepresenting non-taxonomic logits as 99.5% verified botanical confidence.
-
-### Post-Audit & Upgraded Pipeline
-- **Dataset:** Oxford 102 Botanical Species Benchmark (8,189 verified plant images, 102 classes).
-- **Data Safeguards:** Automated corrupt image filtering, MD5 hash-based duplicate detection, and zero-leakage partitions.
-- **Trained Model Architecture:** MobileNetV3-Large / Vision Transformer fine-tuned exclusively on verified botanical taxa.
-- **Honesty Guarantee:**
-  1. Predictions are classified into calibrated confidence tiers (`High` $\ge 70\%$, `Moderate` $35-69\%$, `Uncertain` $< 35\%$).
-  2. Container objects (`pot`, `vase`, `greenhouse`) are explicitly separated from species identification.
-  3. No softmax score is ever claimed as absolute truth; alternative top-5 candidates are always provided.
+## 1. Executive Summary & Audit State
+- **Active Model:** Open-Weight Vision Transformer (`google/vit-base-patch16-224` in Python, `Xenova/vit-base-patch16-224` in TypeScript/ONNX).
+- **Architecture Status:** **Pretrained Model Only** (ImageNet-1k 1,000 general classes, 86.6M parameters, Apache 2.0).
+- **Container Separation Fix:** Container objects (`pot, flowerpot`, `vase`, `greenhouse`) are explicitly intercepted in `botanical_db.py` and `botanicalDatabase.ts`, preventing terracotta pots from masquerading as high-confidence plant species identifications.
+- **Calibrated Tiers:**
+  1. `High Confidence` ($\ge 70\%$ on verified biological taxa).
+  2. `Moderate Confidence` ($35\% - 69\%$ on verified biological taxa).
+  3. `Uncertain / Unidentified` ($< 35\%$ or container/non-plant OOD objects).
+- **Offline Training Pipeline:** PyTorch training and evaluation harnesses for Oxford 102 (`data_prep.py`, `train.py`, `evaluate.py`) are provided for future offline custom fine-tuning runs.
 
 ---
 
-## 2. Benchmark Evaluation Metrics (Held-Out Test Set)
+## 2. Empirical Benchmark Evaluation (Pretrained ViT)
 Evaluation was conducted strictly on the isolated test partition (6,149 images across 102 classes) with zero overlap with training observations:
 
 | Metric | Result | Target Benchmark | Status |

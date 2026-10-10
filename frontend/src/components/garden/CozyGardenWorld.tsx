@@ -384,12 +384,14 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
 
           <button
             onClick={onOpenScanner}
-            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-xs transition-all active:scale-95 cursor-pointer"
-            title="Scan plant to unlock in game shop"
+            className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-extrabold shadow-[0_4px_16px_rgba(16,185,129,0.35)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.5)] border border-emerald-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer ring-2 ring-emerald-400/30 animate-pulse"
+            title="Scan real plants with AI Vision to unlock seeds and earn coins!"
           >
-            <Camera className="w-3.5 h-3.5 text-emerald-200" />
-            <span className="hidden xs:inline sm:inline">Scan Plant</span>
-            <span className="xs:hidden">Scan</span>
+            <Camera className="w-4 h-4 text-emerald-100 group-hover:scale-110 transition-transform" />
+            <span className="font-extrabold tracking-wide">Scan Plant</span>
+            <span className="hidden md:inline-block text-[10px] bg-emerald-950/40 text-emerald-200 px-1.5 py-0.5 rounded-full border border-emerald-400/30">
+              +50 🪙
+            </span>
           </button>
 
           <button

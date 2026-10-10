@@ -30,8 +30,11 @@ interface GardenContextType {
   observations: NatureObservation[];
   loading: boolean;
   isOutsideModeActive: boolean;
+  isScannerOpen: boolean;
   isServerSyncing: boolean;
   serverConnected: boolean;
+  openScanner: () => void;
+  closeScanner: () => void;
   startOutsideMode: () => void;
   stopOutsideMode: () => void;
   refreshData: () => Promise<void>;
@@ -64,8 +67,12 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [observations, setObservations] = useState<NatureObservation[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOutsideModeActive, setIsOutsideModeActive] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isServerSyncing, setIsServerSyncing] = useState(false);
   const [serverConnected, setServerConnected] = useState(true);
+
+  const openScanner = useCallback(() => setIsScannerOpen(true), []);
+  const closeScanner = useCallback(() => setIsScannerOpen(false), []);
 
   const refreshData = useCallback(async () => {
     try {
@@ -504,8 +511,11 @@ export const GardenProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         observations,
         loading,
         isOutsideModeActive,
+        isScannerOpen,
         isServerSyncing,
         serverConnected,
+        openScanner,
+        closeScanner,
         startOutsideMode,
         stopOutsideMode,
         refreshData,

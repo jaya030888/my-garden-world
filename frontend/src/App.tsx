@@ -6,6 +6,8 @@ import { Navbar } from './components/layout/Navbar';
 import { BottomNav } from './components/layout/BottomNav';
 import { OutsideModeModal } from './components/modals/OutsideModeModal';
 import { AuthModal } from './components/modals/AuthModal';
+import { AIScannerModal } from './components/garden/AIScannerModal';
+import { useGarden } from './context/GardenContext';
 import { DashboardPage } from './pages/Dashboard';
 import { DiscoverPage } from './pages/Discover';
 import { GrowPage } from './pages/Grow';
@@ -15,6 +17,7 @@ import { SettingsPage } from './pages/Settings';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
+  const { isScannerOpen, closeScanner } = useGarden();
   const isGardenCanvas = location.pathname === '/' || location.pathname === '/garden';
 
   return (
@@ -35,9 +38,10 @@ const AppContent: React.FC = () => {
         </Routes>
       </main>
 
-      {/* Modals */}
+      {/* Global Modals */}
       <OutsideModeModal />
       <AuthModal />
+      <AIScannerModal isOpen={isScannerOpen} onClose={closeScanner} />
 
       {/* Mobile Viewport Bottom Navigation Bar */}
       <BottomNav />

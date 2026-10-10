@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, Sprout, Leaf, LogIn, LogOut } from 'lucide-react';
+import { Coins, Sprout, Leaf, LogIn, LogOut, Camera, Sparkles } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
 import { useAuth } from '../../context/AuthContext';
 import { calculateXpForNextLevel } from '../../services/economyService';
 
 export const Navbar: React.FC = () => {
-  const { profile, startOutsideMode } = useGarden();
+  const { profile, startOutsideMode, openScanner } = useGarden();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
 
   const currentLevel = user?.level || profile?.level || 1;
@@ -17,7 +17,7 @@ export const Navbar: React.FC = () => {
   const xpPercentage = Math.min(100, Math.round((currentXp / xpNeeded) * 100));
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border-b border-forest-100/80 dark:border-stone-800 shadow-xs">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-xl border-b border-forest-100/80 dark:border-stone-800 shadow-xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2">
         
         {/* Brand Logo */}
@@ -34,6 +34,24 @@ export const Navbar: React.FC = () => {
             </span>
           </div>
         </Link>
+
+        {/* PRIMARY CENTERPIECE: Glowing AI Scan Trigger */}
+        <div className="flex items-center justify-center">
+          <button
+            onClick={openScanner}
+            className="group relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 text-white font-extrabold text-xs sm:text-sm shadow-[0_4px_14px_rgba(16,185,129,0.35)] hover:shadow-[0_6px_20px_rgba(16,185,129,0.5)] border border-emerald-400/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-95 cursor-pointer animate-subtle-pulse"
+            title="Scan any real-world leaf, flower, or plant to unlock rare seeds & earn Flora Coins!"
+          >
+            <div className="relative flex items-center justify-center w-5 h-5 rounded-full bg-white/20 group-hover:scale-110 transition-transform">
+              <Camera className="w-3.5 h-3.5 text-emerald-100" />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+            </div>
+            <span className="tracking-wide">Scan Plant</span>
+            <span className="hidden md:inline-flex items-center gap-0.5 text-[10px] bg-emerald-950/40 text-emerald-200 px-1.5 py-0.5 rounded-full border border-emerald-400/30 font-bold">
+              <Sparkles className="w-2.5 h-2.5 text-amber-300" /> +50 🪙
+            </span>
+          </button>
+        </div>
 
         {/* Right Actions & Stats */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">

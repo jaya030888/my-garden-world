@@ -26,6 +26,7 @@ import {
 import { useGarden } from '../../context/GardenContext';
 import { GardenShopItem, PlacedGardenItem } from '../../types';
 import { GardenItemIllustration } from './GardenItemIllustrations';
+import { IsometricGardenCanvas } from './IsometricGardenCanvas';
 import { cozyAudio } from '../../services/audioService';
 import {
   SimulatedPlantState,
@@ -437,126 +438,56 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         )}
       </AnimatePresence>
 
-      {/* EXPANSIVE LUSH GARDEN CANVAS */}
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-1 sm:p-3 w-full min-h-0">
+      {/* EXPANSIVE 2.5D ISOMETRIC GARDEN WORLD SCENE */}
+      <main className="relative z-10 flex-1 w-full h-[calc(100dvh-13.5rem)] min-h-[380px] overflow-hidden flex flex-col items-center justify-center">
         
-        {/* Botanical Meadow Sanctuary Container */}
-        <div className="relative p-3 sm:p-6 rounded-[2.5rem] bg-emerald-900/30 dark:bg-emerald-950/60 backdrop-blur-xl border-2 border-emerald-500/40 shadow-[0_20px_50px_rgba(6,78,59,0.25)] w-full max-w-[min(100%,620px,calc(100dvh-17rem))] flex flex-col items-center">
-          
-          {/* Top Plot Header Bar */}
-          <div className="w-full flex items-center justify-between mb-2 px-1">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-              <span className="text-xs sm:text-sm font-extrabold text-forest-950 dark:text-emerald-100">
-                Botanical Sanctuary Plot
-              </span>
-            </div>
+        {/* Full-Viewport Isometric Garden Canvas Scene */}
+        <div className="relative w-full h-full">
+          <IsometricGardenCanvas
+            gridDimension={gridDimension}
+            placedItems={gardenItems}
+            plantStates={plantStates}
+            selectedInventoryItem={selectedInventoryItem}
+            selectedPlacedInstanceId={selectedPlaced?.instanceId || null}
+            selectedTool={selectedTool}
+            weather={currentWeather}
+            onTileClick={(x, y) => handleCellClick(x, y)}
+            onItemClick={(item) => {
+              setSelectedCell({ x: item.gridX, y: item.gridY });
+              cozyAudio.playPlacementSound();
+            }}
+          />
 
-            <div className="flex items-center gap-2">
-              {selectedInventoryItem && (
-                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-900 dark:text-emerald-200 text-[10px] font-extrabold animate-pulse">
-                  <span>Placing: {selectedInventoryItem.name}</span>
-                  <button onClick={() => setSelectedInventoryItem(null)} className="hover:text-rose-600 ml-1">
-                    <X className="w-3 h-3" />
-                  </button>
-                </div>
-              )}
-
+          {/* Active Placement Indicator Badge */}
+          {selectedInventoryItem && (
+            <div className="absolute top-3 left-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-emerald-950/90 text-emerald-100 border border-emerald-400/50 shadow-xl backdrop-blur-md text-xs font-extrabold animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>Placing: {selectedInventoryItem.name}</span>
               <button
-                onClick={() => setShowExpansionModal(true)}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-forest-800 hover:bg-forest-900 text-white text-[10px] font-extrabold transition-all active:scale-95 shadow-xs cursor-pointer"
+                onClick={() => setSelectedInventoryItem(null)}
+                className="p-1 hover:bg-white/20 rounded-lg text-stone-300 hover:text-white ml-1 cursor-pointer"
+                title="Cancel placement"
               >
-                <Maximize2 className="w-3 h-3 text-amber-300" />
-                <span>{gridDimension}x{gridDimension}</span>
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
+          )}
+
+          {/* Expansion Controls Pill */}
+          <div className="absolute top-3 right-16 z-20">
+            <button
+              onClick={() => setShowExpansionModal(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-white/90 dark:bg-stone-900/90 hover:bg-white text-forest-950 dark:text-emerald-100 text-xs font-extrabold transition-all active:scale-95 shadow-md border border-stone-200/80 dark:border-stone-700 cursor-pointer"
+              title="Expand Garden Meadow Plot"
+            >
+              <Maximize2 className="w-3.5 h-3.5 text-amber-500" />
+              <span>{gridDimension}×{gridDimension} Meadow</span>
+            </button>
           </div>
+        </div>
 
-          {/* Living Meadow Grid Canvas */}
-          <div
-            className="grid gap-1 sm:gap-1.5 p-2 sm:p-3 rounded-3xl bg-gradient-to-b from-emerald-950/70 to-emerald-950/90 border-2 border-emerald-700/50 shadow-inner w-full aspect-square relative overflow-hidden"
-            style={{
-              gridTemplateColumns: `repeat(${gridDimension}, minmax(0, 1fr))`
-            }}
-          >
-            {Array.from({ length: gridDimension * gridDimension }).map((_, index) => {
-              const x = index % gridDimension;
-              const y = Math.floor(index / gridDimension);
-              const placed = getPlacedItemAt(x, y);
-              const plantState = placed ? plantStates[placed.instanceId] : null;
-              const isSelected = selectedCell?.x === x && selectedCell?.y === y;
-              const isHovered = hoveredCell?.x === x && hoveredCell?.y === y;
-
-              return (
-                <div
-                  key={`${x}-${y}`}
-                  onClick={() => handleCellClick(x, y)}
-                  onMouseEnter={() => setHoveredCell({ x, y })}
-                  onMouseLeave={() => setHoveredCell(null)}
-                  className={`relative aspect-square rounded-xl cursor-pointer transition-all duration-150 flex items-center justify-center group select-none touch-manipulation ${
-                    placed
-                      ? 'bg-emerald-700/60 hover:bg-emerald-600/70 shadow-xs active:scale-95 border border-emerald-500/30'
-                      : 'bg-emerald-900/45 hover:bg-emerald-800/60 border border-emerald-700/30 active:scale-95'
-                  } ${isSelected ? 'ring-3 ring-amber-400 scale-105 z-20 shadow-lg' : ''} ${
-                    isHovered && selectedInventoryItem && !placed
-                      ? 'ring-2 ring-emerald-400 bg-emerald-600/40 scale-102'
-                      : ''
-                  } ${
-                    isHovered && selectedInventoryItem && placed
-                      ? 'ring-2 ring-rose-400 bg-rose-500/20'
-                      : ''
-                  }`}
-                >
-                  {/* Subtle Grass Lawn Blade Highlights on empty tiles */}
-                  {!placed && !selectedInventoryItem && (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-25 group-hover:opacity-60 transition-opacity">
-                      <Plus className="w-3 h-3 text-emerald-300" />
-                    </div>
-                  )}
-
-                  {/* Ghost Placement Preview */}
-                  {isHovered && selectedInventoryItem && !placed && (
-                    <div className="relative w-full h-full p-1 opacity-50 pointer-events-none scale-95">
-                      <GardenItemIllustration itemId={selectedInventoryItem.id} />
-                    </div>
-                  )}
-
-                  {/* Placed Plant / Object Render */}
-                  {placed && (
-                    <div className="relative w-full h-full p-0.5 sm:p-1">
-                      <GardenItemIllustration
-                        itemId={placed.itemId}
-                        rotation={placed.rotation}
-                        stage={plantState?.stage || 'bloom'}
-                        isWatered={plantState?.moisture === 'moist'}
-                      />
-
-                      {/* Growth Progress Badge */}
-                      {plantState && plantState.stage !== 'bloom' && (
-                        <div className="absolute bottom-0 right-0 px-1 py-0.2 rounded-md bg-stone-950/85 text-amber-300 font-extrabold text-[7px] sm:text-[8px] backdrop-blur-xs shadow-xs">
-                          {plantState.growthProgress}%
-                        </div>
-                      )}
-
-                      {/* Soil Thirsty Droplet */}
-                      {plantState && plantState.moisture === 'dry' && (
-                        <div className="absolute top-0 right-0 p-0.5 rounded-full bg-amber-500 text-white animate-bounce shadow-xs" title="Needs watering!">
-                          <Droplets className="w-2.5 h-2.5 fill-white" />
-                        </div>
-                      )}
-
-                      {/* Harvest Bloom Sparkle */}
-                      {plantState && (plantState.stage === 'bloom' || plantState.isHarvestable) && (
-                        <div className="absolute top-0 left-0 p-0.5 rounded-full bg-emerald-500 text-white animate-pulse shadow-xs" title="Mature Bloom! Ready to harvest">
-                          <Sparkles className="w-2.5 h-2.5 fill-amber-300 text-amber-300" />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+        {/* Selected Item Floating Contextual Action Drawer */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 w-full max-w-lg px-2 pointer-events-auto">
 
           {/* Plant Inspector Contextual HUD Popup */}
           <AnimatePresence>

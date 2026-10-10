@@ -43,9 +43,9 @@ This guide provides end-to-end instructions for deploying **My Garden World** in
    ```
 4. Run migrations from your terminal to initialize tables:
    ```bash
-   cd server
-   npx prisma migrate deploy
-   npx prisma db seed
+   cd backend
+   npx prisma db push # or npx prisma migrate deploy
+   npm run prisma:seed
    ```
 
 ---
@@ -55,12 +55,12 @@ This guide provides end-to-end instructions for deploying **My Garden World** in
 ### Option A: Using `render.yaml` Blueprint
 1. In the [Render Dashboard](https://dashboard.render.com/), select **New +** $\rightarrow$ **Blueprint**.
 2. Connect your GitHub repository.
-3. Render will detect `render.yaml` and configure the Web Service automatically.
+3. Render will detect `render.yaml` and configure both `floraquest-backend` and `floraquest-ai-service` automatically.
 
 ### Option B: Manual Web Service Setup
 1. Create a **New Web Service** and link your repository.
 2. Configure build & runtime parameters:
-   - **Root Directory:** `server`
+   - **Root Directory:** `backend`
    - **Environment:** `Node`
    - **Build Command:** `npm install && npx prisma generate && npm run build`
    - **Start Command:** `npm start`

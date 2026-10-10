@@ -499,27 +499,112 @@ export const INITIAL_PLANTS: PlantRecord[] = [
 ];
 
 export const INITIAL_GARDEN_LAYOUT: PlacedGardenItem[] = [
+  // Winding stone path
   {
-    instanceId: 'starter-item-1',
-    itemId: 'vp-monstera',
-    gridX: 2,
+    instanceId: 'starter-path-1',
+    itemId: 'tile-cobblestone',
+    gridX: 3,
+    gridY: 1,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-path-2',
+    itemId: 'tile-cobblestone',
+    gridX: 3,
     gridY: 2,
     rotation: 0,
     placedAt: new Date().toISOString()
   },
   {
-    instanceId: 'starter-item-2',
-    itemId: 'pot-terracotta',
-    gridX: 2,
+    instanceId: 'starter-path-3',
+    itemId: 'tile-stepping-stone',
+    gridX: 3,
     gridY: 3,
     rotation: 0,
     placedAt: new Date().toISOString()
   },
   {
-    instanceId: 'starter-item-3',
+    instanceId: 'starter-path-4',
+    itemId: 'tile-stepping-stone',
+    gridX: 4,
+    gridY: 3,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+
+  // Flowerbeds & Living Flora
+  {
+    instanceId: 'starter-soil-1',
+    itemId: 'tile-soil-bed',
+    gridX: 1,
+    gridY: 2,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-flower-1',
+    itemId: 'vp-marigold',
+    gridX: 1,
+    gridY: 3,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-flower-2',
+    itemId: 'vp-daisy',
+    gridX: 2,
+    gridY: 2,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-seed-1',
+    itemId: 'seed-sunflower',
+    gridX: 2,
+    gridY: 1,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+
+  // Cozy Rest Nook
+  {
+    instanceId: 'starter-bench-1',
+    itemId: 'dec-bench',
+    gridX: 5,
+    gridY: 2,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-lantern-1',
+    itemId: 'dec-lantern',
+    gridX: 5,
+    gridY: 1,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-birdbath-1',
     itemId: 'dec-birdbath',
     gridX: 4,
-    gridY: 2,
+    gridY: 4,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-pothos-1',
+    itemId: 'vp-pothos',
+    gridX: 5,
+    gridY: 4,
+    rotation: 0,
+    placedAt: new Date().toISOString()
+  },
+  {
+    instanceId: 'starter-fence-1',
+    itemId: 'dec-fence',
+    gridX: 1,
+    gridY: 1,
     rotation: 0,
     placedAt: new Date().toISOString()
   }

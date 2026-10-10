@@ -18,7 +18,10 @@ import {
   Maximize2,
   X,
   Compass,
-  Leaf
+  Undo2,
+  Layers,
+  CheckCircle2,
+  HelpCircle
 } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
 import { GardenShopItem, PlacedGardenItem } from '../../types';
@@ -42,6 +45,18 @@ interface CozyGardenWorldProps {
 }
 
 type ToolMode = 'select' | 'water' | 'harvest' | 'rotate' | 'remove';
+type DockCategory = 'all' | 'seeds' | 'plant' | 'path' | 'decoration';
+
+interface UndoAction {
+  type: 'place' | 'remove' | 'move' | 'rotate';
+  instanceId: string;
+  itemId?: string;
+  prevX?: number;
+  prevY?: number;
+  newX?: number;
+  newY?: number;
+  prevRot?: number;
+}
 
 export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   onOpenShop,
@@ -66,7 +81,10 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   const [currentWeather, setCurrentWeather] = useState<WeatherAtmosphere>('sunny');
   const [selectedTool, setSelectedTool] = useState<ToolMode>('select');
   const [selectedInventoryItem, setSelectedInventoryItem] = useState<GardenShopItem | null>(null);
+  const [dockCategory, setDockCategory] = useState<DockCategory>('all');
   const [selectedCell, setSelectedCell] = useState<{ x: number; y: number } | null>(null);
+  const [hoveredCell, setHoveredCell] = useState<{ x: number; y: number } | null>(null);
+  const [undoStack, setUndoStack] = useState<UndoAction[]>([]);
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(cozyAudio.getIsMuted());
   const [showExpansionModal, setShowExpansionModal] = useState<boolean>(false);
   const [harvestNotification, setHarvestNotification] = useState<{ text: string; coins: number } | null>(null);
@@ -131,6 +149,13 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   }, []);
 
   const ownedItems = shopCatalog.filter(i => i.unlocked);
+
+  const filteredOwnedItems = ownedItems.filter(item => {
+    if (dockCategory === 'all') return true;
+    if (dockCategory === 'seeds') return item.id.startsWith('seed-');
+    if (dockCategory === 'plant') return item.category === 'plant' && !item.id.startsWith('seed-');
+    return item.category === dockCategory;
+  });
 
   const getPlacedItemAt = (x: number, y: number): PlacedGardenItem | undefined => {
     return gardenItems.find(item => item.gridX === x && item.gridY === y);
@@ -197,6 +222,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     if (selectedTool === 'rotate') {
       if (existing) {
         cozyAudio.playPlacementSound();
+        setUndoStack(prev => [{ type: 'rotate', instanceId: existing.instanceId, prevRot: (existing.rotation + 270) % 360 }, ...prev.slice(0, 19)]);
         await rotateGardenItem(existing.instanceId);
       }
       return;
@@ -205,6 +231,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     if (selectedTool === 'remove') {
       if (existing) {
         cozyAudio.playPlacementSound();
+        setUndoStack(prev => [{ type: 'remove', instanceId: existing.instanceId, itemId: existing.itemId, prevX: existing.gridX, prevY: existing.gridY }, ...prev.slice(0, 19)]);
         await removeGardenItem(existing.instanceId);
         setSelectedCell(null);
       }
@@ -221,7 +248,6 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     }
 
     if (existing) {
-      // Toggle select this item
       if (selectedCell?.x === x && selectedCell?.y === y) {
         setSelectedCell(null);
       } else {
@@ -229,10 +255,17 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         cozyAudio.playPlacementSound();
       }
     } else {
-      // If we already have a placed item selected and tap an empty tile, move it there!
       const currentSelectedPlaced = selectedCell ? getPlacedItemAt(selectedCell.x, selectedCell.y) : null;
       if (currentSelectedPlaced) {
         cozyAudio.playPlacementSound();
+        setUndoStack(prev => [{
+          type: 'move',
+          instanceId: currentSelectedPlaced.instanceId,
+          prevX: currentSelectedPlaced.gridX,
+          prevY: currentSelectedPlaced.gridY,
+          newX: x,
+          newY: y
+        }, ...prev.slice(0, 19)]);
         await moveGardenItem(currentSelectedPlaced.instanceId, x, y);
         setSelectedCell({ x, y });
       } else {
@@ -241,15 +274,36 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     }
   };
 
+  const handleUndo = async () => {
+    if (undoStack.length === 0) return;
+    const [action, ...rest] = undoStack;
+    setUndoStack(rest);
+    cozyAudio.playPlacementSound();
+
+    try {
+      if (action.type === 'rotate') {
+        await rotateGardenItem(action.instanceId);
+        await rotateGardenItem(action.instanceId);
+        await rotateGardenItem(action.instanceId);
+      } else if (action.type === 'move' && action.prevX !== undefined && action.prevY !== undefined) {
+        await moveGardenItem(action.instanceId, action.prevX, action.prevY);
+      } else if (action.type === 'remove' && action.itemId && action.prevX !== undefined && action.prevY !== undefined) {
+        await placeGardenItem(action.itemId, action.prevX, action.prevY);
+      }
+    } catch {
+      // rollback
+    }
+  };
+
   const selectedPlaced = selectedCell ? getPlacedItemAt(selectedCell.x, selectedCell.y) : null;
   const selectedPlantState = selectedPlaced ? plantStates[selectedPlaced.instanceId] : null;
   const selectedShopItem = selectedPlaced ? getShopItemById(selectedPlaced.itemId) : null;
 
   const weatherClass = {
-    sunny: 'bg-gradient-to-b from-emerald-100/60 via-amber-50/40 to-emerald-50/80',
-    golden_hour: 'bg-gradient-to-b from-amber-100/80 via-orange-100/60 to-rose-100/40',
+    sunny: 'bg-gradient-to-b from-emerald-100/70 via-amber-50/50 to-emerald-100/80',
+    golden_hour: 'bg-gradient-to-b from-amber-200/70 via-orange-100/60 to-rose-100/50',
     twilight: 'bg-gradient-to-b from-indigo-950 via-slate-900 to-emerald-950 text-emerald-100',
-    rain: 'bg-gradient-to-b from-slate-200 via-sky-100 to-teal-100/80'
+    rain: 'bg-gradient-to-b from-slate-300 via-sky-200 to-teal-100/80'
   }[currentWeather];
 
   return (
@@ -259,12 +313,13 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {currentWeather === 'twilight' && (
           <>
-            <div className="absolute w-2 h-2 rounded-full bg-amber-300 blur-[1px] animate-pulse top-1/4 left-1/5 shadow-[0_0_12px_#fde047]" />
-            <div className="absolute w-2.5 h-2.5 rounded-full bg-emerald-300 blur-[1px] animate-pulse top-1/2 left-3/4 shadow-[0_0_15px_#86efac]" />
+            <div className="absolute w-2.5 h-2.5 rounded-full bg-amber-300 blur-[1px] animate-pulse top-1/4 left-1/5 shadow-[0_0_15px_#fde047]" />
+            <div className="absolute w-3 h-3 rounded-full bg-emerald-300 blur-[1px] animate-pulse top-1/2 left-3/4 shadow-[0_0_20px_#86efac]" />
+            <div className="absolute w-2 h-2 rounded-full bg-amber-200 blur-[1px] animate-pulse top-3/4 left-1/3 shadow-[0_0_12px_#fef08a]" />
           </>
         )}
         {currentWeather === 'rain' && (
-          <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-25 animate-pulse" />
+          <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1.5px,transparent_1.5px)] [background-size:20px_20px] opacity-35 animate-pulse" />
         )}
       </div>
 
@@ -272,32 +327,32 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
       <header className="relative z-10 p-2 sm:p-4 flex items-center justify-between gap-2 max-w-6xl mx-auto w-full">
         
         {/* Left: Weather & Audio Controls */}
-        <div className="flex items-center gap-0.5 sm:gap-1 p-1 rounded-2xl bg-white/85 dark:bg-stone-900/85 backdrop-blur-md border border-stone-200/80 dark:border-stone-700 shadow-xs shrink-0">
+        <div className="flex items-center gap-0.5 sm:gap-1 p-1 rounded-2xl bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border border-stone-200/80 dark:border-stone-700 shadow-xs shrink-0">
           <button
             onClick={() => setCurrentWeather('sunny')}
             title="Radiant Daylight"
-            className={`p-1.5 rounded-xl text-xs transition-all ${currentWeather === 'sunny' ? 'bg-amber-400 text-white shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+            className={`p-1.5 rounded-xl text-xs transition-all cursor-pointer ${currentWeather === 'sunny' ? 'bg-amber-400 text-white shadow-xs scale-105' : 'text-stone-500 hover:text-stone-800'}`}
           >
             <Sun className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setCurrentWeather('golden_hour')}
-            title="Golden Hour"
-            className={`p-1.5 rounded-xl text-xs transition-all ${currentWeather === 'golden_hour' ? 'bg-orange-400 text-white shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+            title="Golden Hour Sunset"
+            className={`p-1.5 rounded-xl text-xs transition-all cursor-pointer ${currentWeather === 'golden_hour' ? 'bg-orange-400 text-white shadow-xs scale-105' : 'text-stone-500 hover:text-stone-800'}`}
           >
             <Sunset className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setCurrentWeather('twilight')}
             title="Twilight Fireflies"
-            className={`p-1.5 rounded-xl text-xs transition-all ${currentWeather === 'twilight' ? 'bg-indigo-600 text-white shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+            className={`p-1.5 rounded-xl text-xs transition-all cursor-pointer ${currentWeather === 'twilight' ? 'bg-indigo-600 text-white shadow-xs scale-105' : 'text-stone-500 hover:text-stone-800'}`}
           >
             <Moon className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setCurrentWeather('rain')}
             title="Gentle Spring Rain"
-            className={`p-1.5 rounded-xl text-xs transition-all ${currentWeather === 'rain' ? 'bg-sky-500 text-white shadow-xs' : 'text-stone-500 hover:text-stone-800'}`}
+            className={`p-1.5 rounded-xl text-xs transition-all cursor-pointer ${currentWeather === 'rain' ? 'bg-sky-500 text-white shadow-xs scale-105' : 'text-stone-500 hover:text-stone-800'}`}
           >
             <CloudRain className="w-3.5 h-3.5" />
           </button>
@@ -315,20 +370,32 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         </div>
 
         {/* Right: 4 Clean Action Buttons */}
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {undoStack.length > 0 && (
+            <button
+              onClick={handleUndo}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
+              title="Undo last placement or move"
+            >
+              <Undo2 className="w-3.5 h-3.5 text-amber-600" />
+              <span className="hidden sm:inline">Undo</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenScanner}
             className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-xs transition-all active:scale-95 cursor-pointer"
-            title="Plant Scanner"
+            title="Scan plant to unlock in game shop"
           >
             <Camera className="w-3.5 h-3.5 text-emerald-200" />
-            <span className="hidden xs:inline sm:inline">Scan</span>
+            <span className="hidden xs:inline sm:inline">Scan Plant</span>
+            <span className="xs:hidden">Scan</span>
           </button>
 
           <button
             onClick={onOpenShop}
             className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-forest-800 hover:bg-forest-900 text-white text-xs font-extrabold shadow-xs transition-all active:scale-95 cursor-pointer"
-            title="Botanical Nursery Shop"
+            title="Botanical Nursery & Decor Shop"
           >
             <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
             <span className="hidden xs:inline sm:inline">Shop</span>
@@ -336,7 +403,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
 
           <button
             onClick={onOpenQuests}
-            className="p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-white/85 dark:bg-stone-900/85 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-white shadow-xs transition-all active:scale-95 cursor-pointer"
+            className="p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-white shadow-xs transition-all active:scale-95 cursor-pointer"
             title="Quests & Goals"
           >
             <Compass className="w-4 h-4 text-emerald-600" />
@@ -344,8 +411,8 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
 
           <button
             onClick={onOpenJournal}
-            className="p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-white/85 dark:bg-stone-900/85 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-white shadow-xs transition-all active:scale-95 cursor-pointer"
-            title="Botanical Journal"
+            className="p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-white/90 dark:bg-stone-900/90 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-200 hover:bg-white shadow-xs transition-all active:scale-95 cursor-pointer"
+            title="Botanical Field Journal"
           >
             <BookOpen className="w-4 h-4 text-forest-700" />
           </button>
@@ -359,36 +426,53 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-3.5 py-2 rounded-2xl bg-forest-900/95 text-white shadow-xl border border-emerald-500/40 backdrop-blur-md flex items-center gap-2 text-xs font-extrabold"
+            className="fixed top-14 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-forest-900/95 text-white shadow-xl border border-emerald-500/40 backdrop-blur-md flex items-center gap-2 text-xs font-extrabold"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <Sparkles className="w-4 h-4 text-amber-300 animate-spin" />
             <span>{harvestNotification.text}</span>
             <span className="text-amber-400">+{harvestNotification.coins} Coins</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* CENTER GARDEN CANVAS */}
+      {/* EXPANSIVE LUSH GARDEN CANVAS */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center p-1 sm:p-3 w-full min-h-0">
-        <div className="relative p-2 sm:p-4 rounded-3xl bg-emerald-800/20 dark:bg-emerald-950/40 backdrop-blur-md border border-emerald-600/30 shadow-2xl w-full max-w-[min(100%,560px,calc(100dvh-17rem))] flex flex-col items-center">
+        
+        {/* Botanical Meadow Sanctuary Container */}
+        <div className="relative p-3 sm:p-6 rounded-[2.5rem] bg-emerald-900/30 dark:bg-emerald-950/60 backdrop-blur-xl border-2 border-emerald-500/40 shadow-[0_20px_50px_rgba(6,78,59,0.25)] w-full max-w-[min(100%,620px,calc(100dvh-17rem))] flex flex-col items-center">
           
-          {/* Plot Info / Expansion */}
-          <div className="w-full flex items-center justify-between mb-1 sm:mb-2 px-1">
-            <span className="text-[11px] font-extrabold text-forest-950 dark:text-emerald-200">
-              Virtual Sanctuary
-            </span>
-            <button
-              onClick={() => setShowExpansionModal(true)}
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-forest-700/20 hover:bg-forest-700/30 text-forest-900 dark:text-emerald-200 text-[10px] font-bold transition-all active:scale-95 cursor-pointer"
-            >
-              <Maximize2 className="w-2.5 h-2.5" />
-              <span>{gridDimension}x{gridDimension} Plot</span>
-            </button>
+          {/* Top Plot Header Bar */}
+          <div className="w-full flex items-center justify-between mb-2 px-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="text-xs sm:text-sm font-extrabold text-forest-950 dark:text-emerald-100">
+                Botanical Sanctuary Plot
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {selectedInventoryItem && (
+                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-900 dark:text-emerald-200 text-[10px] font-extrabold animate-pulse">
+                  <span>Placing: {selectedInventoryItem.name}</span>
+                  <button onClick={() => setSelectedInventoryItem(null)} className="hover:text-rose-600 ml-1">
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+
+              <button
+                onClick={() => setShowExpansionModal(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-forest-800 hover:bg-forest-900 text-white text-[10px] font-extrabold transition-all active:scale-95 shadow-xs cursor-pointer"
+              >
+                <Maximize2 className="w-3 h-3 text-amber-300" />
+                <span>{gridDimension}x{gridDimension}</span>
+              </button>
+            </div>
           </div>
 
-          {/* Responsive Garden Canvas Grid */}
+          {/* Living Meadow Grid Canvas */}
           <div
-            className="grid gap-0.5 sm:gap-1.5 p-1 sm:p-2.5 rounded-2xl bg-forest-950/40 border border-forest-800/40 shadow-inner w-full aspect-square"
+            className="grid gap-1 sm:gap-1.5 p-2 sm:p-3 rounded-3xl bg-gradient-to-b from-emerald-950/70 to-emerald-950/90 border-2 border-emerald-700/50 shadow-inner w-full aspect-square relative overflow-hidden"
             style={{
               gridTemplateColumns: `repeat(${gridDimension}, minmax(0, 1fr))`
             }}
@@ -399,25 +483,45 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
               const placed = getPlacedItemAt(x, y);
               const plantState = placed ? plantStates[placed.instanceId] : null;
               const isSelected = selectedCell?.x === x && selectedCell?.y === y;
+              const isHovered = hoveredCell?.x === x && hoveredCell?.y === y;
 
               return (
                 <div
                   key={`${x}-${y}`}
                   onClick={() => handleCellClick(x, y)}
-                  className={`relative aspect-square rounded-md sm:rounded-xl cursor-pointer transition-all duration-150 flex items-center justify-center group select-none touch-manipulation ${
+                  onMouseEnter={() => setHoveredCell({ x, y })}
+                  onMouseLeave={() => setHoveredCell(null)}
+                  className={`relative aspect-square rounded-xl cursor-pointer transition-all duration-150 flex items-center justify-center group select-none touch-manipulation ${
                     placed
-                      ? 'bg-emerald-700/40 hover:bg-emerald-600/50 shadow-xs active:scale-95'
-                      : 'bg-emerald-900/30 hover:bg-emerald-800/50 border border-emerald-700/20 active:scale-95'
-                  } ${isSelected ? 'ring-2 sm:ring-3 ring-amber-400 scale-105 z-20' : ''}`}
+                      ? 'bg-emerald-700/60 hover:bg-emerald-600/70 shadow-xs active:scale-95 border border-emerald-500/30'
+                      : 'bg-emerald-900/45 hover:bg-emerald-800/60 border border-emerald-700/30 active:scale-95'
+                  } ${isSelected ? 'ring-3 ring-amber-400 scale-105 z-20 shadow-lg' : ''} ${
+                    isHovered && selectedInventoryItem && !placed
+                      ? 'ring-2 ring-emerald-400 bg-emerald-600/40 scale-102'
+                      : ''
+                  } ${
+                    isHovered && selectedInventoryItem && placed
+                      ? 'ring-2 ring-rose-400 bg-rose-500/20'
+                      : ''
+                  }`}
                 >
-                  {!placed && (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-40">
-                      <Plus className="w-2 sm:w-2.5 h-2 sm:h-2.5 text-emerald-300" />
+                  {/* Subtle Grass Lawn Blade Highlights on empty tiles */}
+                  {!placed && !selectedInventoryItem && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-25 group-hover:opacity-60 transition-opacity">
+                      <Plus className="w-3 h-3 text-emerald-300" />
                     </div>
                   )}
 
+                  {/* Ghost Placement Preview */}
+                  {isHovered && selectedInventoryItem && !placed && (
+                    <div className="relative w-full h-full p-1 opacity-50 pointer-events-none scale-95">
+                      <GardenItemIllustration itemId={selectedInventoryItem.id} />
+                    </div>
+                  )}
+
+                  {/* Placed Plant / Object Render */}
                   {placed && (
-                    <div className="relative w-full h-full p-0.5">
+                    <div className="relative w-full h-full p-0.5 sm:p-1">
                       <GardenItemIllustration
                         itemId={placed.itemId}
                         rotation={placed.rotation}
@@ -427,22 +531,22 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
 
                       {/* Growth Progress Badge */}
                       {plantState && plantState.stage !== 'bloom' && (
-                        <div className="absolute bottom-0 right-0 px-0.5 py-0.1 rounded bg-stone-950/80 text-amber-300 font-extrabold text-[6px] sm:text-[8px] backdrop-blur-xs">
+                        <div className="absolute bottom-0 right-0 px-1 py-0.2 rounded-md bg-stone-950/85 text-amber-300 font-extrabold text-[7px] sm:text-[8px] backdrop-blur-xs shadow-xs">
                           {plantState.growthProgress}%
                         </div>
                       )}
 
-                      {/* Water Droplet */}
+                      {/* Soil Thirsty Droplet */}
                       {plantState && plantState.moisture === 'dry' && (
-                        <div className="absolute top-0 right-0 p-0.5 rounded-full bg-amber-500 text-white animate-bounce">
-                          <Droplets className="w-2 h-2 fill-white" />
+                        <div className="absolute top-0 right-0 p-0.5 rounded-full bg-amber-500 text-white animate-bounce shadow-xs" title="Needs watering!">
+                          <Droplets className="w-2.5 h-2.5 fill-white" />
                         </div>
                       )}
 
-                      {/* Harvest Sparkle */}
+                      {/* Harvest Bloom Sparkle */}
                       {plantState && (plantState.stage === 'bloom' || plantState.isHarvestable) && (
-                        <div className="absolute top-0 left-0 p-0.5 rounded-full bg-emerald-500 text-white animate-pulse">
-                          <Sparkles className="w-2 h-2 fill-amber-300 text-amber-300" />
+                        <div className="absolute top-0 left-0 p-0.5 rounded-full bg-emerald-500 text-white animate-pulse shadow-xs" title="Mature Bloom! Ready to harvest">
+                          <Sparkles className="w-2.5 h-2.5 fill-amber-300 text-amber-300" />
                         </div>
                       )}
                     </div>
@@ -452,17 +556,17 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
             })}
           </div>
 
-          {/* Plant Inspector Popup */}
+          {/* Plant Inspector Contextual HUD Popup */}
           <AnimatePresence>
             {selectedPlaced && selectedPlantState && selectedShopItem && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
-                className="mt-2 w-full p-2 sm:p-3 rounded-2xl bg-white/95 dark:bg-stone-900/95 border border-emerald-500/40 shadow-lg backdrop-blur-md flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 z-30"
+                className="mt-2.5 w-full p-2.5 sm:p-3 rounded-2xl bg-white/95 dark:bg-stone-900/95 border border-emerald-500/40 shadow-xl backdrop-blur-md flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 z-30"
               >
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-forest-100 p-0.5 sm:p-1 flex items-center justify-center shrink-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-forest-100 dark:bg-emerald-950/60 p-1 flex items-center justify-center shrink-0 border border-forest-200">
                     <GardenItemIllustration
                       itemId={selectedPlaced.itemId}
                       rotation={selectedPlaced.rotation}
@@ -470,11 +574,13 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                     />
                   </div>
                   <div className="min-w-0 truncate">
-                    <div className="text-xs font-extrabold text-forest-950 dark:text-emerald-100 truncate">
+                    <div className="text-xs sm:text-sm font-extrabold text-forest-950 dark:text-emerald-100 truncate">
                       {selectedShopItem.name}
                     </div>
-                    <div className="text-[10px] text-stone-500">
-                      <span className="capitalize">{selectedPlantState.stage}</span> • Soil: {selectedPlantState.moisture}
+                    <div className="text-[10px] text-stone-500 flex items-center gap-1.5">
+                      <span className="capitalize font-bold text-emerald-700 dark:text-emerald-400">{selectedPlantState.stage}</span>
+                      <span>•</span>
+                      <span>Soil: {selectedPlantState.moisture}</span>
                     </div>
                   </div>
                 </div>
@@ -482,30 +588,31 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                 <div className="flex items-center gap-1 shrink-0 ml-auto">
                   <button
                     onClick={() => handleCellClick(selectedCell!.x, selectedCell!.y)}
-                    className="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-[11px] sm:text-xs font-bold shadow-xs active:scale-95 cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold shadow-xs active:scale-95 cursor-pointer"
+                    title="Water plant to accelerate growth"
                   >
-                    <Droplets className="w-3 h-3 fill-white" />
+                    <Droplets className="w-3.5 h-3.5 fill-white" />
                     <span>Water</span>
                   </button>
                   <button
                     onClick={() => rotateGardenItem(selectedPlaced.instanceId)}
                     className="p-1.5 rounded-xl bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 text-xs font-bold active:scale-95 cursor-pointer"
-                    title="Rotate"
+                    title="Rotate 90 degrees"
                   >
-                    <RotateCw className="w-3 h-3" />
+                    <RotateCw className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => removeGardenItem(selectedPlaced.instanceId)}
                     className="p-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 hover:bg-rose-100 text-xs font-bold active:scale-95 cursor-pointer"
-                    title="Store"
+                    title="Store back in inventory"
                   >
-                    <Trash2 className="w-3 h-3" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => setSelectedCell(null)}
                     className="p-1 text-stone-400 hover:text-stone-600"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               </motion.div>
@@ -514,20 +621,22 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         </div>
       </main>
 
-      {/* BOTTOM RESPONSIVE TOOLBAR */}
-      <footer className="relative z-10 p-2 sm:p-4 max-w-3xl mx-auto w-full pb-safe">
-        <div className="p-2 sm:p-2.5 rounded-2xl bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border border-stone-200/80 dark:border-stone-700 shadow-xl space-y-1.5">
+      {/* BOTTOM RESPONSIVE DOCK TRAY */}
+      <footer className="relative z-10 p-2 sm:p-4 max-w-4xl mx-auto w-full pb-safe">
+        <div className="p-2 sm:p-3 rounded-3xl bg-white/90 dark:bg-stone-900/90 backdrop-blur-xl border border-stone-200/80 dark:border-stone-700 shadow-2xl space-y-2">
           
-          {/* Tool Modes */}
+          {/* Action Tool Modes & Category Filters */}
           <div className="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar pb-0.5">
-            <div className="flex items-center gap-1">
+            {/* Tool Modes */}
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 onClick={() => { setSelectedTool('select'); setSelectedInventoryItem(null); }}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                   selectedTool === 'select' && !selectedInventoryItem
-                    ? 'bg-forest-800 text-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                    ? 'bg-forest-800 text-white shadow-xs scale-102'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200'
                 }`}
+                title="Select and move placed objects"
               >
                 <span>✋ Move</span>
               </button>
@@ -535,49 +644,76 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                 onClick={() => setSelectedTool('water')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                   selectedTool === 'water'
-                    ? 'bg-sky-500 text-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                    ? 'bg-sky-500 text-white shadow-xs scale-102'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200'
                 }`}
+                title="Water plants to boost growth"
               >
-                <Droplets className="w-3 h-3" />
+                <Droplets className="w-3.5 h-3.5" />
                 <span>Water</span>
               </button>
               <button
                 onClick={() => setSelectedTool('harvest')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                   selectedTool === 'harvest'
-                    ? 'bg-amber-500 text-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                    ? 'bg-amber-500 text-white shadow-xs scale-102'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200'
                 }`}
+                title="Harvest mature blooms for coins & XP"
               >
-                <Sparkles className="w-3 h-3" />
+                <Sparkles className="w-3.5 h-3.5" />
                 <span>Harvest</span>
               </button>
               <button
                 onClick={() => setSelectedTool('remove')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                   selectedTool === 'remove'
-                    ? 'bg-rose-600 text-white shadow-xs'
-                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300'
+                    ? 'bg-rose-600 text-white shadow-xs scale-102'
+                    : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200'
                 }`}
+                title="Store placed items back in bag"
               >
-                <Trash2 className="w-3 h-3" />
+                <Trash2 className="w-3.5 h-3.5" />
                 <span>Store</span>
               </button>
             </div>
 
-            <button
-              onClick={onOpenShop}
-              className="text-xs font-extrabold text-forest-700 dark:text-emerald-300 hover:underline flex items-center gap-1 shrink-0 whitespace-nowrap px-1.5 py-1 rounded-lg bg-forest-50 dark:bg-emerald-950/40"
-            >
-              <Plus className="w-3 h-3" />
-              <span>Seeds</span>
-            </button>
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1 border-l border-stone-200 dark:border-stone-700 pl-2 shrink-0">
+              {[
+                { id: 'all', label: 'All' },
+                { id: 'seeds', label: '🌱 Seeds' },
+                { id: 'plant', label: '🌸 Flowers' },
+                { id: 'path', label: '🧱 Paths' },
+                { id: 'decoration', label: '🏡 Decor' }
+              ].map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setDockCategory(cat.id as DockCategory)}
+                  className={`px-2 py-1 rounded-lg text-[11px] font-extrabold whitespace-nowrap transition-all ${
+                    dockCategory === cat.id
+                      ? 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-900 dark:text-emerald-200 font-black'
+                      : 'text-stone-500 hover:text-stone-800'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+
+              <button
+                onClick={onOpenShop}
+                className="text-xs font-extrabold text-forest-700 dark:text-emerald-300 hover:underline flex items-center gap-1 shrink-0 whitespace-nowrap px-2 py-1 rounded-lg bg-forest-50 dark:bg-emerald-950/40 ml-1"
+                title="Open Botanical Nursery Shop"
+              >
+                <ShoppingBag className="w-3 h-3 text-amber-500" />
+                <span>Shop</span>
+              </button>
+            </div>
           </div>
 
-          {/* Clean Inventory Belt */}
+          {/* Visual Inventory Dock Carousel */}
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-            {ownedItems.map(item => {
+            {filteredOwnedItems.map(item => {
               const isChosen = selectedInventoryItem?.id === item.id;
               return (
                 <button
@@ -587,21 +723,35 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                     setSelectedTool('select');
                     cozyAudio.playPlacementSound();
                   }}
-                  className={`flex-shrink-0 flex items-center gap-1.5 p-1 px-2 rounded-xl border transition-all active:scale-95 cursor-pointer ${
+                  className={`flex-shrink-0 flex items-center gap-1.5 p-1 px-2.5 rounded-2xl border transition-all active:scale-95 cursor-pointer ${
                     isChosen
-                      ? 'bg-forest-100 border-forest-600 ring-2 ring-forest-500/50 scale-102'
-                      : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-500 ring-2 ring-emerald-400 scale-102 shadow-sm'
+                      : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 hover:bg-stone-100'
                   }`}
                 >
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-white dark:bg-stone-900 p-0.5 flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-white dark:bg-stone-900 p-1 flex items-center justify-center shrink-0 border border-stone-100 dark:border-stone-800 shadow-2xs">
                     <GardenItemIllustration itemId={item.id} />
                   </div>
-                  <span className="text-[10px] font-extrabold text-forest-950 dark:text-emerald-100 truncate max-w-[70px] sm:max-w-[80px]">
-                    {item.name}
-                  </span>
+                  <div className="text-left min-w-0">
+                    <span className="text-[11px] font-extrabold text-forest-950 dark:text-emerald-100 truncate block max-w-[85px] sm:max-w-[105px]">
+                      {item.name}
+                    </span>
+                    <span className="text-[9px] text-stone-400 capitalize block -mt-0.5">
+                      {item.category}
+                    </span>
+                  </div>
                 </button>
               );
             })}
+
+            {filteredOwnedItems.length === 0 && (
+              <div className="py-2 px-4 text-xs text-stone-400 flex items-center gap-2">
+                <span>No items in this category.</span>
+                <button onClick={onOpenShop} className="text-emerald-600 font-bold underline">
+                  Acquire in Shop
+                </button>
+              </div>
+            )}
           </div>
 
         </div>
@@ -635,7 +785,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                   return (
                     <div
                       key={tier.size}
-                      className={`p-2 rounded-xl border flex items-center justify-between ${
+                      className={`p-2.5 rounded-xl border flex items-center justify-between ${
                         isCurrent
                           ? 'bg-forest-50 dark:bg-emerald-950/40 border-forest-500'
                           : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700'
@@ -679,3 +829,4 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
     </div>
   );
 };
+

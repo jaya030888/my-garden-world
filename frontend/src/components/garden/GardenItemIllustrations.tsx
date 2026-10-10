@@ -340,12 +340,77 @@ export const GardenItemIllustration: React.FC<IllustrationProps> = ({
       );
 
     case 'dec-pot-terracotta':
+    case 'pot-terracotta':
       return (
         <svg viewBox="0 0 64 64" fill="none" className={className} style={transformStyle}>
           <ellipse cx="32" cy="54" rx="10" ry="3" fill="#2d2822" opacity="0.3" />
           <path d="M22 28L25 50H39L42 28Z" fill="#c2410c" stroke="#7c2d12" strokeWidth="2" />
           <rect x="20" y="24" width="24" height="6" rx="2" fill="#ea580c" stroke="#7c2d12" strokeWidth="1.5" />
           <ellipse cx="32" cy="24" rx="10" ry="2.5" fill="#451a03" />
+        </svg>
+      );
+
+    case 'pot-ceramic-teal':
+      return (
+        <svg viewBox="0 0 64 64" fill="none" className={className} style={transformStyle}>
+          <ellipse cx="32" cy="54" rx="10" ry="3" fill="#2d2822" opacity="0.3" />
+          <path d="M22 28L25 50H39L42 28Z" fill="#0d9488" stroke="#115e59" strokeWidth="2" />
+          <rect x="20" y="24" width="24" height="6" rx="2" fill="#14b8a6" stroke="#0f766e" strokeWidth="1.5" />
+          <ellipse cx="32" cy="24" rx="10" ry="2.5" fill="#134e4a" />
+          {/* Artisan crackle glaze accent */}
+          <path d="M26 34L30 38L28 44" stroke="#5eead4" strokeWidth="1" strokeLinecap="round" opacity="0.8" />
+        </svg>
+      );
+
+    case 'dec-birdbath':
+      return (
+        <svg viewBox="0 0 64 64" fill="none" className={className} style={transformStyle}>
+          <ellipse cx="32" cy="54" rx="12" ry="4" fill="#2d2822" opacity="0.3" />
+          {/* Stone base & pedestal */}
+          <rect x="28" y="32" width="8" height="22" rx="2" fill="#94a3b8" stroke="#475569" strokeWidth="1.5" />
+          {/* Basin */}
+          <ellipse cx="32" cy="32" rx="18" ry="6" fill="#cbd5e1" stroke="#64748b" strokeWidth="2" />
+          <ellipse cx="32" cy="31" rx="15" ry="4" fill="#38bdf8" />
+          {/* Little bird resting on edge */}
+          <circle cx="44" cy="26" r="3.5" fill="#3b82f6" />
+          <path d="M47 26L50 25.5L47 27Z" fill="#f59e0b" />
+          <circle cx="42" cy="28" r="4.5" fill="#60a5fa" />
+        </svg>
+      );
+
+    case 'vp-pothos':
+      return (
+        <svg viewBox="0 0 64 64" fill="none" className={className} style={transformStyle}>
+          <ellipse cx="32" cy="54" rx="8" ry="3" fill="#2d2822" opacity="0.3" />
+          <path d="M32 54V32" stroke="#15803d" strokeWidth="2.5" strokeLinecap="round" />
+          {/* Trailing golden-variegated heart leaves */}
+          {[
+            { cx: 24, cy: 30, r: 8, color: '#22c55e', v: '#facc15' },
+            { cx: 40, cy: 26, r: 9, color: '#16a34a', v: '#fde047' },
+            { cx: 32, cy: 18, r: 7.5, color: '#4ade80', v: '#fef08a' },
+            { cx: 18, cy: 40, r: 6.5, color: '#15803d', v: '#facc15' },
+            { cx: 44, cy: 38, r: 7, color: '#22c55e', v: '#fde047' }
+          ].map((leaf, i) => (
+            <g key={i}>
+              <circle cx={leaf.cx} cy={leaf.cy} r={leaf.r} fill={leaf.color} />
+              <path d={`M${leaf.cx} ${leaf.cy - leaf.r + 2}C${leaf.cx + 2} ${leaf.cy} ${leaf.cx - 2} ${leaf.cy + leaf.r - 2} ${leaf.cx} ${leaf.cy + leaf.r - 2}`} stroke={leaf.v} strokeWidth="1.8" fill="none" strokeLinecap="round" />
+            </g>
+          ))}
+        </svg>
+      );
+
+    case 'tile-wood-deck':
+      return (
+        <svg viewBox="0 0 64 64" fill="none" className={className} style={transformStyle}>
+          <rect x="4" y="4" width="56" height="56" rx="8" fill="#b45309" stroke="#78350f" strokeWidth="2" />
+          {/* Wood deck planks */}
+          <line x1="4" y1="18" x2="60" y2="18" stroke="#78350f" strokeWidth="1.5" />
+          <line x1="4" y1="32" x2="60" y2="32" stroke="#78350f" strokeWidth="1.5" />
+          <line x1="4" y1="46" x2="60" y2="46" stroke="#78350f" strokeWidth="1.5" />
+          {/* Wood grain knots */}
+          <ellipse cx="20" cy="11" rx="3" ry="1.5" fill="#92400e" opacity="0.6" />
+          <ellipse cx="45" cy="25" rx="3" ry="1.5" fill="#92400e" opacity="0.6" />
+          <ellipse cx="15" cy="39" rx="3" ry="1.5" fill="#92400e" opacity="0.6" />
         </svg>
       );
 

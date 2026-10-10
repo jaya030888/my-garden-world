@@ -28,6 +28,7 @@ import { GardenShopItem, PlacedGardenItem } from '../../types';
 import { GardenItemIllustration } from './GardenItemIllustrations';
 import { IsometricGardenCanvas } from './IsometricGardenCanvas';
 import { FlowerSelectionModal } from '../modals/FlowerSelectionModal';
+import { GardenGuideManualModal } from '../modals/GardenGuideManualModal';
 import { GardenSpiritCompanion } from './GardenSpiritCompanion';
 import { cozyAudio } from '../../services/audioService';
 import {
@@ -92,6 +93,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(cozyAudio.getIsMuted());
   const [showExpansionModal, setShowExpansionModal] = useState<boolean>(false);
   const [showFlowerModal, setShowFlowerModal] = useState<boolean>(false);
+  const [showManualModal, setShowManualModal] = useState<boolean>(false);
   const [targetPlantTile, setTargetPlantTile] = useState<{ x: number; y: number } | null>(null);
   const [harvestNotification, setHarvestNotification] = useState<{ text: string; coins: number } | null>(null);
 
@@ -408,7 +410,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
           </button>
         </div>
 
-        {/* Right: 4 Clean Action Buttons */}
+        {/* Right: Clean Action Buttons & Manual */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {undoStack.length > 0 && (
             <button
@@ -420,6 +422,15 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
               <span className="hidden sm:inline">Undo</span>
             </button>
           )}
+
+          <button
+            onClick={() => setShowManualModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-black shadow-xs hover:shadow-md transition-all active:scale-95 cursor-pointer ring-1 ring-amber-300 animate-bounce"
+            title="How to Play & Garden Manual"
+          >
+            <HelpCircle className="w-4 h-4 text-white" />
+            <span className="hidden xs:inline sm:inline">How to Play</span>
+          </button>
 
           <button
             onClick={onOpenScanner}
@@ -490,10 +501,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
             selectedTool={selectedTool}
             weather={currentWeather}
             onTileClick={(x, y) => handleCellClick(x, y)}
-            onItemClick={(item) => {
-              setSelectedCell({ x: item.gridX, y: item.gridY });
-              cozyAudio.playPlacementSound();
-            }}
+            onItemClick={(item) => handleCellClick(item.gridX, item.gridY)}
           />
 
           {/* Active Placement Indicator Badge */}
@@ -609,7 +617,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                 className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs hover:scale-102 active:scale-95 transition-all cursor-pointer ring-1 ring-pink-300"
                 title="Choose beautiful exotic flowers to sow in your garden"
               >
-                <span>🌸 Plant Flower</span>
+                <span>🌸 Plant</span>
               </button>
 
               <button
@@ -623,6 +631,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
               >
                 <span>✋ Move</span>
               </button>
+
               <button
                 onClick={() => setSelectedTool('water')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
@@ -630,11 +639,21 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                     ? 'bg-sky-500 text-white shadow-xs scale-102'
                     : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200'
                 }`}
-                title="Water plants to boost growth"
+                title="Water individual plants to boost growth"
               >
                 <Droplets className="w-3.5 h-3.5" />
                 <span>Water</span>
               </button>
+
+              <button
+                onClick={() => handleApplyMiracleWater()}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap bg-teal-600 hover:bg-teal-700 text-white shadow-xs active:scale-95 transition-all cursor-pointer"
+                title="Water all plants in meadow at once"
+              >
+                <Droplets className="w-3.5 h-3.5 fill-white" />
+                <span>Water All</span>
+              </button>
+
               <button
                 onClick={() => setSelectedTool('harvest')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
@@ -647,6 +666,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Harvest</span>
               </button>
+
               <button
                 onClick={() => setSelectedTool('remove')}
                 className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
@@ -658,6 +678,15 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>Store</span>
+              </button>
+
+              <button
+                onClick={() => setShowManualModal(true)}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap bg-amber-100 dark:bg-amber-950/60 text-amber-900 dark:text-amber-200 hover:bg-amber-200 shadow-2xs active:scale-95 transition-all cursor-pointer border border-amber-300 dark:border-amber-800"
+                title="Open Game Manual & Guide"
+              >
+                <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
+                <span>Guide</span>
               </button>
             </div>
 
@@ -827,6 +856,14 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         onApplyMiracleWater={handleApplyMiracleWater}
         thirstyCount={Object.values(plantStates).filter(p => p.moisture === 'dry').length}
         bloomReadyCount={Object.values(plantStates).filter(p => p.stage === 'bloom' || p.isHarvestable).length}
+      />
+
+      {/* How to Play & Garden Manual Modal */}
+      <GardenGuideManualModal
+        isOpen={showManualModal}
+        onClose={() => setShowManualModal(false)}
+        onOpenScanner={onOpenScanner}
+        onOpenShop={onOpenShop}
       />
 
     </div>

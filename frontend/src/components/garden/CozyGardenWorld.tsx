@@ -27,10 +27,13 @@ import { useGarden } from '../../context/GardenContext';
 import { GardenShopItem, PlacedGardenItem } from '../../types';
 import { GardenItemIllustration } from './GardenItemIllustrations';
 import { IsometricGardenCanvas } from './IsometricGardenCanvas';
+import { FlowerSelectionModal } from '../modals/FlowerSelectionModal';
+import { GardenSpiritCompanion } from './GardenSpiritCompanion';
 import { cozyAudio } from '../../services/audioService';
 import {
   SimulatedPlantState,
   SPECIES_GROWTH_RULES,
+  SpeciesGrowthRule,
   GARDEN_EXPANSION_TIERS,
   advancePlantGrowth,
   WeatherAtmosphere
@@ -88,6 +91,8 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   const [undoStack, setUndoStack] = useState<UndoAction[]>([]);
   const [isAudioMuted, setIsAudioMuted] = useState<boolean>(cozyAudio.getIsMuted());
   const [showExpansionModal, setShowExpansionModal] = useState<boolean>(false);
+  const [showFlowerModal, setShowFlowerModal] = useState<boolean>(false);
+  const [targetPlantTile, setTargetPlantTile] = useState<{ x: number; y: number } | null>(null);
   const [harvestNotification, setHarvestNotification] = useState<{ text: string; coins: number } | null>(null);
 
   // Sync gardenItems into simulated plant states
@@ -105,6 +110,10 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
           if (item.itemId.includes('rose')) speciesId = 'rose';
           if (item.itemId.includes('daisy')) speciesId = 'daisy';
           if (item.itemId.includes('lavender')) speciesId = 'lavender';
+          if (item.itemId.includes('orchid')) speciesId = 'orchid';
+          if (item.itemId.includes('lotus')) speciesId = 'lotus';
+          if (item.itemId.includes('hydrangea')) speciesId = 'hydrangea';
+          if (item.itemId.includes('camellia')) speciesId = 'camellia';
           if (item.itemId.includes('monstera')) speciesId = 'monstera';
           if (item.itemId.includes('pothos')) speciesId = 'pothos';
           if (item.itemId.includes('hibiscus')) speciesId = 'hibiscus';
@@ -270,9 +279,38 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
         await moveGardenItem(currentSelectedPlaced.instanceId, x, y);
         setSelectedCell({ x, y });
       } else {
-        setSelectedCell(null);
+        // Empty tile tapped! Open the Flower Selection Modal to choose a beautiful flower!
+        setTargetPlantTile({ x, y });
+        setShowFlowerModal(true);
       }
     }
+  };
+
+  const handleSowFlower = async (species: SpeciesGrowthRule) => {
+    const coords = targetPlantTile || { x: 3, y: 3 };
+    cozyAudio.playPlacementSound();
+    fireConfetti();
+    await placeGardenItem(species.seedItemId, coords.x, coords.y);
+    setTargetPlantTile(null);
+  };
+
+  const handleApplyMiracleWater = () => {
+    cozyAudio.playWateringSound();
+    setPlantStates(prev => {
+      const updated: Record<string, SimulatedPlantState> = {};
+      Object.entries(prev).forEach(([id, plant]) => {
+        const nextProgress = Math.min(100, plant.growthProgress + 35);
+        updated[id] = {
+          ...plant,
+          growthProgress: nextProgress,
+          stage: nextProgress >= 100 ? 'bloom' : (nextProgress >= 60 ? 'growing' : (nextProgress >= 25 ? 'sprout' : 'seed')),
+          isHarvestable: nextProgress >= 100,
+          moisture: 'moist',
+          lastWateredAt: Date.now()
+        };
+      });
+      return updated;
+    });
   };
 
   const handleUndo = async () => {
@@ -563,6 +601,18 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
             {/* Tool Modes */}
             <div className="flex items-center gap-1 shrink-0">
               <button
+                onClick={() => {
+                  setTargetPlantTile(null);
+                  setShowFlowerModal(true);
+                  cozyAudio.playPlacementSound();
+                }}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black whitespace-nowrap bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs hover:scale-102 active:scale-95 transition-all cursor-pointer ring-1 ring-pink-300"
+                title="Choose beautiful exotic flowers to sow in your garden"
+              >
+                <span>🌸 Plant Flower</span>
+              </button>
+
+              <button
                 onClick={() => { setSelectedTool('select'); setSelectedInventoryItem(null); }}
                 className={`px-2.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                   selectedTool === 'select' && !selectedInventoryItem
@@ -758,6 +808,26 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
           </div>
         )}
       </AnimatePresence>
+
+      {/* Flower Selection & Sowing Modal */}
+      <FlowerSelectionModal
+        isOpen={showFlowerModal}
+        onClose={() => {
+          setShowFlowerModal(false);
+          setTargetPlantTile(null);
+        }}
+        onSelectFlower={handleSowFlower}
+        selectedTileCoords={targetPlantTile}
+      />
+
+      {/* Garden Spirit Companion */}
+      <GardenSpiritCompanion
+        onOpenTask={onOpenExercise || onOpenQuests}
+        onOpenScanner={onOpenScanner}
+        onApplyMiracleWater={handleApplyMiracleWater}
+        thirstyCount={Object.values(plantStates).filter(p => p.moisture === 'dry').length}
+        bloomReadyCount={Object.values(plantStates).filter(p => p.stage === 'bloom' || p.isHarvestable).length}
+      />
 
     </div>
   );

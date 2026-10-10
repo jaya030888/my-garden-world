@@ -411,13 +411,6 @@ export const IsometricGardenCanvas: React.FC<IsometricGardenCanvasProps> = ({
     }
   };
 
-  // Wheel Zoom
-  const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    setZoom(prev => Math.min(1.8, Math.max(0.65, prev + delta)));
-  };
-
   return (
     <div className="relative w-full h-full select-none overflow-hidden touch-none flex items-center justify-center">
       <canvas
@@ -429,35 +422,35 @@ export const IsometricGardenCanvas: React.FC<IsometricGardenCanvasProps> = ({
           setIsDragging(false);
           setHoveredTile(null);
         }}
-        onWheel={handleWheel}
         className="w-full h-full cursor-grab active:cursor-grabbing block"
       />
 
-      {/* Floating Canvas Controls (Reset View & Zoom) */}
+      {/* Floating Canvas Controls (Reset View & Zoom by Clicking Only) */}
       <div className="absolute top-3 right-3 z-20 flex flex-col gap-1.5 p-1.5 rounded-2xl bg-white/90 dark:bg-stone-900/90 backdrop-blur-md border border-stone-200/80 dark:border-stone-800 shadow-md">
         <button
           onClick={() => {
             setCameraOffset({ x: 0, y: 0 });
             setZoom(1.0);
           }}
-          title="Reset Garden View"
-          className="p-1.5 text-stone-600 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-bold transition-all cursor-pointer"
+          title="Recenter Meadow"
+          className="p-1.5 text-stone-700 dark:text-stone-300 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-black transition-all cursor-pointer flex items-center gap-1"
         >
-          🎯 Recenter
+          <span>🎯</span>
+          <span className="hidden sm:inline">Reset</span>
         </button>
         <button
-          onClick={() => setZoom(z => Math.min(1.8, z + 0.15))}
+          onClick={() => setZoom(z => Math.min(1.8, +(z + 0.15).toFixed(2)))}
           title="Zoom In"
-          className="p-1.5 text-stone-600 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-bold transition-all cursor-pointer"
+          className="p-1.5 text-stone-700 dark:text-stone-300 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-black transition-all cursor-pointer flex items-center justify-center"
         >
-          🔍+
+          ➕
         </button>
         <button
-          onClick={() => setZoom(z => Math.max(0.65, z - 0.15))}
+          onClick={() => setZoom(z => Math.max(0.65, +(z - 0.15).toFixed(2)))}
           title="Zoom Out"
-          className="p-1.5 text-stone-600 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-bold transition-all cursor-pointer"
+          className="p-1.5 text-stone-700 dark:text-stone-300 hover:text-emerald-600 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 text-xs font-black transition-all cursor-pointer flex items-center justify-center"
         >
-          🔍-
+          ➖
         </button>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { calculateXpForNextLevel } from '../../services/economyService';
 
 export const Navbar: React.FC = () => {
-  const { profile, startOutsideMode, openScanner } = useGarden();
+  const { profile, openScanner } = useGarden();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
 
   const currentLevel = user?.level || profile?.level || 1;
@@ -73,32 +73,19 @@ export const Navbar: React.FC = () => {
         </div>
 
         {/* Right Actions & Stats */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          
-          {/* Daily Nature Photo Task Tracker */}
-          <button
-            onClick={startOutsideMode}
-            className="flex items-center gap-1 px-2.5 py-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-950 dark:text-emerald-200 border border-emerald-500/30 rounded-xl text-xs font-extrabold transition-all hover:scale-102 shadow-xs cursor-pointer"
-            title="Daily Nature Task: Photograph 3 leaves or birds outside (+50 Coins)"
-          >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <Leaf className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span className="hidden sm:inline">Daily Task (+50 🪙)</span>
-            <span className="sm:hidden text-[11px]">Task</span>
-          </button>
-
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Flora Coins Pill */}
-          <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 px-2 py-1 rounded-xl">
+          <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 px-2.5 py-1 rounded-xl shadow-2xs">
             <Coins className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-            <span className="text-xs font-extrabold text-amber-950 dark:text-amber-300">{currentCoins}</span>
+            <span className="text-xs font-black text-amber-950 dark:text-amber-300">{currentCoins}</span>
           </div>
 
           {/* Level Badge */}
           <div
-            className="flex items-center gap-1 bg-forest-50 dark:bg-stone-800 border border-forest-200/80 dark:border-stone-700 px-2 py-1 rounded-xl"
+            className="flex items-center gap-1.5 bg-forest-50 dark:bg-stone-800 border border-forest-200/80 dark:border-stone-700 px-2.5 py-1 rounded-xl shadow-2xs"
             title={`Level ${currentLevel} • ${currentXp}/${xpNeeded} XP`}
           >
-            <div className="w-4 h-4 rounded-md bg-forest-700 text-white flex items-center justify-center text-[9px] font-extrabold">
+            <div className="w-4 h-4 rounded-md bg-forest-700 text-white flex items-center justify-center text-[9px] font-black">
               {currentLevel}
             </div>
             <div className="w-6 sm:w-8 h-1.5 bg-forest-200 dark:bg-stone-700 rounded-full overflow-hidden hidden xs:block">

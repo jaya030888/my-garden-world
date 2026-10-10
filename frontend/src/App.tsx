@@ -4,7 +4,6 @@ import { AuthProvider } from './context/AuthContext';
 import { GardenProvider } from './context/GardenContext';
 import { Navbar } from './components/layout/Navbar';
 import { BottomNav } from './components/layout/BottomNav';
-import { OutsideModeModal } from './components/modals/OutsideModeModal';
 import { AuthModal } from './components/modals/AuthModal';
 import { AIScannerModal } from './components/garden/AIScannerModal';
 import { useGarden } from './context/GardenContext';
@@ -39,7 +38,6 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* Global Modals */}
-      <OutsideModeModal />
       <AuthModal />
       <AIScannerModal isOpen={isScannerOpen} onClose={closeScanner} />
 

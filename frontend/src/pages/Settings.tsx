@@ -8,14 +8,14 @@ import {
   Wifi,
   WifiOff,
   CheckCircle2,
-  AlertTriangle,
   RefreshCw,
   FileJson,
   User,
   LogIn,
   LogOut,
   Database,
-  Activity
+  Activity,
+  Coins
 } from 'lucide-react';
 import { db } from '../db';
 import { useGarden } from '../context/GardenContext';
@@ -190,44 +190,44 @@ export const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-24 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-10 space-y-8">
       
-      {/* Title */}
-      <div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-2">
-          <SettingsIcon className="w-3.5 h-3.5" />
-          Settings & Full-Stack System Control
+      {/* Spacious Header */}
+      <div className="space-y-1">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-100/80 border border-forest-200 text-forest-800 text-xs font-semibold">
+          <SettingsIcon className="w-3.5 h-3.5 text-forest-600" />
+          <span>System & Account Preferences</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-display text-text-primary">
-          Preferences & Data Management
+        <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-forest-950">
+          Settings & Data Management
         </h1>
-        <p className="text-text-secondary text-sm">
-          Manage your cloud botanist account, verify backend health & offline sync, and export complete JSON snapshots.
+        <p className="text-stone-600 text-xs sm:text-sm">
+          Manage your cloud botanist account, verify backend connectivity, and export complete JSON snapshots.
         </p>
       </div>
 
       {statusNotice && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 text-xs font-semibold flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          {statusNotice}
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+          <span>{statusNotice}</span>
         </div>
       )}
 
-      {/* Cloud Botanist Account Card */}
-      <div className="glass-panel p-6 rounded-3xl border border-border shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+      {/* Cloud Account Card */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-forest-100/80 text-forest-800 flex items-center justify-center shrink-0">
               <User className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-text-primary text-base">
-                {isAuthenticated ? `Botanist Account: @${user?.username}` : 'Guest Botanist (Local Mode)'}
+              <h3 className="font-bold text-forest-950 text-base">
+                {isAuthenticated ? `@${user?.username}` : 'Guest Botanist'}
               </h3>
-              <p className="text-xs text-text-secondary">
+              <p className="text-xs text-stone-500 mt-0.5">
                 {isAuthenticated
-                  ? `Email: ${user?.email} • Level ${user?.level} • ${user?.coins} Flora Coins`
-                  : 'Operating locally on browser IndexedDB. Sign in to sync across devices.'}
+                  ? `${user?.email} • Level ${user?.level} • ${user?.coins} Coins`
+                  : 'Operating locally. Sign in to sync across devices.'}
               </p>
             </div>
           </div>
@@ -236,7 +236,7 @@ export const SettingsPage: React.FC = () => {
             {isAuthenticated ? (
               <button
                 onClick={logout}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-300 text-xs font-semibold transition-colors"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 text-xs font-semibold transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Log Out</span>
@@ -244,9 +244,9 @@ export const SettingsPage: React.FC = () => {
             ) : (
               <button
                 onClick={() => openAuthModal('login')}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition-all shadow-md shadow-emerald-500/20"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-900 text-white text-xs font-bold shadow-xs transition-all"
               >
-                <LogIn className="w-4 h-4" />
+                <LogIn className="w-4 h-4 text-emerald-300" />
                 <span>Sign In / Register</span>
               </button>
             )}
@@ -255,43 +255,42 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Backend & Database Health Monitor */}
-      <div className="glass-panel p-6 rounded-3xl border border-border shadow-sm space-y-4">
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-lg text-text-primary font-display flex items-center gap-2">
-            <Database className="w-5 h-5 text-emerald-400" />
+          <h3 className="font-bold text-base text-forest-950 flex items-center gap-2">
+            <Database className="w-4 h-4 text-forest-600" />
             Backend & Database Health
           </h3>
           <button
             onClick={checkHealth}
             disabled={isCheckingHealth}
-            className="flex items-center gap-1 text-xs text-text-muted hover:text-text-primary p-1 rounded-lg hover:bg-surface-hover transition-colors"
-            title="Refresh backend status"
+            className="flex items-center gap-1 text-xs text-forest-700 hover:text-forest-900 font-semibold p-1 transition-colors"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${isCheckingHealth ? 'animate-spin text-emerald-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isCheckingHealth ? 'animate-spin' : ''}`} />
             <span>Check Health</span>
           </button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="p-3 rounded-2xl bg-surface-input border border-border">
-            <span className="text-text-muted block text-[11px]">API Status</span>
-            <span className={`font-bold flex items-center gap-1.5 mt-0.5 ${backendHealth?.status === 'healthy' ? 'text-emerald-400' : 'text-amber-400'}`}>
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 border border-forest-100/80">
+            <span className="text-stone-500 block text-[10px] uppercase font-bold">API Status</span>
+            <span className={`font-bold flex items-center gap-1.5 mt-1 ${backendHealth?.status === 'healthy' ? 'text-emerald-700' : 'text-amber-700'}`}>
               <Activity className="w-3.5 h-3.5" />
-              {backendHealth?.status === 'healthy' ? 'Healthy (Node/Express)' : 'Local / Offline'}
+              {backendHealth?.status === 'healthy' ? 'Operational' : 'Offline / Standalone'}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-surface-input border border-border">
-            <span className="text-text-muted block text-[11px]">Database (PostgreSQL)</span>
-            <span className={`font-bold flex items-center gap-1.5 mt-0.5 ${backendHealth?.database === 'connected' ? 'text-emerald-400' : 'text-text-secondary'}`}>
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 border border-forest-100/80">
+            <span className="text-stone-500 block text-[10px] uppercase font-bold">PostgreSQL Database</span>
+            <span className={`font-bold flex items-center gap-1.5 mt-1 ${backendHealth?.database === 'connected' ? 'text-emerald-700' : 'text-stone-600'}`}>
               <Database className="w-3.5 h-3.5" />
-              {backendHealth?.database === 'connected' ? 'Connected (Prisma/Neon)' : 'IndexedDB Fallback'}
+              {backendHealth?.database === 'connected' ? 'Connected (Cloud)' : 'Local IndexedDB'}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-surface-input border border-border">
-            <span className="text-text-muted block text-[11px]">Browser Network</span>
-            <span className={`font-bold flex items-center gap-1.5 mt-0.5 ${isOnline ? 'text-emerald-400' : 'text-amber-400'}`}>
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 border border-forest-100/80">
+            <span className="text-stone-500 block text-[10px] uppercase font-bold">Network Connection</span>
+            <span className={`font-bold flex items-center gap-1.5 mt-1 ${isOnline ? 'text-emerald-700' : 'text-amber-700'}`}>
               {isOnline ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
               {isOnline ? 'Online' : 'Offline'}
             </span>
@@ -299,54 +298,24 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Open AI Model Specs Card */}
-      <div className="glass-panel p-6 rounded-3xl border border-border shadow-sm space-y-4">
-        <h3 className="font-bold text-lg text-text-primary font-display flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-emerald-400" />
-          On-Device AI Model Specifications
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div className="p-3.5 rounded-2xl bg-surface-input border border-border space-y-1">
-            <span className="font-semibold text-text-primary block">Model Architecture</span>
-            <span className="text-text-secondary">Vision Transformer (ViT-Base-Patch16-224 Quantized INT8)</span>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-surface-input border border-border space-y-1">
-            <span className="font-semibold text-text-primary block">Official Source & Repository</span>
-            <span className="text-text-secondary">Hugging Face (`Xenova/vit-base-patch16-224`)</span>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-surface-input border border-border space-y-1">
-            <span className="font-semibold text-text-primary block">Open License</span>
-            <span className="text-text-secondary">Apache License 2.0 (Permissive Open Source)</span>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-surface-input border border-border space-y-1">
-            <span className="font-semibold text-text-primary block">Inference Runtime</span>
-            <span className="text-text-secondary">ONNX Runtime WebAssembly (Zero Remote Image Uploads)</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Data Management & Backup Controls */}
-      <div className="glass-panel p-6 rounded-3xl border border-border shadow-sm space-y-4">
-        <h3 className="font-bold text-lg text-text-primary font-display flex items-center gap-2">
-          <FileJson className="w-5 h-5 text-emerald-400" />
-          Data Backup, Export & Reset Controls
+      {/* Data Backup & Reset Controls */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 shadow-xs space-y-4">
+        <h3 className="font-bold text-base text-forest-950 flex items-center gap-2">
+          <FileJson className="w-4 h-4 text-forest-600" />
+          Data Backup & Snapshot Controls
         </h3>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             onClick={handleExportData}
-            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-forest-800 hover:bg-forest-900 text-white font-bold text-xs shadow-xs transition-all"
           >
-            <Download className="w-4 h-4" />
-            <span>Export Full Backup (JSON)</span>
+            <Download className="w-4 h-4 text-emerald-300" />
+            <span>Export Backup (JSON)</span>
           </button>
 
-          <label className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-surface-input hover:bg-surface-hover border border-border text-text-primary font-bold text-xs cursor-pointer transition-colors">
-            <Upload className="w-4 h-4 text-emerald-400" />
+          <label className="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-forest-50 hover:bg-forest-100 border border-forest-200/80 text-forest-900 font-bold text-xs cursor-pointer transition-colors">
+            <Upload className="w-4 h-4 text-forest-600" />
             <span>Restore Backup (JSON)</span>
             <input
               type="file"
@@ -359,7 +328,7 @@ export const SettingsPage: React.FC = () => {
           <button
             onClick={handleClearData}
             disabled={isClearing}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/20 font-bold text-xs transition-colors"
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 font-bold text-xs transition-colors"
           >
             <Trash2 className="w-4 h-4" />
             <span>{isClearing ? 'Resetting...' : 'Reset Local DB'}</span>

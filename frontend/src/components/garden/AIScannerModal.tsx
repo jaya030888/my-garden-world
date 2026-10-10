@@ -105,17 +105,17 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white dark:bg-stone-900 rounded-3xl max-w-lg w-full max-h-[88vh] overflow-y-auto p-5 sm:p-6 shadow-2xl border border-stone-200 dark:border-stone-800 space-y-4"
+        className="bg-white dark:bg-stone-900 rounded-3xl max-w-lg w-full max-h-[90dvh] overflow-y-auto p-4 sm:p-6 shadow-2xl border border-stone-200 dark:border-stone-800 space-y-3.5 sm:space-y-4"
       >
         {/* Simple Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
               <Camera className="w-4 h-4" />
             </div>
             <div>
@@ -134,13 +134,14 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
             type="file"
             ref={fileInputRef}
             accept="image/*"
+            capture="environment"
             onChange={handleFileUpload}
             className="hidden"
           />
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full py-3 rounded-2xl bg-forest-800 hover:bg-forest-900 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer"
+            className="w-full py-3 rounded-2xl bg-forest-800 hover:bg-forest-900 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98 cursor-pointer"
           >
             <Upload className="w-4 h-4 text-emerald-300" />
             <span>Upload or Snap Plant Photo</span>

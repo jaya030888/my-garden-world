@@ -52,12 +52,12 @@ export const AuthModal: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative w-full max-w-md p-6 overflow-hidden rounded-3xl bg-surface-card/95 backdrop-blur-xl border border-border shadow-2xl"
+          className="relative w-full max-w-md max-h-[92dvh] overflow-y-auto p-4 sm:p-6 rounded-3xl bg-surface-card/95 backdrop-blur-xl border border-border shadow-2xl"
         >
           {/* Top Banner */}
           <div className="flex items-center justify-between pb-4 border-b border-border">

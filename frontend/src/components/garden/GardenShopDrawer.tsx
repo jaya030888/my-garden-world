@@ -82,7 +82,7 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
         </div>
 
         {/* Category Pill Filters */}
-        <div className="px-5 py-3 border-b border-stone-100 dark:border-stone-800 flex items-center gap-1.5 overflow-x-auto">
+        <div className="px-4 sm:px-6 py-2.5 sm:py-3 border-b border-stone-100 dark:border-stone-800 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
           {[
             { id: 'all', label: 'All Items' },
             { id: 'seeds', label: '🌱 Seeds' },
@@ -94,7 +94,7 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id as ShopCategory)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all active:scale-95 cursor-pointer ${
                 activeCategory === cat.id
                   ? 'bg-forest-800 text-white shadow-xs'
                   : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200'
@@ -112,7 +112,7 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className={`px-5 py-2.5 text-xs font-bold flex items-center justify-between ${
+              className={`px-4 sm:px-6 py-2.5 text-xs font-bold flex items-center justify-between ${
                 purchaseNotice.success ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800'
               }`}
             >
@@ -123,7 +123,7 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
         </AnimatePresence>
 
         {/* Item Cards List */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-3">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-2.5 sm:space-y-3 pb-safe">
           {filteredItems.map(item => {
             const isUnlocked = item.unlocked;
             const canAfford = (profile?.floraCoins ?? 0) >= item.price;
@@ -132,7 +132,7 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
             return (
               <div
                 key={item.id}
-                className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-4 ${
+                className={`p-3 sm:p-4 rounded-2xl border transition-all flex items-center justify-between gap-2.5 sm:gap-4 ${
                   isUnlocked
                     ? 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
                     : meetsLevel
@@ -140,30 +140,30 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
                     : 'bg-stone-50 dark:bg-stone-800/40 border-stone-200 dark:border-stone-700 opacity-60'
                 }`}
               >
-                <div className="flex items-center gap-3.5">
-                  <div className="w-14 h-14 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 p-2 flex items-center justify-center">
+                <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+                  <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 p-1.5 sm:p-2 flex items-center justify-center shrink-0">
                     <GardenItemIllustration itemId={item.id} />
                   </div>
-                  <div>
-                    <div className="text-xs sm:text-sm font-extrabold text-forest-950 dark:text-emerald-100 flex items-center gap-1.5">
-                      <span>{item.name}</span>
-                      {isUnlocked && <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">Owned</span>}
+                  <div className="min-w-0">
+                    <div className="text-xs sm:text-sm font-extrabold text-forest-950 dark:text-emerald-100 flex items-center gap-1.5 truncate">
+                      <span className="truncate">{item.name}</span>
+                      {isUnlocked && <span className="px-1.5 sm:px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[9px] sm:text-[10px] font-bold shrink-0">Owned</span>}
                     </div>
-                    <p className="text-[11px] text-stone-500 line-clamp-1 max-w-[220px]">{item.description}</p>
-                    <div className="text-[10px] text-stone-400 mt-0.5">
+                    <p className="text-[10px] sm:text-[11px] text-stone-500 truncate max-w-[170px] sm:max-w-[220px]">{item.description}</p>
+                    <div className="text-[9px] sm:text-[10px] text-stone-400 mt-0.5">
                       Requires Level {item.requiredLevel} • Category: {item.category}
                     </div>
                   </div>
                 </div>
 
-                <div>
+                <div className="shrink-0">
                   {isUnlocked ? (
-                    <span className="px-3 py-1.5 rounded-xl bg-forest-100 text-forest-800 text-xs font-bold inline-flex items-center gap-1">
+                    <span className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-forest-100 text-forest-800 text-xs font-bold inline-flex items-center gap-1">
                       <Check className="w-3.5 h-3.5" />
-                      <span>In Bag</span>
+                      <span className="hidden xs:inline">In Bag</span>
                     </span>
                   ) : !meetsLevel ? (
-                    <span className="px-3 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-500 text-xs font-bold inline-flex items-center gap-1">
+                    <span className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-stone-200 dark:bg-stone-700 text-stone-500 text-xs font-bold inline-flex items-center gap-1">
                       <Lock className="w-3.5 h-3.5" />
                       <span>Lvl {item.requiredLevel}</span>
                     </span>
@@ -171,9 +171,9 @@ export const GardenShopDrawer: React.FC<GardenShopDrawerProps> = ({ isOpen, onCl
                     <button
                       onClick={() => handlePurchase(item.id)}
                       disabled={!canAfford}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                      className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
                         canAfford
-                          ? 'bg-forest-800 hover:bg-forest-900 text-white shadow-xs hover:scale-102'
+                          ? 'bg-forest-800 hover:bg-forest-900 text-white shadow-xs cursor-pointer'
                           : 'bg-stone-200 dark:bg-stone-700 text-stone-400 cursor-not-allowed'
                       }`}
                     >

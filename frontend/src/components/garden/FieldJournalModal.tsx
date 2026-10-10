@@ -26,6 +26,7 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
   const { discoveries } = useGarden();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpeciesKey, setSelectedSpeciesKey] = useState<string>('marigold');
+  const [mobileTab, setMobileTab] = useState<'list' | 'details'>('list');
 
   if (!isOpen) return null;
 
@@ -45,35 +46,66 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
     return discoveries.some(d => d.topPrediction?.label.toLowerCase().includes(key));
   };
 
+  const handleSelectSpecies = (key: string) => {
+    setSelectedSpeciesKey(key);
+    setMobileTab('details');
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white dark:bg-stone-900 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 flex flex-col"
+        className="bg-white dark:bg-stone-900 rounded-3xl max-w-4xl w-full max-h-[90dvh] overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 flex flex-col"
       >
         {/* Header */}
-        <div className="p-5 sm:p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-forest-100 dark:bg-emerald-950/60 flex items-center justify-center text-forest-700 dark:text-emerald-400">
-              <BookOpen className="w-5 h-5" />
+        <div className="p-4 sm:p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-forest-100 dark:bg-emerald-950/60 flex items-center justify-center text-forest-700 dark:text-emerald-400 shrink-0">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-forest-950 dark:text-emerald-100">Botanical Field Journal</h2>
-              <p className="text-xs text-stone-500">Curated scientific encyclopedia of identified flora and garden plants.</p>
+              <h2 className="text-base sm:text-lg font-extrabold text-forest-950 dark:text-emerald-100">Botanical Field Journal</h2>
+              <p className="text-[11px] sm:text-xs text-stone-500">Curated scientific encyclopedia of identified flora and garden plants.</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-stone-400 hover:text-stone-600 rounded-xl">
+          <button onClick={onClose} className="p-1.5 sm:p-2 text-stone-400 hover:text-stone-600 rounded-xl">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content Body: Split View */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden">
+        {/* Mobile Tab Switcher */}
+        <div className="md:hidden flex border-b border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/40">
+          <button
+            onClick={() => setMobileTab('list')}
+            className={`flex-1 py-2.5 text-xs font-extrabold text-center transition-all ${
+              mobileTab === 'list'
+                ? 'border-b-2 border-forest-700 text-forest-900 dark:text-emerald-300 bg-white dark:bg-stone-900'
+                : 'text-stone-500'
+            }`}
+          >
+            Species Catalog ({speciesList.length})
+          </button>
+          <button
+            onClick={() => setMobileTab('details')}
+            className={`flex-1 py-2.5 text-xs font-extrabold text-center transition-all ${
+              mobileTab === 'details'
+                ? 'border-b-2 border-forest-700 text-forest-900 dark:text-emerald-300 bg-white dark:bg-stone-900'
+                : 'text-stone-500'
+            }`}
+          >
+            Field Notes ({selectedInfo?.speciesName || 'Selected'})
+          </button>
+        </div>
+
+        {/* Content Body: Split View / Mobile Tab View */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden min-h-0">
           
           {/* Left Species Navigation */}
-          <div className="md:col-span-5 border-r border-stone-200 dark:border-stone-800 flex flex-col overflow-hidden bg-stone-50/50 dark:bg-stone-950/30">
+          <div className={`md:col-span-5 border-r border-stone-200 dark:border-stone-800 flex flex-col overflow-hidden bg-stone-50/50 dark:bg-stone-950/30 ${
+            mobileTab === 'list' ? 'flex' : 'hidden md:flex'
+          }`}>
             <div className="p-3 border-b border-stone-200 dark:border-stone-800">
               <div className="relative">
                 <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -87,7 +119,7 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+            <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2">
               {filteredSpecies.map(([key, info]) => {
                 const discovered = isDiscovered(key);
                 const isSelected = selectedSpeciesKey === key;
@@ -95,8 +127,8 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                 return (
                   <button
                     key={key}
-                    onClick={() => setSelectedSpeciesKey(key)}
-                    className={`w-full p-3 rounded-2xl text-left transition-all flex items-center justify-between gap-3 ${
+                    onClick={() => handleSelectSpecies(key)}
+                    className={`w-full p-2.5 sm:p-3 rounded-2xl text-left transition-all flex items-center justify-between gap-3 ${
                       isSelected
                         ? 'bg-forest-100 dark:bg-emerald-950/60 border border-forest-300 dark:border-emerald-700 shadow-xs'
                         : 'bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 hover:bg-stone-100'
@@ -109,7 +141,7 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                       </div>
                       <div className="text-[10px] text-stone-500 italic">{info.scientificName}</div>
                     </div>
-                    <div className="w-8 h-8 rounded-xl bg-forest-50 dark:bg-stone-800 p-1 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-xl bg-forest-50 dark:bg-stone-800 p-1 flex items-center justify-center shrink-0">
                       <GardenItemIllustration itemId={`vp-${key}`} />
                     </div>
                   </button>
@@ -119,7 +151,19 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
           </div>
 
           {/* Right Species Fact Sheet */}
-          <div className="md:col-span-7 p-6 overflow-y-auto space-y-5 bg-white dark:bg-stone-900">
+          <div className={`md:col-span-7 p-4 sm:p-6 overflow-y-auto space-y-4 sm:space-y-5 bg-white dark:bg-stone-900 ${
+            mobileTab === 'details' ? 'block' : 'hidden md:block'
+          }`}>
+            {/* Mobile Back to Catalog Button */}
+            <div className="md:hidden mb-2">
+              <button
+                onClick={() => setMobileTab('list')}
+                className="text-xs text-forest-700 dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
+              >
+                ← Back to Species Catalog
+              </button>
+            </div>
+
             {selectedInfo && (
               <>
                 <div className="flex items-start justify-between gap-4">

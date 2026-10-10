@@ -36,26 +36,26 @@ export const QuestsDrawer: React.FC<QuestsDrawerProps> = ({ isOpen, onClose }) =
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-        className="w-full max-w-md bg-white dark:bg-stone-900 h-full shadow-2xl border-l border-stone-200 dark:border-stone-800 flex flex-col"
+        className="w-full sm:max-w-md bg-white dark:bg-stone-900 h-full shadow-2xl border-l border-stone-200 dark:border-stone-800 flex flex-col"
       >
         {/* Header */}
-        <div className="p-5 sm:p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400">
-              <Compass className="w-5 h-5" />
+        <div className="p-4 sm:p-6 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 shrink-0">
+              <Compass className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-forest-950 dark:text-emerald-100">Nature Quests & Goals</h2>
-              <p className="text-xs text-stone-500">Complete garden activities to earn coins & XP.</p>
+              <h2 className="text-base sm:text-lg font-extrabold text-forest-950 dark:text-emerald-100">Nature Quests & Goals</h2>
+              <p className="text-[11px] sm:text-xs text-stone-500">Complete garden activities to earn coins & XP.</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-stone-400 hover:text-stone-600 rounded-xl">
+          <button onClick={onClose} className="p-1.5 sm:p-2 text-stone-400 hover:text-stone-600 rounded-xl">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Quest List */}
-        <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-3.5">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-3 pb-safe">
           {quests.map(quest => {
             const isDone = quest.isCompleted;
             const progress = Math.min(quest.currentCount, quest.targetCount);

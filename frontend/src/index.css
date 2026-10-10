@@ -43,11 +43,11 @@ h1, h2, h3, h4, .font-display {
 
 /* Custom Botanical Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #ede9dc;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #a3c2ac;
@@ -55,6 +55,27 @@ h1, h2, h3, h4, .font-display {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #5b966f;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Touch & Mobile UX Utilities */
+.touch-pan-garden {
+  touch-action: pan-x pan-y;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 1rem);
 }
 
 /* Garden Isometric Grid */

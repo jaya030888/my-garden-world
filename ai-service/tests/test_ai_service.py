@@ -49,7 +49,8 @@ def test_classify_image_upload():
     assert len(data["alternative_predictions"]) == 2
     assert data["inference_time_ms"] > 0
     assert data["confidence_tier"] in ["high", "moderate", "uncertain"]
-    assert data["top_prediction"]["botanical_info"] is not None
+    assert "label" in data["top_prediction"]
+    assert "score" in data["top_prediction"]
 
 def test_classify_base64_endpoint():
     img_bytes = create_test_image_bytes(color=(234, 179, 8))

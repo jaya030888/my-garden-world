@@ -1,10 +1,11 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi>=0.115.0
 uvicorn[standard]>=0.32.0
 pydantic>=2.10.0
 pillow>=11.0.0
 transformers>=4.46.0
-torch>=2.5.0 --extra-index-url https://download.pytorch.org/whl/cpu
-torchvision>=0.20.0 --extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.5.0
+torchvision>=0.20.0
 requests>=2.32.0
 python-multipart>=0.0.18
 pytest>=8.3.0

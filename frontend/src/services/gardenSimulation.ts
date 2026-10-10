@@ -44,72 +44,150 @@ export interface SpeciesGrowthRule {
   seedItemId: string;
   plantItemId: string;
   baseGrowthMinutes: number;
-  waterGrowthBoostPercent: number; // +25% per watering
+  waterGrowthBoostPercent: number;
   coinHarvestYield: number;
   xpHarvestYield: number;
-  rarity: 'common' | 'uncommon' | 'rare' | 'exotic';
+  rarity: 'common' | 'uncommon' | 'rare' | 'legendary' | 'mythic';
+  color: string;
+  description: string;
+  bloomDaysRequired: number; // Daily care streak days required
 }
 
 export const SPECIES_GROWTH_RULES: Record<string, SpeciesGrowthRule> = {
   marigold: {
     speciesId: 'marigold',
-    commonName: 'English Marigold',
+    commonName: 'Golden Velvet Marigold',
     scientificName: 'Calendula officinalis',
     seedItemId: 'seed-marigold',
     plantItemId: 'vp-marigold',
-    baseGrowthMinutes: 2, // fast cozy loop
-    waterGrowthBoostPercent: 30,
-    coinHarvestYield: 35,
-    xpHarvestYield: 45,
-    rarity: 'common'
+    baseGrowthMinutes: 2,
+    waterGrowthBoostPercent: 35,
+    coinHarvestYield: 40,
+    xpHarvestYield: 50,
+    rarity: 'common',
+    color: '#f59e0b',
+    description: 'Radiant golden blossom that repels garden pests and protects surrounding soil.',
+    bloomDaysRequired: 1
   },
   sunflower: {
     speciesId: 'sunflower',
-    commonName: 'Golden Sunflower',
+    commonName: 'Solar Sunburst Helianthus',
     scientificName: 'Helianthus annuus',
     seedItemId: 'seed-sunflower',
     plantItemId: 'vp-sunflower',
     baseGrowthMinutes: 3,
-    waterGrowthBoostPercent: 25,
-    coinHarvestYield: 50,
-    xpHarvestYield: 60,
-    rarity: 'common'
+    waterGrowthBoostPercent: 30,
+    coinHarvestYield: 60,
+    xpHarvestYield: 75,
+    rarity: 'common',
+    color: '#eab308',
+    description: 'Majestic giant solar blossom that tracks the morning daylight.',
+    bloomDaysRequired: 2
   },
   rose: {
     speciesId: 'rose',
-    commonName: 'Wild Rose',
-    scientificName: 'Rosa canina',
+    commonName: 'Velvet Crimson Rose',
+    scientificName: 'Rosa damascena',
     seedItemId: 'seed-rose',
     plantItemId: 'vp-rose',
     baseGrowthMinutes: 4,
     waterGrowthBoostPercent: 25,
-    coinHarvestYield: 65,
-    xpHarvestYield: 80,
-    rarity: 'uncommon'
+    coinHarvestYield: 85,
+    xpHarvestYield: 100,
+    rarity: 'uncommon',
+    color: '#e11d48',
+    description: 'Deep crimson fragrant petals prized by master botanists and garden enthusiasts.',
+    bloomDaysRequired: 2
   },
   daisy: {
     speciesId: 'daisy',
-    commonName: 'Common Daisy',
+    commonName: 'Fairy Meadow Daisy',
     scientificName: 'Bellis perennis',
     seedItemId: 'seed-daisy',
     plantItemId: 'vp-daisy',
     baseGrowthMinutes: 2,
-    waterGrowthBoostPercent: 30,
-    coinHarvestYield: 30,
-    xpHarvestYield: 40,
-    rarity: 'common'
+    waterGrowthBoostPercent: 35,
+    coinHarvestYield: 35,
+    xpHarvestYield: 45,
+    rarity: 'common',
+    color: '#ffffff',
+    description: 'Cheerful white petals with sunny golden center that bloom in playful clusters.',
+    bloomDaysRequired: 1
   },
   lavender: {
     speciesId: 'lavender',
-    commonName: 'English Lavender',
+    commonName: 'Royal Provence Lavender',
     scientificName: 'Lavandula angustifolia',
     seedItemId: 'seed-lavender',
     plantItemId: 'vp-lavender',
-    baseGrowthMinutes: 3.5,
+    baseGrowthMinutes: 4,
+    waterGrowthBoostPercent: 30,
+    coinHarvestYield: 90,
+    xpHarvestYield: 110,
+    rarity: 'rare',
+    color: '#a855f7',
+    description: 'Fragrant purple spires that attract honeybees and calm the garden breeze.',
+    bloomDaysRequired: 2
+  },
+  orchid: {
+    speciesId: 'orchid',
+    commonName: 'Midnight Royal Orchid',
+    scientificName: 'Phalaenopsis violacea',
+    seedItemId: 'seed-orchid',
+    plantItemId: 'vp-orchid',
+    baseGrowthMinutes: 5,
     waterGrowthBoostPercent: 25,
-    coinHarvestYield: 55,
-    xpHarvestYield: 70,
-    rarity: 'uncommon'
+    coinHarvestYield: 150,
+    xpHarvestYield: 200,
+    rarity: 'legendary',
+    color: '#7c3aed',
+    description: 'Luminous deep violet tropical petals that radiate soft night glow.',
+    bloomDaysRequired: 3
+  },
+  lotus: {
+    speciesId: 'lotus',
+    commonName: 'Mystic Lotus Blossom',
+    scientificName: 'Nelumbo nucifera',
+    seedItemId: 'seed-lotus',
+    plantItemId: 'vp-lotus',
+    baseGrowthMinutes: 4,
+    waterGrowthBoostPercent: 30,
+    coinHarvestYield: 120,
+    xpHarvestYield: 160,
+    rarity: 'rare',
+    color: '#ec4899',
+    description: 'Sacred water flower that floats peacefully on calm morning pools.',
+    bloomDaysRequired: 2
+  },
+  hydrangea: {
+    speciesId: 'hydrangea',
+    commonName: 'Starlight Blue Hydrangea',
+    scientificName: 'Hydrangea macrophylla',
+    seedItemId: 'seed-hydrangea',
+    plantItemId: 'vp-hydrangea',
+    baseGrowthMinutes: 4,
+    waterGrowthBoostPercent: 30,
+    coinHarvestYield: 100,
+    xpHarvestYield: 130,
+    rarity: 'uncommon',
+    color: '#38bdf8',
+    description: 'Abundant lush spheres of sky-blue florets that change hue with soil pH.',
+    bloomDaysRequired: 2
+  },
+  camellia: {
+    speciesId: 'camellia',
+    commonName: 'Cherry Blossom Camellia',
+    scientificName: 'Camellia japonica',
+    seedItemId: 'seed-camellia',
+    plantItemId: 'vp-camellia',
+    baseGrowthMinutes: 6,
+    waterGrowthBoostPercent: 20,
+    coinHarvestYield: 220,
+    xpHarvestYield: 300,
+    rarity: 'mythic',
+    color: '#f43f5e',
+    description: 'Legendary multi-layered pink blossoms that bloom once per season in peak health.',
+    bloomDaysRequired: 3
   },
   monstera: {
     speciesId: 'monstera',
@@ -121,7 +199,10 @@ export const SPECIES_GROWTH_RULES: Record<string, SpeciesGrowthRule> = {
     waterGrowthBoostPercent: 20,
     coinHarvestYield: 90,
     xpHarvestYield: 110,
-    rarity: 'rare'
+    rarity: 'rare',
+    color: '#16a34a',
+    description: 'Lush tropical foliage with dramatic natural leaf perforations.',
+    bloomDaysRequired: 2
   },
   pothos: {
     speciesId: 'pothos',
@@ -133,7 +214,10 @@ export const SPECIES_GROWTH_RULES: Record<string, SpeciesGrowthRule> = {
     waterGrowthBoostPercent: 25,
     coinHarvestYield: 45,
     xpHarvestYield: 55,
-    rarity: 'common'
+    rarity: 'common',
+    color: '#84cc16',
+    description: 'Heart-shaped variegated green foliage trailing with golden ribbons.',
+    bloomDaysRequired: 1
   },
   hibiscus: {
     speciesId: 'hibiscus',
@@ -145,7 +229,10 @@ export const SPECIES_GROWTH_RULES: Record<string, SpeciesGrowthRule> = {
     waterGrowthBoostPercent: 25,
     coinHarvestYield: 80,
     xpHarvestYield: 95,
-    rarity: 'rare'
+    rarity: 'rare',
+    color: '#ef4444',
+    description: 'Vibrant scarlet tropical petals with prominent golden nectar stamen.',
+    bloomDaysRequired: 2
   }
 };
 

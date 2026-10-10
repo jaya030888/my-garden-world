@@ -721,6 +721,128 @@ export function drawIsometricItem(
       ctx.ellipse(sway + 3, f, 3.5, 2, 0.3, 0, Math.PI * 2);
       ctx.fill();
     }
+  } else if (itemId.includes('orchid')) {
+    // Midnight Royal Orchid (Luminous Deep Violet)
+    ctx.strokeStyle = '#14532d';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.quadraticCurveTo(sway, -15, sway * 1.2, -32);
+    ctx.stroke();
+
+    const fY = -34;
+    // Glowing Orchid Petals
+    ctx.fillStyle = '#6b21a8';
+    ctx.beginPath();
+    ctx.ellipse(sway * 1.2 - 10, fY - 2, 9, 6, -0.5, 0, Math.PI * 2);
+    ctx.ellipse(sway * 1.2 + 10, fY - 2, 9, 6, 0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#a855f7';
+    ctx.beginPath();
+    ctx.ellipse(sway * 1.2, fY - 8, 7, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(sway * 1.2, fY + 4, 8, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#fde047';
+    ctx.beginPath();
+    ctx.arc(sway * 1.2, fY, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (itemId.includes('lotus')) {
+    // Mystic Pink Lotus
+    const fY = -24;
+    ctx.fillStyle = '#be185d';
+    ctx.beginPath();
+    ctx.ellipse(sway, fY, 14, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#f472b6';
+    for (let p = 0; p < 8; p++) {
+      const angle = (p * Math.PI * 2) / 8;
+      ctx.beginPath();
+      ctx.ellipse(sway + Math.cos(angle) * 8, fY + Math.sin(angle) * 5, 7, 4, angle, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(sway, fY, 5, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (itemId.includes('hydrangea')) {
+    // Starlight Blue Hydrangea (Spherical Florets)
+    ctx.strokeStyle = '#15803d';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.quadraticCurveTo(sway, -12, sway, -26);
+    ctx.stroke();
+
+    const fY = -28;
+    const colors = ['#0284c7', '#38bdf8', '#7dd3fc', '#bae6fd'];
+    for (let f = 0; f < 16; f++) {
+      const angle = (f * Math.PI * 2) / 16;
+      const dist = 6 + (f % 3) * 3;
+      ctx.fillStyle = colors[f % colors.length];
+      ctx.beginPath();
+      ctx.arc(sway + Math.cos(angle) * dist, fY + Math.sin(angle) * dist * 0.7, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (itemId.includes('camellia')) {
+    // Mythic Cherry Blossom Camellia
+    ctx.strokeStyle = '#14532d';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.quadraticCurveTo(sway, -14, sway, -28);
+    ctx.stroke();
+
+    const fY = -30;
+    // Multi-layered delicate pink ruffles
+    ctx.fillStyle = '#e11d48';
+    ctx.beginPath();
+    ctx.arc(sway, fY, 13, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fb7185';
+    ctx.beginPath();
+    ctx.arc(sway, fY, 9.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fbcfe8';
+    ctx.beginPath();
+    ctx.arc(sway, fY, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(sway, fY, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (itemId.includes('hibiscus')) {
+    // Tropical Scarlet Hibiscus
+    ctx.strokeStyle = '#15803d';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.quadraticCurveTo(sway, -12, sway, -26);
+    ctx.stroke();
+
+    const fY = -28;
+    ctx.fillStyle = '#dc2626';
+    for (let p = 0; p < 5; p++) {
+      const angle = (p * Math.PI * 2) / 5;
+      ctx.beginPath();
+      ctx.ellipse(sway + Math.cos(angle) * 10, fY + Math.sin(angle) * 8, 9, 5.5, angle, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Long golden stamen
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(sway, fY);
+    ctx.lineTo(sway + 4, fY - 10);
+    ctx.stroke();
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(sway + 4, fY - 10, 2, 0, Math.PI * 2);
+    ctx.fill();
   } else if (itemId.includes('monstera') || itemId.includes('pothos')) {
     // Tropical Foliage
     ctx.fillStyle = '#14532d';

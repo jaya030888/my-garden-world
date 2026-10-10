@@ -13,7 +13,8 @@ import {
   Search
 } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
-import { VERIFIED_BOTANICAL_TAXONOMY } from '../../ai/botanicalDatabase';
+import { VERIFIED_BOTANICAL_SPECIES } from '../../ai/botanicalDatabase';
+import { BotanicalInfo } from '../../types';
 import { GardenItemIllustration } from './GardenItemIllustrations';
 
 interface FieldJournalModalProps {
@@ -22,26 +23,26 @@ interface FieldJournalModalProps {
 }
 
 export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, onClose }) => {
-  const { discoveries, shopCatalog } = useGarden();
+  const { discoveries } = useGarden();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpeciesKey, setSelectedSpeciesKey] = useState<string>('marigold');
 
   if (!isOpen) return null;
 
-  const speciesList = Object.entries(VERIFIED_BOTANICAL_TAXONOMY);
-  const selectedInfo = VERIFIED_BOTANICAL_TAXONOMY[selectedSpeciesKey] || speciesList[0][1];
+  const speciesList: [string, BotanicalInfo][] = Object.entries(VERIFIED_BOTANICAL_SPECIES);
+  const selectedInfo = VERIFIED_BOTANICAL_SPECIES[selectedSpeciesKey] || speciesList[0][1];
 
   const filteredSpecies = speciesList.filter(([key, info]) => {
     const term = searchTerm.toLowerCase();
     return (
       key.includes(term) ||
-      info.species_name.toLowerCase().includes(term) ||
-      info.scientific_name.toLowerCase().includes(term)
+      info.speciesName.toLowerCase().includes(term) ||
+      info.scientificName.toLowerCase().includes(term)
     );
   });
 
   const isDiscovered = (key: string) => {
-    return discoveries.some(d => d.topLabel.toLowerCase().includes(key));
+    return discoveries.some(d => d.topPrediction?.label.toLowerCase().includes(key));
   };
 
   return (
@@ -68,7 +69,7 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
           </button>
         </div>
 
-        {/* Content Body: Split View (List on left, detail on right) */}
+        {/* Content Body: Split View */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden">
           
           {/* Left Species Navigation */}
@@ -103,10 +104,10 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                   >
                     <div>
                       <div className="text-xs font-extrabold text-forest-950 dark:text-emerald-100 flex items-center gap-1.5">
-                        <span>{info.species_name}</span>
+                        <span>{info.speciesName}</span>
                         {discovered && <span className="px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[9px] font-bold">Discovered</span>}
                       </div>
-                      <div className="text-[10px] text-stone-500 italic">{info.scientific_name}</div>
+                      <div className="text-[10px] text-stone-500 italic">{info.scientificName}</div>
                     </div>
                     <div className="w-8 h-8 rounded-xl bg-forest-50 dark:bg-stone-800 p-1 flex items-center justify-center">
                       <GardenItemIllustration itemId={`vp-${key}`} />
@@ -127,9 +128,9 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                       {selectedInfo.family}
                     </span>
                     <h3 className="text-xl font-extrabold text-forest-950 dark:text-emerald-100 mt-1">
-                      {selectedInfo.species_name}
+                      {selectedInfo.speciesName}
                     </h3>
-                    <p className="text-xs text-stone-500 italic">{selectedInfo.scientific_name}</p>
+                    <p className="text-xs text-stone-500 italic">{selectedInfo.scientificName}</p>
                   </div>
 
                   <div className="w-16 h-16 rounded-2xl bg-forest-50 dark:bg-stone-800 border border-forest-200 dark:border-stone-700 p-2 flex items-center justify-center">
@@ -145,7 +146,7 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                 <div className="grid grid-cols-2 gap-3 p-4 rounded-2xl bg-stone-50 dark:bg-stone-800/60 border border-stone-200 dark:border-stone-700 text-xs">
                   <div>
                     <span className="text-stone-400 font-bold block text-[10px]">NATIVE REGION</span>
-                    <span className="text-forest-900 dark:text-emerald-200 font-extrabold">{selectedInfo.native_region}</span>
+                    <span className="text-forest-900 dark:text-emerald-200 font-extrabold">{selectedInfo.nativeRegion}</span>
                   </div>
                   <div>
                     <span className="text-stone-400 font-bold block text-[10px]">CARE DIFFICULTY</span>
@@ -163,11 +164,11 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
 
                 {/* Ecological Contribution */}
                 <div className="p-4 rounded-2xl bg-forest-50/60 dark:bg-emerald-950/30 border border-forest-200 dark:border-emerald-800 text-xs space-y-1">
-                  <span className="font-extrabold text-forest-900 dark:text-emerald-200 flex items-center gap-1.5">
+                  <span className="font-extrabold text-forest-950 dark:text-emerald-200 flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-emerald-600" />
                     <span>Ecological Synergy</span>
                   </span>
-                  <p className="text-stone-600 dark:text-stone-300">{selectedInfo.ecological_fact}</p>
+                  <p className="text-stone-600 dark:text-stone-300">{selectedInfo.ecologicalFact}</p>
                 </div>
               </>
             )}

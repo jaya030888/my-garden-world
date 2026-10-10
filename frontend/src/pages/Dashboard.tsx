@@ -4,12 +4,14 @@ import { GardenShopDrawer } from '../components/garden/GardenShopDrawer';
 import { AIScannerModal } from '../components/garden/AIScannerModal';
 import { FieldJournalModal } from '../components/garden/FieldJournalModal';
 import { QuestsDrawer } from '../components/garden/QuestsDrawer';
+import { DailyNatureExerciseModal } from '../components/modals/DailyNatureExerciseModal';
 
 export const DashboardPage: React.FC = () => {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
   const [isQuestsOpen, setIsQuestsOpen] = useState(false);
+  const [isExerciseOpen, setIsExerciseOpen] = useState(false);
 
   return (
     <div className="relative min-h-screen">
@@ -19,6 +21,7 @@ export const DashboardPage: React.FC = () => {
         onOpenScanner={() => setIsScannerOpen(true)}
         onOpenJournal={() => setIsJournalOpen(true)}
         onOpenQuests={() => setIsQuestsOpen(true)}
+        onOpenExercise={() => setIsExerciseOpen(true)}
       />
 
       {/* Non-Intrusive Overlays & Drawers */}
@@ -26,6 +29,7 @@ export const DashboardPage: React.FC = () => {
       <AIScannerModal isOpen={isScannerOpen} onClose={() => setIsScannerOpen(false)} />
       <FieldJournalModal isOpen={isJournalOpen} onClose={() => setIsJournalOpen(false)} />
       <QuestsDrawer isOpen={isQuestsOpen} onClose={() => setIsQuestsOpen(false)} />
+      <DailyNatureExerciseModal isOpen={isExerciseOpen} onClose={() => setIsExerciseOpen(false)} />
     </div>
   );
 };

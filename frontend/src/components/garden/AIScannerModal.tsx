@@ -15,7 +15,7 @@ import {
   Info,
   RefreshCw
 } from 'lucide-react';
-import { identifyPlantImage } from '../../ai/plantClassifier';
+import { identifyPlant } from '../../ai/plantClassifier';
 import { IdentificationResult } from '../../types';
 import { useGarden } from '../../context/GardenContext';
 import { cozyAudio } from '../../services/audioService';
@@ -60,7 +60,7 @@ const CURATED_SPECIMENS = [
 ];
 
 export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose }) => {
-  const { saveDiscovery, buyItem } = useGarden();
+  const { saveDiscovery } = useGarden();
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isClassifying, setIsClassifying] = useState<boolean>(false);
@@ -97,16 +97,15 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
     setRewardGranted(false);
 
     try {
-      // Create HTMLImageElement for client/server AI classification
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.src = imgSrc;
       await new Promise(resolve => { img.onload = resolve; });
 
-      const res = await identifyPlantImage(img);
+      const res = await identifyPlant(img);
       setResult(res);
 
-      if (res.confidenceTier !== 'uncertain' && res.botanicalInfo) {
+      if (res.confidenceTier !== 'uncertain' && res.topPrediction.botanicalInfo) {
         cozyAudio.playFanfare();
         fireConfetti();
         await saveDiscovery(res);
@@ -208,7 +207,7 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
               <div>
                 <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">AI Identification Result</div>
                 <div className="text-base font-extrabold text-forest-950 dark:text-emerald-100">
-                  {result.topLabel}
+                  {result.topPrediction.label}
                 </div>
               </div>
               <div className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -216,43 +215,43 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
                 result.confidenceTier === 'moderate' ? 'bg-amber-100 text-amber-800' :
                 'bg-rose-100 text-rose-800'
               }`}>
-                {result.confidenceTier.toUpperCase()} ({Math.round(result.topScore * 100)}%)
+                {result.confidenceTier.toUpperCase()} ({Math.round(result.topPrediction.score * 100)}%)
               </div>
             </div>
 
             {/* Botanical Taxonomy Fact Sheet */}
-            {result.botanicalInfo ? (
+            {result.topPrediction.botanicalInfo ? (
               <div className="space-y-3 pt-2 border-t border-forest-200/60 dark:border-forest-800 text-xs">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <span className="text-stone-500 font-medium">Scientific Name:</span>
                     <div className="font-extrabold text-forest-900 dark:text-emerald-200 italic">
-                      {result.botanicalInfo.scientificName}
+                      {result.topPrediction.botanicalInfo.scientificName}
                     </div>
                   </div>
                   <div>
                     <span className="text-stone-500 font-medium">Family:</span>
                     <div className="font-extrabold text-forest-900 dark:text-emerald-200">
-                      {result.botanicalInfo.family}
+                      {result.topPrediction.botanicalInfo.family}
                     </div>
                   </div>
                   <div>
                     <span className="text-stone-500 font-medium">Sunlight:</span>
                     <div className="font-bold text-forest-900 dark:text-emerald-200">
-                      {result.botanicalInfo.sunlight}
+                      {result.topPrediction.botanicalInfo.sunlight}
                     </div>
                   </div>
                   <div>
                     <span className="text-stone-500 font-medium">Watering:</span>
                     <div className="font-bold text-forest-900 dark:text-emerald-200">
-                      {result.botanicalInfo.watering}
+                      {result.topPrediction.botanicalInfo.watering}
                     </div>
                   </div>
                 </div>
 
                 <div className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-emerald-200 dark:border-emerald-800 text-xs">
                   <span className="font-bold text-emerald-800 dark:text-emerald-300">Ecological Benefit: </span>
-                  <span className="text-stone-600 dark:text-stone-300">{result.botanicalInfo.ecologicalFact}</span>
+                  <span className="text-stone-600 dark:text-stone-300">{result.topPrediction.botanicalInfo.ecologicalFact}</span>
                 </div>
 
                 {rewardGranted && (

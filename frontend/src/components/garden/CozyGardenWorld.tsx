@@ -23,6 +23,7 @@ import {
   Coins,
   Compass,
   ArrowRight,
+  Leaf,
   Info
 } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
@@ -45,6 +46,7 @@ interface CozyGardenWorldProps {
   onOpenScanner: () => void;
   onOpenJournal: () => void;
   onOpenQuests: () => void;
+  onOpenExercise?: () => void;
 }
 
 type ToolMode = 'select' | 'water' | 'harvest' | 'place' | 'rotate' | 'remove';
@@ -53,7 +55,8 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
   onOpenShop,
   onOpenScanner,
   onOpenJournal,
-  onOpenQuests
+  onOpenQuests,
+  onOpenExercise
 }) => {
   const {
     profile,
@@ -332,6 +335,18 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
 
         {/* Right: Quick Action Modals Trigger */}
         <div className="flex items-center gap-2">
+          {onOpenExercise && (
+            <button
+              onClick={onOpenExercise}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-900 dark:text-emerald-200 border border-emerald-500/30 text-xs font-extrabold shadow-xs transition-all hover:scale-102"
+              title="Today's Nature Expedition: Photograph 3 leaves/birds (+50 Coins)"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <Leaf className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="hidden sm:inline">Nature Task (+50 🪙)</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenScanner}
             className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-all hover:scale-102"
@@ -461,7 +476,7 @@ export const CozyGardenWorld: React.FC<CozyGardenWorldProps> = ({
                       )}
 
                       {/* Harvest Ready Sparkle Indicator */}
-                      {plantState && (plant.stage === 'bloom' || plantState.isHarvestable) && (
+                      {plantState && (plantState.stage === 'bloom' || plantState.isHarvestable) && (
                         <div className="absolute top-1 left-1 p-1 rounded-full bg-emerald-500 text-white shadow-xs animate-pulse">
                           <Sparkles className="w-2.5 h-2.5 fill-amber-300 text-amber-300" />
                         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sparkles, Coins, Award, Compass, Sprout, Footprints, LogIn, LogOut, Settings } from 'lucide-react';
+import { Sparkles, Coins, Award, Compass, Sprout, Footprints, Leaf, LogIn, LogOut, Settings } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
 import { useAuth } from '../../context/AuthContext';
 import { calculateXpForNextLevel } from '../../services/economyService';
@@ -65,14 +65,16 @@ export const Navbar: React.FC = () => {
         {/* Right Actions & Stats */}
         <div className="flex items-center gap-2 sm:gap-3">
           
-          {/* Go Outside Quick Action */}
+          {/* Daily Nature Exercise / Outdoor Photo Quest Tracker */}
           <button
             onClick={startOutsideMode}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 border border-amber-500/20 rounded-xl text-xs font-bold transition-all hover:scale-102"
-            title="Step outside for mindfulness & nature observation"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-950 dark:text-emerald-200 border border-emerald-500/30 rounded-xl text-xs font-extrabold transition-all hover:scale-102 shadow-xs"
+            title="Daily Nature Exercise: Photograph 3 leaves or birds outside (+50 Coins)"
           >
-            <Footprints className="w-3.5 h-3.5 text-amber-600" />
-            <span className="hidden sm:inline">Go Outside</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <Leaf className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span className="hidden sm:inline">Daily Nature Task (+50 🪙)</span>
+            <span className="sm:hidden">Task</span>
           </button>
 
           {/* Flora Coins Badge */}

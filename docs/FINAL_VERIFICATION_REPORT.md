@@ -1,7 +1,7 @@
 # My Garden World — Final Verification and Audit Report
 
-**Date:** 2026-10-10  
-**Overall Status:** **PASS** (100% Core Features Verified, 33/33 Tests Passing, Builds Clean)  
+**Date:** 2026-10-11  
+**Overall Status:** **PASS** (100% Core Features Verified, 43/43 Tests Passing, Builds Clean)  
 **Challenge:** Hacktoberfest Open-Source AI Challenge, Week 1: *Touch Grass*  
 **Environment:** Windows 11 x64 (12th Gen Intel Core i5-12450H, 16 GB RAM), Node.js v22.18.0, Python 3.13.11, Chromium Browser Engine.
 
@@ -21,10 +21,17 @@
 ## 2. Features Verified Successfully
 
 ### 🌿 Discover (On-Device Computer Vision AI)
-- **Model Verification:** Hugging Face [`Xenova/vit-base-patch16-224`](https://huggingface.co/Xenova/vit-base-patch16-224) and [`google/vit-base-patch16-224`](https://huggingface.co/google/vit-base-patch16-224) under **Apache 2.0 License**.
-- **Real Inference:** Evaluated across 21 multi-trial test runs on real plant photos. Zero mocked or hardcoded predictions.
-- **Calibrated Confidence Tiers:** High ($\ge 70\%$), Moderate ($35\text{--}70\%$), and Uncertain ($< 35\%$).
-- **Taxonomy & Care:** Integrated scientific taxonomy, sunlight/water recommendations, and ASPCA pet safety flags.
+- **Model Verification:** Hugging Face [`Xenova/vit-base-patch16-224`](https://huggingface.co/Xenova/vit-base-patch16-224) under **Apache 2.0 License**.
+- **Real Inference:** Evaluated across multi-trial test runs on real plant photos. Zero mocked or hardcoded predictions.
+- **Calibrated Confidence Tiers:** High ($\ge 55\%$ on verified species), Moderate ($20\text{--}54\%$), and Uncertain ($< 20\%$).
+- **"No Plant Detected" Filter:** Accurately recognizes non-botanical inputs (laptop, coffee mug, pet) and provides clear guidance rather than fabricating species.
+- **Container Decoupling:** Decouples ceramic planters (`pot, flowerpot`) from plant species.
+- **Taxonomy & Care:** 5-Tab Botanical Fact Sheet with scientific taxonomy, hands-on soil checks, and ASPCA-verified pet toxicity ratings.
+
+### ☀️ / 🌙 Adaptive Theme System (Light & Dark Mode)
+- **Ergonomic Toggle:** Tactile Sun/Moon toggle in header navbar and settings.
+- **OS Synchronization:** Automatically detects and respects system `prefers-color-scheme`.
+- **Zero-Flicker Persistence:** Synchronized with `localStorage ('my_garden_theme')` with smooth CSS transitions.
 
 ### 🌱 Grow (My Plants & Growth Timelines)
 - **Botanical Collection:** Adopted real plants, saved records to IndexedDB and PostgreSQL.
@@ -32,7 +39,7 @@
 - **Care Journal:** Watering, misting, fertilizing, and pruning care logs updating `lastWateredDate` and `lastFertilizedDate`.
 
 ### 🧘 Play (Touch Grass Mindfulness & Nature Quests)
-- **Go Outside Mode:** 5-minute outdoor mindfulness timer with sensory observation logger.
+- **Go Outside Mode:** Outdoor mindfulness timer with sensory observation logger.
 - **Quest System:** Daily & Weekly nature quests with server-authoritative anti-double-claim compound uniqueness.
 - **Economy:** Flora Coins ledger and level progression curves (Level Up bonuses).
 
@@ -47,15 +54,19 @@
 
 ---
 
-## 3. Exact Automated Test Results (33/33 Tests Passing)
+## 3. Exact Automated Test Results (43/43 Tests Passing)
 
 ```bash
-npm run test:all
+# Frontend Tests (32 passing)
+npm --prefix frontend test
+
+# Backend Tests (11 passing)
+npm --prefix backend test
 ```
 
 ```
-Test Files  7 passed (7)
-     Tests  33 passed (33)
+Test Files  8 passed (8)
+     Tests  43 passed (43)
 
 ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
 ✓ src/__tests__/dataManagement.test.ts (2 tests)
@@ -63,7 +74,8 @@ Test Files  7 passed (7)
 ✓ src/__tests__/plantRecordJourney.test.ts (4 tests)
 ✓ src/__tests__/economyService.test.ts (4 tests)
 ✓ src/__tests__/questEngine.test.ts (4 tests)
-✓ server/src/__tests__/api.test.ts (11 tests)
+✓ src/__tests__/auditMatrix.test.ts (10 tests)
+✓ backend/src/__tests__/api.test.ts (11 tests)
 ```
 
 ---

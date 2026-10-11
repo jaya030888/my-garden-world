@@ -42,16 +42,22 @@
 * **"Touch Grass" Outdoor Quests:** Complete real-world outdoor challenges, log nature observations, earn Flora Coins, and level up your Botanist rank.
 * **Garden Shop & Economy:** Atomic currency ledger ensuring legitimate coin rewards and preventing duplicate item claims.
 
+### 5. ☀️ / 🌙 Adaptive Light & Dark Mode
+* **Instant Tactile Theme Switching:** Full visual palette adaptation with custom theme toggle in the header navbar and settings.
+* **OS Preference Auto-Detection:** Automatically synchronizes with system `prefers-color-scheme: dark/light`.
+* **Zero Flicker Local Storage:** Persists preference in `localStorage ('my_garden_theme')` with smooth CSS transitions across all cards, modals, and charts.
+
 ---
 
 ## 🎨 Editorial UI/UX Redesign
 
-Inspired by modern editorial and minimalist luxury design principles:
-* **Stacked Editorial Typography:** High-contrast, clamp-scaled display typography for an unforgettable hero presence.
+Inspired by modern editorial and minimalist luxury design principles (such as [riyaviz.me](https://riyaviz.me/)):
+* **Stacked Editorial Typography:** High-contrast, clamp-scaled display typography for an unforgettable hero presence (*"Discover nature. Grow with intelligence. Watch life unfold."*).
 * **Tactile Pill Call-to-Actions:** Ergonomic pill-shaped buttons with integrated icon containers and responsive hover micro-interactions.
+* **Interactive Dropzone & Sample Specimen Station:** Direct one-click sample flower scanning right in the hero section for instant user engagement.
 * **Asymmetrical Feature Showcases:** Magazine-style cards with numbered tags (`01` Discovery, `02` Garden Care, `03` Virtual Garden) avoiding generic repeating boxes.
 * **"What You Learn" Architectural Ribbon:** 4-column overview highlighting Taxonomy, Soil Moisture, ASPCA Safety, and Ecological Synergy.
-* **Unified Dark Mode & Contrast:** Glassmorphism styled to strictly adhere to WCAG AA color contrast guidelines.
+* **Unified Light & Dark Modes:** Glassmorphism styled to strictly adhere to WCAG AA color contrast guidelines across both themes.
 
 ---
 

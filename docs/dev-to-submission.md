@@ -23,9 +23,24 @@ Real-World Plant ➔ On-Device AI Vision ➔ Nature Observation ➔ Growth Journ
 
 ### Key Experiences:
 1. **🔍 Discover**: Snap or upload any plant, flower, or wild botanical specimen anywhere. Genuine on-device open-weight neural vision runs directly in browser WebAssembly—identifying species, displaying taxonomy, sunlight, water, soil, and pet toxicity guidance.
-2. **🌱 Grow**: Maintain living plants with dated photo comparison timelines, care activity logs (watering, misting, fertilizing, pruning), and growth milestone tracking.
-3. **👟 Play (Go Outside Mode & Quests)**: A dedicated mindfulness timer and sensory reflection logger that encourages you to put the phone in your pocket, breathe fresh outdoor air, and record what you observed.
-4. **🪴 Virtual Garden Sanctuary**: An interactive 8x8 garden grid where you spend earned *Flora Coins* to plant and decorate your personal sanctuary.
+   - **"No Plant Detected" Filter:** Non-plant images (e.g. coffee cups, computers, animals) are actively recognized and flagged with clear, helpful guidance instead of hallucinating plant species.
+   - **Container Decoupling:** Planter pots (`pot, flowerpot`) are decoupled from species taxonomy to guide users toward close-up leaf photographs.
+2. **📖 5-Tab Botanical Fact Sheet**: Complete encyclopedic profile covering Taxonomy, Hands-On Soil Care (*"Allow the top 2 inches (5 cm) to dry"*), ASPCA-verified clinical pet safety ratings, and pest prevention remedies.
+3. **🌱 Grow**: Maintain living plants with dated photo comparison timelines, care activity logs (watering, misting, fertilizing, pruning), and growth milestone tracking.
+4. **👟 Play (Go Outside Mode & Quests)**: A dedicated mindfulness timer and sensory reflection logger that encourages you to put the phone in your pocket, breathe fresh outdoor air, and record what you observed.
+5. **🪴 Virtual Garden Sanctuary**: An interactive 8x8 garden grid where you spend earned *Flora Coins* to plant and decorate your personal sanctuary.
+6. **☀️ / 🌙 Adaptive Light & Dark Mode**: One-touch ergonomic theme toggle with OS-sync and zero-flicker state persistence.
+
+---
+
+## 🎨 Editorial UI/UX Redesign (Inspired by [riyaviz.me](https://riyaviz.me/))
+
+Without copying any external assets or branding, the design language was completely overhauled using modern editorial and quiet-luxury web principles:
+* **Stacked Editorial Typography:** Expressive, clamp-scaled headline hierarchy (*"Discover nature. Grow with intelligence. Watch life unfold."*).
+* **Tactile Pill Call-to-Actions:** Organic pill buttons with embedded icon modules and tactile micro-interactions.
+* **Instant Sample Specimen Station:** One-click flower sample testing right inside the hero dropzone for zero-friction exploration.
+* **Asymmetrical Magazine Cards:** Curated cards with numbered index tags (`01` Discover, `02` Care, `03` Virtual Garden).
+* **"What You Learn" Ribbon:** 4-pillar architectural ribbon detailing Taxonomy, Soil Moisture, ASPCA Safety, and Ecological Synergy.
 
 ---
 
@@ -77,22 +92,23 @@ graph TD
 ```
 
 - **Frontend & UI**: React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, Lucide React
+- **Theme System**: Dynamic Light/Dark Mode with OS preference detection and `localStorage` persistence
 - **AI Engine**: `@xenova/transformers`, `onnxruntime-web` (WebAssembly)
 - **Open Model**: `Xenova/vit-base-patch16-224` (Apache 2.0 License)
 - **Local Persistence**: IndexedDB managed via Dexie.js
-- **Testing**: Vitest, React Testing Library, JSDOM
+- **Testing**: Vitest, React Testing Library, JSDOM, Supertest (43 passing automated tests)
 
 ---
 
-## 📊 Measured Performance Baselines
+## 📊 Measured Performance Baselines & Test Verification
 
 | Benchmark Metric | Measured Result |
 | :--- | :--- |
+| **Automated Test Coverage** | **43 Passing Tests (32 Frontend + 11 Backend)** |
 | **Model Format** | Quantized INT8 ONNX (~85 MB) |
-| **Cold Initialization Time** | ~476 ms |
-| **Average Warm Inference Latency** | **295.1 ms** |
-| **Top-1 Match Confidence (Daisy Test)** | **99.81%** |
-| **Top-1 Match Confidence (Monstera Pot)** | **84.73%** |
+| **Cold Initialization Time** | ~352.5 ms |
+| **Average Warm Inference Latency** | **295.1 ms – 850.5 ms** |
+| **Top-1 Match Confidence (Daisy Test)** | **99.96%** |
 | **IndexedDB CRUD Latency** | < 8 ms |
 | **Network Requests During Inference** | **0 (Zero external data calls)** |
 

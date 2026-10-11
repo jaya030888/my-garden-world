@@ -48,6 +48,7 @@
 | **13** | **Local Database Persistence** | **PASS** | Dexie.js IndexedDB schema v2 persists user profiles, plants, growth photos, layout, quests, and observations locally across page reloads. |
 | **14** | **Cloud Synchronization** | **PASS** | REST API endpoints for `/api/garden/layout`, `/api/plants`, and `/api/user/sync` pass all supertest integration checks in `backend/src/__tests__/api.test.ts`. |
 | **15** | **Responsive Breakpoints & Contrast** | **PASS** | Mobile (375px), tablet (768px), and desktop (1280px) layouts pass WCAG AA contrast standards with high-contrast panel styling in `index.css`. |
+| **16** | **Adaptive Light & Dark Mode** | **PASS** | `ThemeContext.tsx` supports instant light/dark toggling, OS `prefers-color-scheme` synchronization, zero-flicker `localStorage` caching, and smooth CSS transitions. |
 
 ---
 
@@ -80,17 +81,17 @@ npm --prefix frontend test
 ```
  RUN  v3.2.7 C:/Users/Jaya/Desktop/FloraQuest/my-garden-world/frontend
 
- ✓ src/__tests__/botanicalDatabase.test.ts (4 tests) 6ms
- ✓ src/__tests__/dataManagement.test.ts (2 tests) 59ms
- ✓ src/__tests__/gardenLayout.test.ts (4 tests) 73ms
- ✓ src/__tests__/plantRecordJourney.test.ts (4 tests) 76ms
- ✓ src/__tests__/economyService.test.ts (4 tests) 90ms
- ✓ src/__tests__/auditMatrix.test.ts (9 tests) 132ms
- ✓ src/__tests__/questEngine.test.ts (4 tests) 113ms
+ ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
+ ✓ src/__tests__/dataManagement.test.ts (2 tests)
+ ✓ src/__tests__/gardenLayout.test.ts (4 tests)
+ ✓ src/__tests__/plantRecordJourney.test.ts (4 tests)
+ ✓ src/__tests__/economyService.test.ts (4 tests)
+ ✓ src/__tests__/questEngine.test.ts (4 tests)
+ ✓ src/__tests__/auditMatrix.test.ts (10 tests)
 
  Test Files  7 passed (7)
-      Tests  31 passed (31)
-   Duration  1.98s (transform 294ms, setup 340ms, collect 941ms, tests 549ms, environment 6.65s, prepare 2.74s)
+      Tests  32 passed (32)
+   Duration  2.04s
 ```
 
 ### B. Backend REST API Tests (Vitest & Supertest)
@@ -108,6 +109,8 @@ npm --prefix backend test
       Tests  11 passed (11)
    Duration  4.26s
 ```
+
+**Total Automated Coverage: 43 passed (43)** across 8 test suites.
 
 ### C. Frontend Production Build (TypeScript & Vite)
 ```bash

@@ -57,6 +57,8 @@ graph TD
 | **`src/services/economyService.ts`** | Manages coin balances, level progression curves, shop purchases, and inventory allocations. | `dexie` |
 | **`src/components/garden/*`** | Interactive 2.5D virtual garden grid allowing drag-and-drop placement, rotation, and persistence of plants, pots, and decorations. | `framer-motion`, `lucide-react` |
 | **`src/components/plants/*`** | Plant growth journal, before/after visual timeline comparisons, and care history trackers. | `lucide-react` |
+| **`src/context/ThemeContext.tsx`** | Global dynamic light/dark theme provider, OS scheme synchronization, and localStorage state persistence. | React Context API |
+| **`src/components/garden/BotanicalGuideFactSheet.tsx`** | 5-tab encyclopedic reference sheet with ASPCA poison control citations and practical soil care. | `lucide-react`, Tailwind CSS |
 
 ---
 

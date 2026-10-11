@@ -4,21 +4,34 @@
 
 ## 🌿 1. Aesthetic Vision & Palette
 
-The design language of **My Garden World** evokes the tranquility of a lush botanical greenhouse, blending modern glassmorphism with organic warmth and earthy undertones.
+The design language of **My Garden World** evokes the tranquility of a lush botanical greenhouse, blending modern editorial layout, tactile pill ergonomics, and seamless dual-theme adaptability (Dark and Light modes).
 
-### Color Tokens
+### Dual-Theme Color Tokens
 
-| Palette | Primary Hex | Usage |
-| :--- | :--- | :--- |
-| **Forest Green** | `#1c3e2b` to `#2e744b` | Core branding, primary headers, action buttons, active navigation states |
-| **Sage Green** | `#6d8a69` to `#afc4ab` | Subtle borders, background accents, plant metadata badges |
-| **Warm Cream** | `#fbf9f4` to `#f3ece0` | Global page background, soft card backing, comfortable readability |
-| **Earthy Amber** | `#b45309` to `#f59e0b` | Flora Coins currency, level progression highlights, solar decor |
-| **Flora Accent Blue** | `#0284c7` to `#38bdf8` | Water drop indicators, hydration care actions, birdbath ripples |
+| Palette | Light Mode (`light`) | Dark Mode (`dark`) | Usage |
+| :--- | :--- | :--- | :--- |
+| **Forest Green** | `#15803d` to `#166534` | `#1c3e2b` to `#2e744b` | Core branding, primary headers, active navigation pills |
+| **Sage / Olive Accent** | `#e2ece0` to `#86efac` | `#1e293b` to `#334155` | Card borders, secondary containers, metadata badges |
+| **Surface Background** | `#f8fafc` / `#ffffff` | `#020617` / `#0b1320` | Page body, card background, glassmorphism panels |
+| **High-Contrast Text** | `#0f172a` (Charcoal Slate) | `#f8fafc` (Pure Cloud) | Primary readable typography adhering to WCAG AA contrast |
+| **Earthy Amber** | `#b45309` to `#f59e0b` | `#d97706` to `#fbbf24` | Flora Coins currency, level progression highlights |
+| **Hydration Blue** | `#0284c7` to `#38bdf8` | `#0369a1` to `#0ea5e9` | Water indicators, soil hydration guides |
+
+### Theme System Architecture
+* **`ThemeContext.tsx`**: Provides `'light' | 'dark'` state with automatic fallback to system OS `prefers-color-scheme`.
+* **Zero Flicker**: Immediately applies `<html class="dark">` or `<html class="light">` and caches choice in `localStorage ('my_garden_theme')`.
+* **Ergonomic Toggle**: Tactical Sun ☀️ / Moon 🌙 button accessible in the primary desktop header navbar and within Settings.
 
 ---
 
-## 🔤 2. Typography
+## 🏛️ 2. Editorial UX & Storytelling (Inspired by [riyaviz.me](https://riyaviz.me/))
+
+Drawing inspiration from editorial portfolio and quiet-luxury layouts:
+1. **Stacked Typography Hero:** Hero headline (*"Discover nature. Grow with intelligence. Watch life unfold."*) utilizes clamped dynamic scaling with rhythmic line spacing.
+2. **Tactile Pill Call-to-Actions:** Organic rounded pills with nested micro-icon containers and subtle hover springs.
+3. **Integrated Dropzone & Sample Specimen Station:** Direct in-hero test flowers allow visitors to evaluate the Vision Transformer AI in one click without leaving the page.
+4. **Asymmetrical Magazine Cards:** Curated showcase tiles with numbered tags (`01` Discovery, `02` Garden Care, `03` Virtual Garden) for rich visual pacing.
+5. **Architectural 4-Column Ribbon:** Highlights Taxonomy, Soil Moisture, ASPCA Safety, and Ecological Synergy.
 
 * **Display & Headers:** **`Outfit`** (Google Fonts) — Geometric, friendly, and organic for titles, banners, and modal headers.
 * **Body & Data:** **`Plus Jakarta Sans`** — Clean, legible modern sans-serif with excellent numerals for botanical metrics and transaction ledgers.

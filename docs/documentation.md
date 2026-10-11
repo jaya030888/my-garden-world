@@ -97,7 +97,7 @@ External API Calls During Run   : 0 (100% Local Inference)
 
 ## 5. Automated Test Suite Results
 
-**32 tests across 7 test files (100% Passing):**
+**43 tests across 8 test suites (100% Passing):**
 
 1. `botanicalDatabase.test.ts` (4/4): Knowledge graph taxonomy and ASPCA toxicity queries.
 2. `dataManagement.test.ts` (2/2): JSON snapshot generation and restoration.
@@ -105,7 +105,8 @@ External API Calls During Run   : 0 (100% Local Inference)
 4. `plantRecordJourney.test.ts` (4/4): Plant adoption, growth photo updates, and care history.
 5. `economyService.test.ts` (4/4): Level up progression curves and coin calculations.
 6. `questEngine.test.ts` (4/4): Quest progress tracking and idempotency checks.
-7. `server/src/__tests__/api.test.ts` (10/10): Health check, JWT authentication, unauthorized access rejection, plant CRUD, economy transactions, level restrictions, and garden grid placement.
+7. `auditMatrix.test.ts` (10/10): Confidence calibration tiers, container decoupling, non-plant detection filter, ASPCA citations, and growth journal persistence.
+8. `server/src/__tests__/api.test.ts` (11/11): Health check, JWT authentication, unauthorized access rejection, plant CRUD, economy transactions, level restrictions, and garden grid placement.
 
 ---
 

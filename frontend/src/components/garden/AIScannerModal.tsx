@@ -28,16 +28,28 @@ interface AIScannerModalProps {
 
 const CURATED_SPECIMENS = [
   {
-    name: 'English Marigold',
-    speciesKey: 'marigold',
-    color: '#f59e0b',
-    photoUrl: 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80'
+    name: 'Snake Plant',
+    speciesKey: 'snake_plant',
+    color: '#059669',
+    photoUrl: 'https://images.unsplash.com/photo-1593482892290-f54927ae1bf6?w=600&q=80'
   },
   {
-    name: 'Golden Sunflower',
-    speciesKey: 'sunflower',
-    color: '#eab308',
-    photoUrl: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80'
+    name: 'Swiss Cheese Monstera',
+    speciesKey: 'monstera',
+    color: '#22c55e',
+    photoUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&q=80'
+  },
+  {
+    name: 'Aloe Vera',
+    speciesKey: 'aloe',
+    color: '#10b981',
+    photoUrl: 'https://images.unsplash.com/photo-1567689265664-1c48de61db0b?w=600&q=80'
+  },
+  {
+    name: 'Fiddle Leaf Fig',
+    speciesKey: 'ficus',
+    color: '#15803d',
+    photoUrl: 'https://images.unsplash.com/photo-1597055181300-e3633a917c9c?w=600&q=80'
   },
   {
     name: 'Common Daisy',
@@ -46,10 +58,22 @@ const CURATED_SPECIMENS = [
     photoUrl: 'https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?w=600&q=80'
   },
   {
-    name: 'Swiss Cheese Monstera',
-    speciesKey: 'monstera',
-    color: '#22c55e',
-    photoUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&q=80'
+    name: 'Golden Sunflower',
+    speciesKey: 'sunflower',
+    color: '#eab308',
+    photoUrl: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80'
+  },
+  {
+    name: 'English Marigold',
+    speciesKey: 'marigold',
+    color: '#f59e0b',
+    photoUrl: 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80'
+  },
+  {
+    name: 'Golden Pothos',
+    speciesKey: 'pothos',
+    color: '#84cc16',
+    photoUrl: 'https://images.unsplash.com/photo-1596724898399-53b47e24484b?w=600&q=80'
   }
 ];
 
@@ -115,6 +139,22 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
       const match = CURATED_SPECIMENS.find(s => s.speciesKey === speciesKey);
       if (match) handleSelectPreset(match);
     }
+  };
+
+  const handleRefineCultivar = (cultivarKey: string) => {
+    const cultivar = VERIFIED_BOTANICAL_SPECIES[cultivarKey];
+    if (!cultivar || !result) return;
+    setResult({
+      ...result,
+      hasPlantDetected: true,
+      topPrediction: {
+        ...result.topPrediction,
+        label: cultivar.speciesName,
+        isVerifiedSpecies: true,
+        botanicalInfo: cultivar,
+        statusExplanation: `Calibrated to verified cultivar: ${cultivar.speciesName} (${cultivar.scientificName}). Care parameters active.`
+      }
+    });
   };
 
   const handleSaveToPlants = async () => {
@@ -217,38 +257,48 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
         {/* Result Presentation */}
         {result && (
           <div className="space-y-4">
-            {result.topPrediction.botanicalInfo ? (
-              <BotanicalGuideFactSheet
-                botanicalInfo={result.topPrediction.botanicalInfo}
-                prediction={result.topPrediction}
-                imageUrl={result.imageUrl}
-                isSaved={rewardGranted}
-                onSaveToCollection={handleSaveToPlants}
-              />
-            ) : result.topPrediction.detectionType === 'container_object' ? (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-3">
-                <div className="flex items-center gap-2 text-xs font-bold text-amber-900 dark:text-amber-200">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Flowerpot / Planter Container Detected ({((result.topPrediction.score || 0) * 100).toFixed(1)}%)</span>
+            {result.hasPlantDetected && result.topPrediction.botanicalInfo ? (
+              <div className="space-y-3">
+                {/* 1-Tap Cultivar Refinement Strip */}
+                <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-800 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-forest-900 dark:text-emerald-300">
+                    <span className="flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                      1-Tap Species Refinement / Match Cultivar:
+                    </span>
+                    <span className="text-[10px] text-stone-400">Calibrate care guide</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {POPULAR_CULTIVARS.map(cult => {
+                      const isSelected = result.topPrediction.botanicalInfo?.speciesName === cult.name;
+                      return (
+                        <button
+                          key={cult.key}
+                          onClick={() => handleRefineCultivar(cult.key)}
+                          className={`px-2.5 py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-forest-900 dark:bg-emerald-500 text-white dark:text-forest-950 font-bold shadow-xs scale-102'
+                              : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-emerald-500'
+                          }`}
+                        >
+                          <span>{cult.icon}</span>
+                          <span>{cult.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-                  The neural vision model identified the plant container rather than the foliage. Select the plant species growing inside to unlock its full botanical guide:
-                </p>
-                <div className="grid grid-cols-2 gap-2 pt-1">
-                  {CURATED_SPECIMENS.map(spec => (
-                    <button
-                      key={spec.speciesKey}
-                      onClick={() => handleManualSelect(spec.speciesKey)}
-                      className="px-3 py-2 text-left rounded-xl bg-white dark:bg-stone-800 border border-amber-300 dark:border-amber-700 hover:border-emerald-500 text-xs font-semibold text-stone-800 dark:text-stone-200 transition-all flex items-center gap-2 cursor-pointer shadow-2xs"
-                    >
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: spec.color }} />
-                      <span>{spec.name}</span>
-                    </button>
-                  ))}
-                </div>
+
+                <BotanicalGuideFactSheet
+                  botanicalInfo={result.topPrediction.botanicalInfo}
+                  prediction={result.topPrediction}
+                  imageUrl={result.imageUrl}
+                  isSaved={rewardGranted}
+                  onSaveToCollection={handleSaveToPlants}
+                />
               </div>
             ) : (
-              <div className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 space-y-2.5 text-xs text-center">
+              <div className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 space-y-3 text-xs text-center">
                 <div className="w-10 h-10 mx-auto rounded-full bg-rose-100 dark:bg-rose-900/60 flex items-center justify-center text-rose-600">
                   <AlertTriangle className="w-5 h-5" />
                 </div>
@@ -257,8 +307,25 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
                     No Plant Detected
                   </h4>
                   <p className="text-rose-800 dark:text-rose-300 leading-relaxed max-w-md mx-auto">
-                    We could not detect any plant in this picture (detected: <span className="font-semibold">"{result.topPrediction.label}"</span>). Please upload a clear photo of a plant leaf, flower, or foliage in good lighting.
+                    We could not detect any plant in this picture (detected: <span className="font-semibold">"{result.topPrediction.label}"</span>). Please upload a clear photo of living foliage, or tap any cultivar below to explore its verified care guide.
                   </p>
+                </div>
+                <div className="pt-2 border-t border-rose-200 dark:border-rose-800 space-y-2">
+                  <span className="text-[11px] font-bold text-rose-900 dark:text-rose-200 block">
+                    Or select a plant species to explore its verified care guide:
+                  </span>
+                  <div className="flex flex-wrap justify-center gap-1.5">
+                    {POPULAR_CULTIVARS.slice(0, 8).map(cult => (
+                      <button
+                        key={cult.key}
+                        onClick={() => handleRefineCultivar(cult.key)}
+                        className="px-2.5 py-1 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:border-emerald-500 flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>{cult.icon}</span>
+                        <span>{cult.name}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

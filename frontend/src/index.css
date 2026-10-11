@@ -20,6 +20,12 @@ body {
   color: #1c2d22;
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html.dark body {
+  background-color: #141312;
+  color: #f5f4ef;
 }
 
 h1, h2, h3, h4, .font-display {

@@ -15,15 +15,19 @@ import {
   LogOut,
   Database,
   Activity,
-  Coins
+  Coins,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { db } from '../db';
 import { useGarden } from '../context/GardenContext';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 
 export const SettingsPage: React.FC = () => {
   const { refreshData } = useGarden();
+  const { isDark, setTheme } = useTheme();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
 
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -251,6 +255,45 @@ export const SettingsPage: React.FC = () => {
               </button>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Appearance & Color Theme (Light / Dark Mode) */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 dark:border-stone-800 shadow-xs space-y-4">
+        <div className="space-y-0.5">
+          <h3 className="font-bold text-base text-forest-950 dark:text-emerald-50 flex items-center gap-2">
+            <Sun className="w-4 h-4 text-amber-500" />
+            <span>Appearance & Theme Mode</span>
+          </h3>
+          <p className="text-xs text-stone-500 dark:text-stone-400">
+            Switch between Light Botanical and Dark Obsidian mode across the entire application.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 max-w-sm pt-1">
+          <button
+            onClick={() => setTheme('light')}
+            className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
+              !isDark
+                ? 'bg-forest-900 text-white border-forest-800 shadow-xs'
+                : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-emerald-400'
+            }`}
+          >
+            <Sun className="w-4 h-4 text-amber-400" />
+            <span>Light Mode</span>
+          </button>
+
+          <button
+            onClick={() => setTheme('dark')}
+            className={`flex items-center justify-center gap-2 p-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
+              isDark
+                ? 'bg-emerald-500 text-forest-950 border-emerald-400 shadow-xs'
+                : 'bg-stone-50 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-emerald-400'
+            }`}
+          >
+            <Moon className="w-4 h-4 text-forest-950" />
+            <span>Dark Mode</span>
+          </button>
         </div>
       </div>
 

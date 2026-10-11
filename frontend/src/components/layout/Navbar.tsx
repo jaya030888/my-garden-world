@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, Sprout, Leaf, LogIn, LogOut, Camera, Sparkles } from 'lucide-react';
+import { Coins, Sprout, Leaf, LogIn, LogOut, Camera, Sparkles, Sun, Moon } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { calculateXpForNextLevel } from '../../services/economyService';
 
 export const Navbar: React.FC = () => {
   const { profile } = useGarden();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
 
   const currentLevel = user?.level || profile?.level || 1;
   const currentXp = user?.xp || profile?.xp || 0;
@@ -94,6 +96,20 @@ export const Navbar: React.FC = () => {
               />
             </div>
           </div>
+
+          {/* Theme Mode Toggle (Light / Dark) */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 sm:p-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-amber-300 border border-stone-200/80 dark:border-stone-700 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-2xs flex items-center justify-center"
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle theme"
+          >
+            {isDark ? (
+              <Sun className="w-3.5 h-3.5 text-amber-400" />
+            ) : (
+              <Moon className="w-3.5 h-3.5 text-forest-800" />
+            )}
+          </button>
 
           {/* Auth Button */}
           {isAuthenticated ? (

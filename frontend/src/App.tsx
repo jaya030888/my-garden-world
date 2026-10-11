@@ -14,6 +14,8 @@ import { GardenPage } from './pages/Garden';
 import { PlayPage } from './pages/Play';
 import { SettingsPage } from './pages/Settings';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 const AppContent: React.FC = () => {
   const location = useLocation();
   const { isScannerOpen, closeScanner } = useGarden();
@@ -49,13 +51,15 @@ const AppContent: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <GardenProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </GardenProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <GardenProvider>
+          <BrowserRouter>
+            <AppContent />
+          </BrowserRouter>
+        </GardenProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

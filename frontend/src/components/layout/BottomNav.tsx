@@ -13,7 +13,12 @@ export const BottomNav: React.FC = () => {
   }
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-lg border-t border-forest-100 dark:border-stone-800 py-1.5 px-3 shadow-lg">
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-stone-900/95 backdrop-blur-lg border-t border-forest-100 dark:border-stone-800 pt-1.5 px-3 shadow-lg select-none"
+      style={{ paddingBottom: 'max(0.375rem, env(safe-area-inset-bottom, 0px))' }}
+      role="navigation"
+      aria-label="Mobile Bottom Navigation"
+    >
       <div className="flex items-center justify-between max-w-md mx-auto">
         <Link
           to="/"

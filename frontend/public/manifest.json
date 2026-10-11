@@ -1,16 +1,78 @@
 {
-  "short_name": "GardenWorld",
+  "id": "/?source=pwa",
   "name": "My Garden World — Open-Source AI Plant Companion",
+  "short_name": "Garden World",
+  "description": "Discover nature, identify plants with on-device AI, track plant care, and build an interactive virtual garden sanctuary.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#166534",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["lifestyle", "education", "utilities", "entertainment"],
   "icons": [
     {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/favicon.svg",
+      "sizes": "any",
       "type": "image/svg+xml",
-      "sizes": "512x512"
+      "purpose": "any"
     }
   ],
-  "start_url": "/",
-  "background_color": "#fbf9f4",
-  "theme_color": "#1c3e2b",
-  "display": "standalone",
-  "orientation": "portrait"
+  "shortcuts": [
+    {
+      "name": "AI Plant Discovery",
+      "short_name": "Discover",
+      "description": "Scan and identify plants with on-device AI vision",
+      "url": "/discover",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Garden Care Journal",
+      "short_name": "Care",
+      "description": "Track watering, growth photos, and plant health",
+      "url": "/grow",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Virtual Garden Sanctuary",
+      "short_name": "Sanctuary",
+      "description": "Visit and customize your 8x8 virtual garden grid",
+      "url": "/garden",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Touch Grass Quests",
+      "short_name": "Quests",
+      "description": "Outdoor nature mindfulness timer and daily challenges",
+      "url": "/play",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
 }

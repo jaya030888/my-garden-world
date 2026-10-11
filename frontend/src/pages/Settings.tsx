@@ -17,18 +17,22 @@ import {
   Activity,
   Coins,
   Sun,
-  Moon
+  Moon,
+  Smartphone,
+  ShieldCheck
 } from 'lucide-react';
 import { db } from '../db';
 import { useGarden } from '../context/GardenContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { usePWA } from '../context/PWAContext';
 import { api } from '../services/api';
 
 export const SettingsPage: React.FC = () => {
   const { refreshData } = useGarden();
   const { isDark, setTheme } = useTheme();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
+  const { isInstallable, isInstalled, promptInstall } = usePWA();
 
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isClearing, setIsClearing] = useState(false);
@@ -339,6 +343,65 @@ export const SettingsPage: React.FC = () => {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* PWA & Mobile App Installation Card */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-forest-100/80 dark:border-stone-800 shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-bold text-base text-forest-950 dark:text-emerald-50 flex items-center gap-2">
+            <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            Mobile App & PWA Status
+          </h3>
+          <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${isInstalled ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' : 'bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300'}`}>
+            {isInstalled ? 'Installed Standalone App' : 'Browser Web Version'}
+          </span>
+        </div>
+
+        <p className="text-xs text-stone-600 dark:text-stone-400">
+          My Garden World can be installed as a progressive web app on Android, iOS, and desktop browsers, giving you full-screen botanical view, instant camera access, and offline garden journaling.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 dark:bg-stone-800/60 border border-forest-100/80 dark:border-stone-700/80">
+            <span className="text-stone-500 dark:text-stone-400 block text-[10px] uppercase font-bold">App Mode</span>
+            <span className="font-bold text-forest-950 dark:text-emerald-100 block mt-1">
+              {isInstalled ? 'Standalone Mobile App' : 'Web Browser'}
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 dark:bg-stone-800/60 border border-forest-100/80 dark:border-stone-700/80">
+            <span className="text-stone-500 dark:text-stone-400 block text-[10px] uppercase font-bold">Service Worker</span>
+            <span className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 mt-1">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Active & Caching Shell
+            </span>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-forest-50/70 dark:bg-stone-800/60 border border-forest-100/80 dark:border-stone-700/80">
+            <span className="text-stone-500 dark:text-stone-400 block text-[10px] uppercase font-bold">AI Model Weights</span>
+            <span className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5 mt-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Cached On-Device
+            </span>
+          </div>
+        </div>
+
+        {!isInstalled && (
+          <div className="pt-2">
+            <button
+              onClick={() => promptInstall()}
+              disabled={!isInstallable}
+              className={`w-full sm:w-auto flex items-center justify-center gap-2 py-3 px-5 rounded-xl font-bold text-xs shadow-xs transition-all ${
+                isInstallable
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white cursor-pointer active:scale-95'
+                  : 'bg-stone-200 dark:bg-stone-800 text-stone-500 cursor-not-allowed'
+              }`}
+            >
+              <Download className="w-4 h-4" />
+              <span>{isInstallable ? 'Install My Garden World (PWA)' : 'Installed or Auto-Prompt Available in Browser Menu'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Data Backup & Reset Controls */}

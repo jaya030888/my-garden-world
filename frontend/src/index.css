@@ -120,3 +120,18 @@ h1, h2, h3, h4, .font-display {
   );
   animation: shimmer 1.8s infinite;
 }
+
+/* Mobile Safe Area & Touch Enhancements for Standalone PWA */
+@supports (padding: max(0px)) {
+  .safe-padding-top {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+  .safe-padding-bottom {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+}
+
+button, a {
+  touch-action: manipulation;
+}
+

@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Coins, Sprout, Leaf, LogIn, LogOut, Camera, Sparkles, Sun, Moon } from 'lucide-react';
+import { Coins, Sprout, Leaf, LogIn, LogOut, Camera, Sparkles, Sun, Moon, Download } from 'lucide-react';
 import { useGarden } from '../../context/GardenContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
+import { usePWA } from '../../context/PWAContext';
 import { calculateXpForNextLevel } from '../../services/economyService';
 
 export const Navbar: React.FC = () => {
   const { profile } = useGarden();
   const { user, isAuthenticated, openAuthModal, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
+  const { isInstallable, isInstalled, promptInstall } = usePWA();
 
   const currentLevel = user?.level || profile?.level || 1;
   const currentXp = user?.xp || profile?.xp || 0;
@@ -96,6 +98,19 @@ export const Navbar: React.FC = () => {
               />
             </div>
           </div>
+
+          {/* Install App Button when installable */}
+          {isInstallable && !isInstalled && (
+            <button
+              onClick={() => promptInstall()}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
+              title="Install My Garden World as a Mobile PWA"
+              aria-label="Install App"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Install</span>
+            </button>
+          )}
 
           {/* Theme Mode Toggle (Light / Dark) */}
           <button

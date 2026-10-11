@@ -15,6 +15,8 @@ import { PlayPage } from './pages/Play';
 import { SettingsPage } from './pages/Settings';
 
 import { ThemeProvider } from './context/ThemeContext';
+import { PWAProvider } from './context/PWAContext';
+import { PWAInstallBanner } from './components/layout/PWAInstallBanner';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -23,6 +25,9 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-surface-bg text-text-primary selection:bg-emerald-500/30 selection:text-emerald-300">
+      {/* PWA Offline / Installation Banner */}
+      <PWAInstallBanner />
+
       {/* Top Sticky Navigation Bar */}
       <Navbar />
 
@@ -52,13 +57,15 @@ const AppContent: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <GardenProvider>
-          <BrowserRouter>
-            <AppContent />
-          </BrowserRouter>
-        </GardenProvider>
-      </AuthProvider>
+      <PWAProvider>
+        <AuthProvider>
+          <GardenProvider>
+            <BrowserRouter>
+              <AppContent />
+            </BrowserRouter>
+          </GardenProvider>
+        </AuthProvider>
+      </PWAProvider>
     </ThemeProvider>
   );
 };

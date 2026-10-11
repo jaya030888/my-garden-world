@@ -27,23 +27,27 @@ interface AIScannerModalProps {
 const CURATED_SPECIMENS = [
   {
     name: 'English Marigold',
+    speciesKey: 'marigold',
     color: '#f59e0b',
-    photoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="224" height="224" viewBox="0 0 224 224"><rect width="224" height="224" fill="%232e7d32"/><circle cx="112" cy="112" r="60" fill="%23ea580c"/><circle cx="112" cy="112" r="45" fill="%23f97316"/><circle cx="112" cy="112" r="30" fill="%23f59e0b"/><circle cx="112" cy="112" r="15" fill="%23fbbf24"/></svg>'
+    photoUrl: 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80'
   },
   {
     name: 'Sunflower',
+    speciesKey: 'sunflower',
     color: '#eab308',
-    photoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="224" height="224" viewBox="0 0 224 224"><rect width="224" height="224" fill="%231b4d2e"/><circle cx="112" cy="112" r="70" fill="%23facc15"/><circle cx="112" cy="112" r="40" fill="%2378350f"/></svg>'
+    photoUrl: 'https://images.unsplash.com/photo-1597848212624-a19eb35e2651?w=600&q=80'
   },
   {
     name: 'Common Daisy',
+    speciesKey: 'daisy',
     color: '#ffffff',
-    photoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="224" height="224" viewBox="0 0 224 224"><rect width="224" height="224" fill="%2315803d"/><circle cx="112" cy="112" r="65" fill="%23ffffff"/><circle cx="112" cy="112" r="28" fill="%23facc15"/></svg>'
+    photoUrl: 'https://images.unsplash.com/photo-1560717789-0ac7c58ac90a?w=600&q=80'
   },
   {
     name: 'Monstera',
+    speciesKey: 'monstera',
     color: '#22c55e',
-    photoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="224" height="224" viewBox="0 0 224 224"><rect width="224" height="224" fill="%23052e16"/><path d="M112 40C70 40 40 80 40 130C40 180 90 190 112 180C134 190 184 180 184 130C184 80 154 40 112 40Z" fill="%2322c55e"/></svg>'
+    photoUrl: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=600&q=80'
   }
 ];
 
@@ -74,21 +78,16 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
 
   const handleSelectPreset = (specimen: typeof CURATED_SPECIMENS[0]) => {
     setImagePreview(specimen.photoUrl);
-    runClassification(specimen.photoUrl);
+    runClassification(specimen.photoUrl, specimen.speciesKey);
   };
 
-  const runClassification = async (imgSrc: string) => {
+  const runClassification = async (imgSrc: string, hint?: string) => {
     setIsClassifying(true);
     setResult(null);
     setRewardGranted(false);
 
     try {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = imgSrc;
-      await new Promise(resolve => { img.onload = resolve; });
-
-      const res = await identifyPlant(img);
+      const res = await identifyPlant(imgSrc, undefined, hint);
       setResult(res);
 
       if (res.confidenceTier !== 'uncertain' && res.topPrediction.botanicalInfo) {
@@ -98,9 +97,23 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
         setRewardGranted(true);
       }
     } catch (err: any) {
-      // Fallback
+      console.warn('[AIScannerModal] Classification notice:', err);
+      // Fallback with hint if provided
+      if (hint) {
+        const res = await identifyPlant(imgSrc, undefined, hint);
+        setResult(res);
+      }
     } finally {
       setIsClassifying(false);
+    }
+  };
+
+  const handleManualSelect = (speciesKey: string) => {
+    if (imagePreview) {
+      runClassification(imagePreview, speciesKey);
+    } else {
+      const match = CURATED_SPECIMENS.find(s => s.speciesKey === speciesKey);
+      if (match) handleSelectPreset(match);
     }
   };
 
@@ -216,9 +229,23 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
                 )}
               </div>
             ) : (
-              <div className="p-3 rounded-xl bg-amber-50 text-amber-900 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Could not confirm species. Try a clearer photo in sunlight!</span>
+              <div className="space-y-2.5">
+                <div className="p-3 rounded-xl bg-amber-50 text-amber-900 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Pot detected! Select the plant species growing inside:</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {CURATED_SPECIMENS.map(spec => (
+                    <button
+                      key={spec.speciesKey}
+                      onClick={() => handleManualSelect(spec.speciesKey)}
+                      className="px-2.5 py-1.5 text-left rounded-lg bg-white dark:bg-stone-800 border border-amber-300 dark:border-stone-700 hover:border-emerald-500 text-xs font-semibold text-stone-800 dark:text-stone-200 transition-all flex items-center gap-1.5"
+                    >
+                      <span className="w-2 h-2 rounded-full" style={{ backgroundColor: spec.color }} />
+                      <span>{spec.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

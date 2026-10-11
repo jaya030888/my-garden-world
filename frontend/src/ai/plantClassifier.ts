@@ -108,105 +108,72 @@ export async function identifyPlant(
     const classifier = await getOrInitClassifier(onProgress);
     
     // Attempt standard pipeline inference
-    try {
-      if (typeof imageSource === 'string') {
-        const image = await RawImage.read(imageSource);
-        rawOutputs = await classifier(image, { topk: 5 });
-      } else if (imageSource instanceof Blob || imageSource instanceof File) {
-        const image = await RawImage.fromBlob(imageSource);
-        rawOutputs = await classifier(image, { topk: 5 });
-      } else {
-        rawOutputs = await classifier(imageSource, { topk: 5 });
-      }
-    } catch (pipeErr) {
-      // Fallback: try direct input or URL
-      rawOutputs = await classifier(imageUrl, { topk: 5 });
+    if (typeof imageSource === 'string') {
+      const image = await RawImage.read(imageSource);
+      rawOutputs = await classifier(image, { topk: 5 });
+    } else if (imageSource instanceof Blob || imageSource instanceof File) {
+      const image = await RawImage.fromBlob(imageSource);
+      rawOutputs = await classifier(image, { topk: 5 });
+    } else {
+      rawOutputs = await classifier(imageSource, { topk: 5 });
     }
   } catch (inferenceErr: any) {
-    console.warn('[PlantClassifier] Local neural inference notice:', inferenceErr);
-    
-    // Match against verified botanical dataset if network/CORS occurs on sample URLs
-    const lowerHint = (specimenHint || '').toLowerCase();
-    const lowerUrl = imageUrl.toLowerCase();
-    let detectedKey = 'marigold';
-    if (lowerHint.includes('daisy') || lowerUrl.includes('daisy') || lowerUrl.includes('bellis')) detectedKey = 'daisy';
-    else if (lowerHint.includes('sunflower') || lowerUrl.includes('sunflower') || lowerUrl.includes('helianthus')) detectedKey = 'sunflower';
-    else if (lowerHint.includes('rose') || lowerUrl.includes('rose') || lowerUrl.includes('rosa')) detectedKey = 'rose';
-    else if (lowerHint.includes('lavender') || lowerUrl.includes('lavender') || lowerUrl.includes('lavandula')) detectedKey = 'lavender';
-    else if (lowerHint.includes('monstera') || lowerUrl.includes('monstera')) detectedKey = 'monstera';
-    else if (lowerHint.includes('pothos') || lowerUrl.includes('pothos')) detectedKey = 'pothos';
-    
-    const species = VERIFIED_BOTANICAL_SPECIES[detectedKey] || VERIFIED_BOTANICAL_SPECIES['marigold'];
-    rawOutputs = [
-      { label: species.scientificName, score: 0.94 },
-      { label: 'flower', score: 0.04 },
-      { label: 'pot, flowerpot', score: 0.02 }
-    ];
+    console.error('[PlantClassifier] Local neural inference failed:', inferenceErr);
+    // Do not fabricate synthetic outputs; throw honest error to inform user
+    throw new Error(
+      inferenceErr?.message || 'Neural inference failed. Please ensure your image is clear and under 15MB.'
+    );
   }
   
   const inferenceTimeMs = Math.round(performance.now() - start) || 28;
 
   if (!rawOutputs || rawOutputs.length === 0) {
-    throw new Error('Model produced no prediction classes.');
+    throw new Error('Vision Transformer returned an empty prediction array.');
   }
 
-  // Map predictions to verified botanical taxonomy
+  // Map raw model predictions through verified botanical taxonomy evaluator
   const predictions: ClassificationPrediction[] = rawOutputs.map((item: any) => {
     const rawLabel = String(item.label || 'Unknown');
     const score = Number(item.score || 0);
     return evaluateModelPrediction(rawLabel, score);
   });
 
-  let top = predictions[0];
+  const top = predictions[0];
+  const isTopContainer = top.detectionType === 'container_object' || top.label.toLowerCase().includes('flowerpot');
+  const verifiedAlternative = predictions.find(p => p !== top && p.isVerifiedSpecies);
 
-  // Container Decoupling: If Top-1 is a container object (flowerpot, pot, vase, tray),
-  // check if any alternative prediction is a verified botanical species and promote it!
-  if (!top.isVerifiedSpecies && (top.detectionType === 'container_object' || top.label.toLowerCase().includes('flowerpot'))) {
-    const verifiedPlantCandidate = predictions.find(p => p.isVerifiedSpecies);
-    if (verifiedPlantCandidate) {
-      top = verifiedPlantCandidate;
-    } else if (specimenHint && VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()]) {
-      const hintSpecies = VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()];
-      top = {
-        label: hintSpecies.speciesName,
-        score: 0.92,
-        botanicalInfo: hintSpecies,
-        isVerifiedSpecies: true,
-        detectionType: 'species',
-        statusExplanation: `Verified botanical match: ${hintSpecies.scientificName}`
-      };
-    }
-  } else if (!top.isVerifiedSpecies && specimenHint && VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()]) {
-    const hintSpecies = VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()];
-    top = {
-      label: hintSpecies.speciesName,
-      score: 0.95,
-      botanicalInfo: hintSpecies,
-      isVerifiedSpecies: true,
-      detectionType: 'species',
-      statusExplanation: `Verified botanical match: ${hintSpecies.scientificName}`
-    };
-  }
-
+  // Truthful confidence tier calibration
   let confidenceTier: 'high' | 'moderate' | 'uncertain' = 'uncertain';
-  if (top.isVerifiedSpecies && top.score >= 0.60) {
+  if (top.isVerifiedSpecies && top.score >= 0.55) {
     confidenceTier = 'high';
-  } else if (top.isVerifiedSpecies && top.score >= 0.30) {
+  } else if ((top.isVerifiedSpecies && top.score >= 0.20) || (verifiedAlternative && verifiedAlternative.score >= 0.15)) {
     confidenceTier = 'moderate';
   } else {
     confidenceTier = 'uncertain';
+  }
+
+  // Attach curated specimen context if provided (for demonstration or preset exploration)
+  let activeBotanicalInfo = top.botanicalInfo;
+  if (!activeBotanicalInfo && specimenHint && VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()]) {
+    activeBotanicalInfo = VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()];
   }
 
   return {
     id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     timestamp: new Date().toISOString(),
     imageUrl: imageUrl || 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80',
-    topPrediction: top,
+    topPrediction: {
+      ...top,
+      botanicalInfo: activeBotanicalInfo || top.botanicalInfo,
+      statusExplanation: isTopContainer
+        ? 'Container / Flowerpot detected. The vision model identified the planter container rather than the plant species foliage.'
+        : top.statusExplanation
+    },
     alternativePredictions: predictions.filter(p => p !== top),
     inferenceTimeMs,
     modelName: MODEL_ID,
     confidenceTier,
     isSaved: false,
-    isUnidentified: !top.isVerifiedSpecies
+    isUnidentified: !top.isVerifiedSpecies && !activeBotanicalInfo
   };
 }

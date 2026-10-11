@@ -11,6 +11,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['English Daisy', 'Lawn Daisy', 'Bruisewort'],
     scientificName: 'Bellis perennis',
     family: 'Asteraceae (Composite Family)',
+    genus: 'Bellis',
+    lifespan: 'Perennial (often grown as biennial)',
+    floweringSeason: 'Early Spring to Late Autumn',
+    expectedHeight: '10 - 20 cm (4 - 8 in)',
+    temperatureRange: '10°C - 22°C (50°F - 72°F) • Cold-hardy to USDA Zone 4',
+    fertilizerGuidance: 'Light feeder; apply balanced organic compost or half-strength liquid bloom fertilizer once in early spring.',
+    pruningAndRepotting: 'Deadhead spent composite flowers to prolong blooming period and prevent aggressive self-seeding.',
+    pestsAndDiseases: [
+      { name: 'Aphids', symptoms: 'Curled tender young foliage and sticky honeydew on stems.', prevention: 'Spray with dilute horticultural soap or introduce beneficial lady beetles.' },
+      { name: 'Powdery Mildew', symptoms: 'White powdery fungal coating on upper leaf surfaces during dry humid spells.', prevention: 'Water at soil level in morning and ensure adequate spacing for airflow.' }
+    ],
+    humanToxicity: 'Non-toxic; young tender leaves and ray petals are edible raw in salads or brewed as herbal tisanes.',
+    confusableSpecies: ['Oxeye Daisy (Leucanthemum vulgare)', 'German Chamomile (Matricaria chamomilla)', 'Feverfew (Tanacetum parthenium)'],
+    sources: [
+      { title: 'ASPCA Non-Toxic Plants Registry', organization: 'ASPCA Animal Poison Control', url: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants' },
+      { title: 'Bellis perennis Plant Profile', organization: 'Royal Horticultural Society (RHS)', url: 'https://www.rhs.org.uk/plants/2070/bellis-perennis/details' },
+      { title: 'USDA Plants Database: Bellis perennis L.', organization: 'USDA Natural Resources Conservation Service' }
+    ],
     description: 'A classic perennial herb featuring a basal rosette of spoon-shaped leaves and composite flower heads with white ray florets around a bright yellow central disc.',
     nativeRegion: 'Western, central, and northern Europe',
     sunlight: 'Full sun to partial shade (4-6 hours direct sun)',
@@ -29,6 +47,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Sunflower', 'Golden Solar Bloom', 'Helianthus'],
     scientificName: 'Helianthus annuus',
     family: 'Asteraceae (Composite Family)',
+    genus: 'Helianthus',
+    lifespan: 'Annual',
+    floweringSeason: 'Mid Summer to Early Autumn (July - October)',
+    expectedHeight: '1.5 - 3.5 m (5 - 12 ft)',
+    temperatureRange: '20°C - 32°C (68°F - 90°F) • Heat tolerant',
+    fertilizerGuidance: 'Moderate to heavy feeder; incorporate slow-release potassium and phosphorus fertilizer at planting to support strong sturdy stems.',
+    pruningAndRepotting: 'Does not require pruning; stake tall varieties in windy areas. Single-stem cultivars yield one magnificent terminal bloom.',
+    pestsAndDiseases: [
+      { name: 'Sunflower Moth Larvae', symptoms: 'Damage to florets and developing seed heads with webbing.', prevention: 'Handpick caterpillars or apply Bacillus thuringiensis (Bt) at early bloom.' },
+      { name: 'Downy Mildew', symptoms: 'Pale green chlorotic patches on upper leaves with downy fungal growth beneath.', prevention: 'Use certified disease-free seed and avoid waterlogged planting beds.' }
+    ],
+    humanToxicity: 'Non-toxic; seeds and cold-pressed sunflower oil are staple human foods rich in Vitamin E and essential fatty acids.',
+    confusableSpecies: ['Jerusalem Artichoke (Helianthus tuberosus)', 'False Sunflower (Heliopsis helianthoides)'],
+    sources: [
+      { title: 'ASPCA Animal Poison Control: Sunflower', organization: 'ASPCA', url: 'https://www.aspca.org' },
+      { title: 'Helianthus annuus Guide', organization: 'Missouri Botanical Garden' },
+      { title: 'Helianthus annuus Species Factsheet', organization: 'Royal Horticultural Society (RHS)' }
+    ],
     description: 'A tall, fast-growing annual recognized for its large golden flower heads that practice heliotropism (tracking the sun from east to west during early bud stages).',
     nativeRegion: 'North America',
     sunlight: 'Full direct sun (minimum 6-8 hours daily)',
@@ -47,6 +83,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Dog Rose', 'Sweet Briar', 'Wild Briar Rose'],
     scientificName: 'Rosa canina',
     family: 'Rosaceae (Rose Family)',
+    genus: 'Rosa',
+    lifespan: 'Perennial Deciduous Shrub',
+    floweringSeason: 'Late Spring to Mid Summer (May - July)',
+    expectedHeight: '1.8 - 3.0 m (6 - 10 ft)',
+    temperatureRange: '-15°C - 28°C (5°F - 82°F) • Extremely winter-hardy',
+    fertilizerGuidance: 'Topdress with aged compost or organic rose fertilizer in early spring; stop fertilizing late summer to harden wood for frost.',
+    pruningAndRepotting: 'Prune dead wood and crossing branches in late winter while dormant. Avoid deadheading wild roses if autumn rose hips are desired.',
+    pestsAndDiseases: [
+      { name: 'Black Spot (Diplocarpon rosae)', symptoms: 'Fringed circular black spots on foliage followed by premature leaf drop.', prevention: 'Rake fallen leaves, ensure full sun exposure, and avoid overhead sprinkler watering.' },
+      { name: 'Rose Aphids', symptoms: 'Clusters of small green sap-sucking insects on flower buds.', prevention: 'Wash off with high-pressure hose blast or apply organic neem oil.' }
+    ],
+    humanToxicity: 'Non-toxic; wild rose hips are rich in Vitamin C, flavonoids, and pectin, widely harvested for herbal syrups, jams, and medicinal teas.',
+    confusableSpecies: ['Sweet Briar (Rosa rubiginosa)', 'Japanese Rose (Rosa rugosa)', 'Field Rose (Rosa arvensis)'],
+    sources: [
+      { title: 'Rosa canina Botanical Monograph', organization: 'Royal Botanic Gardens, Kew' },
+      { title: 'ASPCA Non-Toxic Plants List: Rose', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Native Plant Database: Rosa canina', organization: 'Lady Bird Johnson Wildflower Center' }
+    ],
     description: 'A thorny climbing wild shrub featuring delicate 5-petaled pale pink to white blossoms followed by nutrient-dense scarlet rosehip seed pods in autumn.',
     nativeRegion: 'Europe, Northwest Africa, and Western Asia',
     sunlight: 'Full sun for maximum blooms and fruit production (6+ hours)',
@@ -65,6 +119,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Marigold', 'Tagetes', 'African Marigold'],
     scientificName: 'Tagetes patula',
     family: 'Asteraceae (Composite Family)',
+    genus: 'Tagetes',
+    lifespan: 'Annual',
+    floweringSeason: 'Early Summer until First Hard Autumn Frost',
+    expectedHeight: '15 - 45 cm (6 - 18 in)',
+    temperatureRange: '18°C - 30°C (65°F - 86°F)',
+    fertilizerGuidance: 'Light fertilizer only; excessive nitrogen promotes lush green leaves at the expense of floral blooms.',
+    pruningAndRepotting: 'Pinch young seedlings to promote branching; regularly deadhead spent blossoms to stimulate continuous heavy blooming.',
+    pestsAndDiseases: [
+      { name: 'Spider Mites', symptoms: 'Fine webbing under leaves with stippled yellow foliage in hot dry conditions.', prevention: 'Mist foliage regularly to increase humidity and spray with insecticidal soap.' },
+      { name: 'Slugs & Snails', symptoms: 'Irregular holes chewed in young tender seedlings overnight.', prevention: 'Use copper barrier tape or beer traps around planting borders.' }
+    ],
+    humanToxicity: 'Petals are edible and commonly used as colorful culinary salad garnishes and natural food coloring (source of lutein).',
+    confusableSpecies: ['Pot Marigold / Calendula (Calendula officinalis)', 'African Marigold (Tagetes erecta)', 'Signet Marigold (Tagetes tenuifolia)'],
+    sources: [
+      { title: 'Tagetes patula Cultivar Database', organization: 'Royal Horticultural Society (RHS)' },
+      { title: 'ASPCA Advisory: Marigolds and Pet Toxicity', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Companion Planting with Tagetes patula', organization: 'University of Florida Agricultural Extension' }
+    ],
     description: 'A cheerful, compact annual with aromatic pinnate foliage and velvety ruff-petaled flowers in brilliant shades of yellow, orange, and mahogany red.',
     nativeRegion: 'Mexico and Central America',
     sunlight: 'Full direct sunlight (minimum 6 hours daily)',
@@ -83,6 +155,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Swiss Cheese Plant', 'Split-Leaf Philodendron', 'Ceriman'],
     scientificName: 'Monstera deliciosa',
     family: 'Araceae (Arum Family)',
+    genus: 'Monstera',
+    lifespan: 'Perennial Climbing Epiphyte',
+    floweringSeason: 'Rare indoors; summer in tropical outdoor habitats',
+    expectedHeight: '1.5 - 3.0 m (5 - 10 ft) indoors; up to 20 m in wild canopy',
+    temperatureRange: '18°C - 29°C (65°F - 85°F) • Protect below 12°C (54°F)',
+    fertilizerGuidance: 'Feed every 2-4 weeks during spring and summer with a balanced 20-20-20 houseplant fertilizer diluted to half strength.',
+    pruningAndRepotting: 'Repot every 2 years into a container 2 inches wider using a chunky aroid mix; provide a sturdy moss pole for aerial root attachment.',
+    pestsAndDiseases: [
+      { name: 'Thrips', symptoms: 'Silvery discoloration on leaves with tiny black fecal frass dots.', prevention: 'Isolate plant immediately, wash leaves with insecticidal soap, and treat with systemic granules.' },
+      { name: 'Root Rot', symptoms: 'Yellowing lower foliage and mushy dark brown roots from oxygen starvation.', prevention: 'Ensure pot has drainage holes and allow soil to dry 50% between waterings.' }
+    ],
+    humanToxicity: 'Leaves, stems, and unripened fruit contain insoluble calcium oxalate crystals which cause intense mouth burning and swelling if chewed. Ripe wild fruit is edible.',
+    confusableSpecies: ['Monstera adansonii (Monkey Mask)', 'Rhaphidophora tetrasperma (Mini Monstera)', 'Thaumatophyllum bipinnatifidum'],
+    sources: [
+      { title: 'ASPCA Poisonous Plants: Cutleaf Philodendron (Monstera deliciosa)', organization: 'ASPCA Animal Poison Control', url: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cutleaf-philodendron' },
+      { title: 'Monstera deliciosa Care Factsheet', organization: 'Missouri Botanical Garden' },
+      { title: 'Indoor Aroid Cultivation Manual', organization: 'International Aroid Society' }
+    ],
     description: 'An iconic tropical climbing epiphyte celebrated for its dramatic glossy green leaves that develop natural fenestrations (slits and perforations) as they mature.',
     nativeRegion: 'Tropical rainforests of Southern Mexico to Panama',
     sunlight: 'Medium to bright indirect light; avoid harsh midday direct sun.',
@@ -101,6 +191,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ["Devil's Ivy", 'Ceylon Creeper', 'Hunter’s Robe'],
     scientificName: 'Epipremnum aureum',
     family: 'Araceae (Arum Family)',
+    genus: 'Epipremnum',
+    lifespan: 'Perennial Evergreen Vine',
+    floweringSeason: 'Does not flower naturally in home cultivation (juvenile phase)',
+    expectedHeight: 'Trails 2 - 6 m (6 - 20 ft) indoors',
+    temperatureRange: '16°C - 30°C (60°F - 86°F) • Avoid cold drafts below 10°C',
+    fertilizerGuidance: 'Feed monthly in spring and summer with standard houseplant liquid fertilizer at half strength; no feeding needed in winter.',
+    pruningAndRepotting: 'Trim trailing vines just above a leaf node to encourage bushier growth; root trimmed cuttings easily in water.',
+    pestsAndDiseases: [
+      { name: 'Mealybugs', symptoms: 'White cottony wax deposits nestled in leaf axils and along stems.', prevention: 'Dab pests directly with a cotton swab dipped in 70% isopropyl alcohol.' },
+      { name: 'Bacterial Leaf Spot', symptoms: 'Water-soaked translucent lesions with yellow chlorotic halos.', prevention: 'Keep foliage dry and remove severely infected leaves.' }
+    ],
+    humanToxicity: 'Toxic if ingested by humans and pets due to sharp microscopic calcium oxalate raphides causing oral irritation, drooling, and difficulty swallowing.',
+    confusableSpecies: ['Heartleaf Philodendron (Philodendron hederaceum)', 'Scindapsus pictus (Satin Pothos)', 'Epipremnum pinnatum'],
+    sources: [
+      { title: 'ASPCA Toxic Plants: Golden Pothos', organization: 'ASPCA Animal Poison Control', url: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/golden-pothos' },
+      { title: 'Epipremnum aureum Plant Profile', organization: 'University of Florida IFAS Extension' },
+      { title: 'Interior Plant Air Quality Research', organization: 'NASA Clean Air Study (Wolverton et al.)' }
+    ],
     description: 'An exceptionally hardy trailing evergreen vine with glossy heart-shaped foliage marbled with creamy golden variegation.',
     nativeRegion: 'Mo\'orea, Society Islands (French Polynesia)',
     sunlight: 'Low to bright indirect light; very tolerant of lower light conditions.',
@@ -119,6 +227,24 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['True Lavender', 'Common Lavender', 'Garden Lavender'],
     scientificName: 'Lavandula angustifolia',
     family: 'Lamiaceae (Mint Family)',
+    genus: 'Lavandula',
+    lifespan: 'Perennial Sub-Shrub',
+    floweringSeason: 'Early to Mid Summer (June - August)',
+    expectedHeight: '40 - 90 cm (16 - 36 in)',
+    temperatureRange: '-15°C - 32°C (5°F - 90°F) • High cold hardiness',
+    fertilizerGuidance: 'Very light feeder; avoid rich soil and heavy fertilizers which promote weak, floppy growth and diminish essential oil fragrance.',
+    pruningAndRepotting: 'Prune back by one-third after summer blooming to maintain compact mounded shape; never cut into old leafless woody stems.',
+    pestsAndDiseases: [
+      { name: 'Root Rot (Phytophthora)', symptoms: 'Foliage rapidly wilts and turns dull greyish-brown while soil remains damp.', prevention: 'Plant strictly in gritty, free-draining sandy soil on mounds or raised beds.' },
+      { name: 'Spittlebugs', symptoms: 'Frothy white foam masses on tender stems enclosing feeding nymphs.', prevention: 'Wash off with garden hose; causes negligible cosmetic damage.' }
+    ],
+    humanToxicity: 'Culinary grade flowers are prized in teas, syrups, and baking; concentrated essential oils should not be ingested undiluted.',
+    confusableSpecies: ['French Lavender (Lavandula stoechas)', 'Lavandin (Lavandula x intermedia)', 'Russian Sage (Salvia yangii)'],
+    sources: [
+      { title: 'Lavandula angustifolia Plant Profile', organization: 'Royal Horticultural Society (RHS)' },
+      { title: 'ASPCA Plant Guide: Lavender', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Herb Factsheets: Lavandula', organization: 'Penn State Agricultural Extension' }
+    ],
     description: 'An aromatic evergreen sub-shrub with narrow grey-green leaves and spikes of intensely fragrant purple-violet flowers.',
     nativeRegion: 'Mediterranean (Spain, France, Italy)',
     sunlight: 'Full blazing sun (6-8+ hours direct sunlight daily)',
@@ -137,6 +263,22 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Cardoon', 'Artichoke Thistle', 'Wild Artichoke'],
     scientificName: 'Cynara cardunculus',
     family: 'Asteraceae (Composite Family)',
+    genus: 'Cynara',
+    lifespan: 'Perennial Herb',
+    floweringSeason: 'Mid to Late Summer (July - September)',
+    expectedHeight: '1.2 - 2.0 m (4 - 6.5 ft)',
+    temperatureRange: '12°C - 30°C (54°F - 86°F)',
+    fertilizerGuidance: 'Apply well-rotted organic compost around plant crown in early spring.',
+    pruningAndRepotting: 'Cut back flower stalks after blooming; blanch leaf petioles 3-4 weeks prior to autumn culinary harvest.',
+    pestsAndDiseases: [
+      { name: 'Black Bean Aphids', symptoms: 'Dense colonies on underside of leaves and stems.', prevention: 'Spray with insecticidal soap or hose off vigorously.' }
+    ],
+    humanToxicity: 'Non-toxic; petioles and young stems are traditional Mediterranean delicacies cooked in soups and gratins.',
+    confusableSpecies: ['Globe Artichoke (Cynara cardunculus var. scolymus)', 'Scotch Thistle (Onopordum acanthium)'],
+    sources: [
+      { title: 'Cynara cardunculus Plant Record', organization: 'Royal Horticultural Society (RHS)' },
+      { title: 'USDA Plants Database: Cynara cardunculus L.', organization: 'USDA NRCS' }
+    ],
     description: 'A dramatic architectural perennial thistle with deeply cut silver-grey foliage and large thistle-like violet flower heads.',
     nativeRegion: 'Mediterranean basin',
     sunlight: 'Full direct sunlight (6+ hours daily)',
@@ -155,6 +297,22 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     commonNames: ['Rapeseed', 'Oilseed Rape', 'Canola Flower'],
     scientificName: 'Brassica napus',
     family: 'Brassicaceae (Mustard Family)',
+    genus: 'Brassica',
+    lifespan: 'Annual or Biennial',
+    floweringSeason: 'Mid Spring (April - May)',
+    expectedHeight: '80 - 150 cm (32 - 60 in)',
+    temperatureRange: '10°C - 24°C (50°F - 75°F)',
+    fertilizerGuidance: 'Requires adequate nitrogen and sulfur during early rosette stage.',
+    pruningAndRepotting: 'Agricultural field crop; does not require pruning.',
+    pestsAndDiseases: [
+      { name: 'Pollen Beetles', symptoms: 'Damage to flower buds preventing pod setting.', prevention: 'Encourage natural parasitic wasp predators in conservation strips.' }
+    ],
+    humanToxicity: 'Canola cultivars are bred for low erucic acid and produce culinary canola oil.',
+    confusableSpecies: ['Wild Mustard (Sinapis arvensis)', 'Black Mustard (Brassica nigra)'],
+    sources: [
+      { title: 'Brassica napus Profile', organization: 'FAO Agricultural Species Index' },
+      { title: 'USDA Plants Database: Brassica napus L.', organization: 'USDA NRCS' }
+    ],
     description: 'A bright yellow flowering member of the mustard family cultivated globally for its golden blossoms and oil-rich seeds.',
     nativeRegion: 'Southern Europe and the Mediterranean',
     sunlight: 'Full direct sun (6+ hours)',

@@ -23,6 +23,7 @@ import {
 import { identifyPlant, ModelLoadingProgress } from '../ai/plantClassifier';
 import { IdentificationResult } from '../types';
 import { useGarden } from '../context/GardenContext';
+import { BotanicalGuideFactSheet } from '../components/garden/BotanicalGuideFactSheet';
 
 const SAMPLE_TEST_IMAGES = [
   {
@@ -339,67 +340,16 @@ export const DiscoverPage: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Verified Botanical Quick Facts */}
+                  {/* Comprehensive Botanical Fact Sheet */}
                   {isVerified && topBotanical && (
-                    <div className="space-y-3 pt-2">
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                        <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Sunlight</span>
-                          <span className="font-semibold text-forest-900">{topBotanical.sunlight}</span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Watering</span>
-                          <span className="font-semibold text-forest-900">{topBotanical.watering}</span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Soil & Substrate</span>
-                          <span className="font-semibold text-forest-900">{topBotanical.soil}</span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-forest-50/70 border border-forest-100/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Humidity</span>
-                          <span className="font-semibold text-forest-900">{topBotanical.humidity}</span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                        <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Pet Safety</span>
-                          <span className={`font-semibold flex items-center gap-1 ${topBotanical.petSafe ? 'text-emerald-700' : 'text-amber-700'}`}>
-                            {topBotanical.petSafe ? 'Pet Safe (Non-Toxic)' : 'Keep Away from Pets'}
-                          </span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Native Region</span>
-                          <span className="font-semibold text-stone-800">{topBotanical.nativeRegion}</span>
-                        </div>
-                        <div className="p-2.5 rounded-xl bg-stone-50 border border-stone-200/80 text-xs">
-                          <span className="text-[10px] text-stone-500 uppercase font-bold block">Propagation</span>
-                          <span className="font-semibold text-stone-800">{topBotanical.propagation}</span>
-                        </div>
-                      </div>
-
-                      {topBotanical.ecologicalFact && (
-                        <div className="p-3 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 text-xs space-y-1">
-                          <span className="font-extrabold text-emerald-950 flex items-center gap-1.5">
-                            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Ecological Synergy & Superpower</span>
-                          </span>
-                          <p className="text-emerald-900/90 leading-relaxed">{topBotanical.ecologicalFact}</p>
-                        </div>
-                      )}
-
-                      {topBotanical.tags && topBotanical.tags.length > 0 && (
-                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                          {topBotanical.tags.map(tag => (
-                            <span
-                              key={tag}
-                              className="px-2 py-0.5 rounded-full bg-forest-100 text-forest-800 border border-forest-200 text-[10px] font-bold"
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+                    <div className="pt-2">
+                      <BotanicalGuideFactSheet
+                        botanicalInfo={topBotanical}
+                        prediction={result.topPrediction}
+                        imageUrl={result.imageUrl}
+                        isSaved={isAddedToPlants}
+                        onSaveToCollection={handleAddToMyPlants}
+                      />
                     </div>
                   )}
 

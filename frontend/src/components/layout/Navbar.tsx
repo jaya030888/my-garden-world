@@ -21,36 +21,52 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-2">
         
         {/* Brand Logo */}
-        <Link to="/" className="flex items-center gap-2 group shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-forest-800 to-forest-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+        <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-forest-800 to-emerald-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
             <Sprout className="w-4 h-4 text-emerald-200" />
           </div>
           <div className="flex flex-col">
-            <span className="font-display font-extrabold text-sm sm:text-base text-forest-950 dark:text-emerald-50 tracking-tight leading-none">
-              FloraQuest
+            <span className="font-display font-black text-sm sm:text-base text-forest-950 dark:text-emerald-50 tracking-tight leading-none">
+              My Garden World
             </span>
             <span className="text-[9px] font-bold text-forest-600 dark:text-emerald-400 tracking-wide mt-0.5 hidden xs:inline">
-              Cozy Garden World
+              AI Nature Companion • FloraQuest
             </span>
           </div>
         </Link>
 
-        {/* Navigation Links for Secondary Features */}
-        <nav className="hidden md:flex items-center gap-1.5">
+        {/* Navigation Links for Core Pillars */}
+        <nav className="hidden lg:flex items-center gap-1">
+          <Link
+            to="/discover"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+          >
+            <Camera className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Plant Discovery</span>
+          </Link>
+
           <Link
             to="/grow"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
           >
-            <Sprout className="w-3.5 h-3.5 text-emerald-600" />
-            <span>My Plants</span>
+            <Sprout className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Garden Care</span>
+          </Link>
+
+          <Link
+            to="/garden"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Virtual Garden</span>
           </Link>
 
           <Link
             to="/play"
-            className="flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-black text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-forest-800 dark:text-emerald-300 hover:bg-forest-50 dark:hover:bg-stone-800 transition-colors"
           >
-            <Leaf className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Quests & Tasks</span>
+            <Leaf className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Quests</span>
           </Link>
         </nav>
 

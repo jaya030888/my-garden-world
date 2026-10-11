@@ -7,8 +7,8 @@ export const BottomNav: React.FC = () => {
   const location = useLocation();
   const { openScanner } = useGarden();
 
-  // Hide on main garden screens to avoid covering the game toolbelt on mobile
-  if (location.pathname === '/' || location.pathname === '/garden') {
+  // Hide only on full-screen virtual garden canvas to avoid covering the toolbelt on mobile
+  if (location.pathname === '/garden') {
     return null;
   }
 
@@ -24,19 +24,19 @@ export const BottomNav: React.FC = () => {
           <div className={`p-1 rounded-xl ${location.pathname === '/' ? 'bg-forest-100 dark:bg-emerald-950/60 text-forest-800 dark:text-emerald-300' : ''}`}>
             <Home className="w-4 h-4" />
           </div>
-          <span className="text-[10px] mt-0.5">Garden</span>
+          <span className="text-[10px] mt-0.5">Home</span>
         </Link>
 
         <Link
-          to="/grow"
+          to="/discover"
           className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
-            location.pathname === '/grow' ? 'text-forest-700 dark:text-emerald-400 font-bold scale-105' : 'text-stone-500 hover:text-forest-600'
+            location.pathname === '/discover' ? 'text-forest-700 dark:text-emerald-400 font-bold scale-105' : 'text-stone-500 hover:text-forest-600'
           }`}
         >
-          <div className={`p-1 rounded-xl ${location.pathname === '/grow' ? 'bg-forest-100 dark:bg-emerald-950/60 text-forest-800 dark:text-emerald-300' : ''}`}>
-            <Sprout className="w-4 h-4" />
+          <div className={`p-1 rounded-xl ${location.pathname === '/discover' ? 'bg-forest-100 dark:bg-emerald-950/60 text-forest-800 dark:text-emerald-300' : ''}`}>
+            <Sparkles className="w-4 h-4" />
           </div>
-          <span className="text-[10px] mt-0.5">My Plants</span>
+          <span className="text-[10px] mt-0.5">Discover</span>
         </Link>
 
         {/* ELEVATED CENTRAL SCAN BUTTON */}
@@ -49,6 +49,18 @@ export const BottomNav: React.FC = () => {
         </button>
 
         <Link
+          to="/grow"
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
+            location.pathname === '/grow' ? 'text-forest-700 dark:text-emerald-400 font-bold scale-105' : 'text-stone-500 hover:text-forest-600'
+          }`}
+        >
+          <div className={`p-1 rounded-xl ${location.pathname === '/grow' ? 'bg-forest-100 dark:bg-emerald-950/60 text-forest-800 dark:text-emerald-300' : ''}`}>
+            <Sprout className="w-4 h-4" />
+          </div>
+          <span className="text-[10px] mt-0.5">Care</span>
+        </Link>
+
+        <Link
           to="/play"
           className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
             location.pathname === '/play' ? 'text-forest-700 dark:text-emerald-400 font-bold scale-105' : 'text-stone-500 hover:text-forest-600'
@@ -58,18 +70,6 @@ export const BottomNav: React.FC = () => {
             <Compass className="w-4 h-4" />
           </div>
           <span className="text-[10px] mt-0.5">Quests</span>
-        </Link>
-
-        <Link
-          to="/settings"
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
-            location.pathname === '/settings' ? 'text-forest-700 dark:text-emerald-400 font-bold scale-105' : 'text-stone-500 hover:text-forest-600'
-          }`}
-        >
-          <div className={`p-1 rounded-xl ${location.pathname === '/settings' ? 'bg-forest-100 dark:bg-emerald-950/60 text-forest-800 dark:text-emerald-300' : ''}`}>
-            <Settings className="w-4 h-4" />
-          </div>
-          <span className="text-[10px] mt-0.5">Settings</span>
         </Link>
       </div>
     </nav>

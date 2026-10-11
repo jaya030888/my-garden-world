@@ -204,13 +204,23 @@ export const FieldJournalModal: React.FC<FieldJournalModalProps> = ({ isOpen, on
                     <span className="text-stone-400 font-bold block text-[10px]">WATERING CADENCE</span>
                     <span className="text-forest-900 dark:text-emerald-200 font-bold">{selectedInfo.watering}</span>
                   </div>
+                  <div>
+                    <span className="text-stone-400 font-bold block text-[10px]">SOIL & SUBSTRATE</span>
+                    <span className="text-forest-900 dark:text-emerald-200 font-bold">{selectedInfo.soil}</span>
+                  </div>
+                  <div>
+                    <span className="text-stone-400 font-bold block text-[10px]">ASPCA PET TOXICITY</span>
+                    <span className={`font-bold ${selectedInfo.petSafe ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                      {selectedInfo.petSafe ? 'Non-Toxic (Pet Safe)' : 'Toxic (Keep Away)'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Ecological Contribution */}
                 <div className="p-4 rounded-2xl bg-forest-50/60 dark:bg-emerald-950/30 border border-forest-200 dark:border-emerald-800 text-xs space-y-1">
                   <span className="font-extrabold text-forest-950 dark:text-emerald-200 flex items-center gap-1.5">
                     <Sparkles className="w-4 h-4 text-emerald-600" />
-                    <span>Ecological Synergy</span>
+                    <span>Ecological Synergy & Superpower</span>
                   </span>
                   <p className="text-stone-600 dark:text-stone-300">{selectedInfo.ecologicalFact}</p>
                 </div>

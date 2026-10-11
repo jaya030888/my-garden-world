@@ -39,11 +39,34 @@ export interface PlantRecord {
   isCustom?: boolean;
 }
 
+export interface BotanicalPestInfo {
+  name: string;
+  symptoms: string;
+  prevention: string;
+}
+
+export interface BotanicalSource {
+  title: string;
+  organization: string;
+  url?: string;
+}
+
 export interface BotanicalInfo {
   speciesName: string;
   commonNames: string[];
   scientificName: string;
   family: string;
+  genus?: string;
+  lifespan?: string;
+  floweringSeason?: string;
+  expectedHeight?: string;
+  temperatureRange?: string;
+  fertilizerGuidance?: string;
+  pruningAndRepotting?: string;
+  pestsAndDiseases?: BotanicalPestInfo[];
+  humanToxicity?: string;
+  confusableSpecies?: string[];
+  sources?: BotanicalSource[];
   description: string;
   nativeRegion: string;
   sunlight: string;

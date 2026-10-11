@@ -17,7 +17,7 @@ import { SettingsPage } from './pages/Settings';
 const AppContent: React.FC = () => {
   const location = useLocation();
   const { isScannerOpen, closeScanner } = useGarden();
-  const isGardenCanvas = location.pathname === '/' || location.pathname === '/garden';
+  const isGardenCanvas = location.pathname === '/garden';
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-surface-bg text-text-primary selection:bg-emerald-500/30 selection:text-emerald-300">

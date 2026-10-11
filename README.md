@@ -58,17 +58,22 @@
 
 ## 🧪 Automated Test Suites
 
-The project features a comprehensive automated test suite across frontend and backend:
+The project features a **33-test automated suite** across 7 test files (22 frontend unit tests + 11 backend integration tests):
 
 ```bash
-# Run frontend tests
-npm --prefix frontend test
+# Run all automated tests (frontend + backend)
+npm test
 
-# Run backend tests
-npm --prefix backend test
+# Run frontend tests only
+npm run test:frontend
+
+# Run backend tests only
+npm run test:backend
 ```
 
 ```text
+Test Files  7 passed (7)
+Tests       33 passed (33)
  ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
  ✓ src/__tests__/dataManagement.test.ts (2 tests)
  ✓ src/__tests__/gardenLayout.test.ts (4 tests)

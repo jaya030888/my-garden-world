@@ -21,6 +21,7 @@ import {
   Tag
 } from 'lucide-react';
 import { identifyPlant, ModelLoadingProgress } from '../ai/plantClassifier';
+import { VERIFIED_BOTANICAL_SPECIES, POPULAR_CULTIVARS } from '../ai/botanicalDatabase';
 import { IdentificationResult } from '../types';
 import { useGarden } from '../context/GardenContext';
 import { BotanicalGuideFactSheet } from '../components/garden/BotanicalGuideFactSheet';
@@ -89,6 +90,23 @@ export const DiscoverPage: React.FC = () => {
       setErrorMsg(err?.message || 'Could not process the image. Please verify file format.');
       setLoadingState({ status: 'error', message: 'Error during inference' });
     }
+  };
+
+  const handleSelectCultivar = (cultivarKey: string) => {
+    const cultivar = VERIFIED_BOTANICAL_SPECIES[cultivarKey];
+    if (!cultivar || !result) return;
+    setCustomPlantName(cultivar.speciesName);
+    setResult({
+      ...result,
+      hasPlantDetected: true,
+      topPrediction: {
+        ...result.topPrediction,
+        label: cultivar.speciesName,
+        isVerifiedSpecies: true,
+        botanicalInfo: cultivar,
+        statusExplanation: `Calibrated to verified cultivar: ${cultivar.speciesName} (${cultivar.scientificName}). Care parameters and ASPCA data active.`
+      }
+    });
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -285,18 +303,20 @@ export const DiscoverPage: React.FC = () => {
                   
                   {/* Status Badges */}
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    {isVerified ? (
-                      <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-bold flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                        Verified Species Match ({result.confidenceTier.toUpperCase()})
-                      </span>
-                    ) : isContainerObject ? (
-                      <span className="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold flex items-center gap-1.5">
-                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                        Container / Pot Detected (Unconfirmed Plant)
-                      </span>
+                    {result.hasPlantDetected ? (
+                      isContainerObject ? (
+                        <span className="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800 text-xs font-bold flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          Potted Plant Specimen ({result.confidenceTier.toUpperCase()})
+                        </span>
+                      ) : (
+                        <span className="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800 text-xs font-bold flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          Verified Botanical Match ({result.confidenceTier.toUpperCase()})
+                        </span>
+                      )
                     ) : (
-                      <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-900 border border-rose-200 text-xs font-bold flex items-center gap-1.5">
+                      <span className="px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 border border-rose-200 dark:border-rose-800 text-xs font-bold flex items-center gap-1.5">
                         <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
                         No Plant Detected
                       </span>
@@ -310,9 +330,9 @@ export const DiscoverPage: React.FC = () => {
                   {/* Title & Scientific Taxonomy */}
                   <div>
                     <h2 className="text-xl sm:text-2xl font-extrabold font-display text-forest-950 dark:text-emerald-50">
-                      {customPlantName || (isVerified ? topBotanical?.speciesName : (isContainerObject ? 'Planter Container Detected' : 'No Plant Detected'))}
+                      {customPlantName || (result.hasPlantDetected ? (topBotanical?.speciesName || result.topPrediction.label) : 'No Plant Detected')}
                     </h2>
-                    {isVerified && topBotanical?.scientificName ? (
+                    {result.hasPlantDetected && topBotanical?.scientificName ? (
                       <p className="text-xs text-stone-500 italic mt-0.5">
                         {topBotanical.scientificName} • {topBotanical.family}
                       </p>
@@ -323,32 +343,55 @@ export const DiscoverPage: React.FC = () => {
                     )}
                   </div>
 
+                  {/* 1-Tap Cultivar Refinement Bar */}
+                  <div className="p-3.5 rounded-2xl bg-forest-50/80 dark:bg-stone-800/80 border border-forest-100/80 dark:border-stone-700/80 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-forest-900 dark:text-emerald-300 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                        1-Tap Cultivar Refinement / Pick Exact Species:
+                      </span>
+                      <span className="text-[10px] text-stone-500 dark:text-stone-400">Instant Care Guide</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {POPULAR_CULTIVARS.map(cult => {
+                        const isSelected = customPlantName === cult.name || (!customPlantName && topBotanical?.speciesName === cult.name);
+                        return (
+                          <button
+                            key={cult.key}
+                            onClick={() => handleSelectCultivar(cult.key)}
+                            className={`px-2.5 py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                              isSelected
+                                ? 'bg-forest-900 dark:bg-emerald-500 text-white dark:text-forest-950 shadow-xs scale-102 font-bold'
+                                : 'bg-white dark:bg-stone-900 border border-stone-200/90 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-emerald-500'
+                            }`}
+                          >
+                            <span>{cult.icon}</span>
+                            <span>{cult.name}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Explanation / Botanical Description */}
-                  {isVerified && topBotanical?.description ? (
+                  {result.hasPlantDetected && topBotanical?.description ? (
                     <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                       {topBotanical.description}
                     </p>
-                  ) : isContainerObject ? (
-                    <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800 text-xs text-amber-950 dark:text-amber-200 space-y-2">
-                      <p className="leading-relaxed">
-                        {result.topPrediction.statusExplanation ||
-                          'The neural model detected a plant pot or container rather than the plant foliage. Please zoom in on the plant leaf or flower.'}
-                      </p>
-                    </div>
-                  ) : (
+                  ) : !result.hasPlantDetected ? (
                     <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-950 dark:text-rose-200 space-y-2">
                       <p className="leading-relaxed font-semibold">
                         No plant detected in this photo.
                       </p>
                       <p className="text-[11px] text-stone-600 dark:text-stone-300">
                         {result.topPrediction.statusExplanation ||
-                          `The vision model classified "${result.topPrediction.label}", which is not a plant species. Please upload a clear photo of a plant leaf, flower, or foliage.`}
+                          `The vision model classified "${result.topPrediction.label}", which is not a plant species. Please upload a clear photo of living plant leaves or tap a cultivar above to explore its care guide directly.`}
                       </p>
                     </div>
-                  )}
+                  ) : null}
 
                   {/* Comprehensive Botanical Fact Sheet */}
-                  {isVerified && topBotanical && (
+                  {result.hasPlantDetected && topBotanical && (
                     <div className="pt-2">
                       <BotanicalGuideFactSheet
                         botanicalInfo={topBotanical}

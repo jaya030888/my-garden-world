@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { identifyPlant } from '../../ai/plantClassifier';
+import { VERIFIED_BOTANICAL_SPECIES, POPULAR_CULTIVARS } from '../../ai/botanicalDatabase';
 import { IdentificationResult } from '../../types';
 import { useGarden } from '../../context/GardenContext';
 import { cozyAudio } from '../../services/audioService';

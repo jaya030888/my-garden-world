@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { useGarden } from '../context/GardenContext';
 import { identifyPlant, ModelLoadingProgress } from '../ai/plantClassifier';
+import { VERIFIED_BOTANICAL_SPECIES, POPULAR_CULTIVARS } from '../ai/botanicalDatabase';
 import { IdentificationResult } from '../types';
 import { BotanicalGuideFactSheet } from '../components/garden/BotanicalGuideFactSheet';
 
@@ -146,6 +147,22 @@ export const DashboardPage: React.FC = () => {
     });
     await saveDiscovery(activeResult);
     setSavedSuccess(true);
+  };
+
+  const handleRefineCultivar = (cultivarKey: string) => {
+    const cultivar = VERIFIED_BOTANICAL_SPECIES[cultivarKey];
+    if (!cultivar || !activeResult) return;
+    setActiveResult({
+      ...activeResult,
+      hasPlantDetected: true,
+      topPrediction: {
+        ...activeResult.topPrediction,
+        label: cultivar.speciesName,
+        isVerifiedSpecies: true,
+        botanicalInfo: cultivar,
+        statusExplanation: `Calibrated to verified cultivar: ${cultivar.speciesName} (${cultivar.scientificName}). Care parameters and ASPCA data active.`
+      }
+    });
   };
 
   return (
@@ -334,7 +351,7 @@ export const DashboardPage: React.FC = () => {
                   exit={{ opacity: 0, y: -12 }}
                   className="pt-2 text-left"
                 >
-                  {activeResult.topPrediction.botanicalInfo ? (
+                  {activeResult.hasPlantDetected && activeResult.topPrediction.botanicalInfo ? (
                     <>
                       <div className="flex items-center justify-between pb-3 px-1">
                         <div className="flex items-center gap-2 text-xs font-bold text-forest-900 dark:text-emerald-300">
@@ -346,6 +363,36 @@ export const DashboardPage: React.FC = () => {
                         </span>
                       </div>
 
+                      {/* Cultivar Refinement Strip */}
+                      <div className="mb-4 p-3.5 rounded-2xl bg-stone-50 dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700/80 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-forest-900 dark:text-emerald-300 flex items-center gap-1.5">
+                            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                            1-Tap Cultivar Refinement / Match Species:
+                          </span>
+                          <span className="text-[10px] text-stone-400">Instant Care Guide</span>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {POPULAR_CULTIVARS.map(cult => {
+                            const isSelected = activeResult.topPrediction.botanicalInfo?.speciesName === cult.name;
+                            return (
+                              <button
+                                key={cult.key}
+                                onClick={() => handleRefineCultivar(cult.key)}
+                                className={`px-2.5 py-1 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-forest-900 dark:bg-emerald-500 text-white dark:text-forest-950 font-bold shadow-xs scale-102'
+                                    : 'bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-emerald-500'
+                                }`}
+                              >
+                                <span>{cult.icon}</span>
+                                <span>{cult.name}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
                       <BotanicalGuideFactSheet
                         botanicalInfo={activeResult.topPrediction.botanicalInfo}
                         prediction={activeResult.topPrediction}
@@ -354,22 +401,8 @@ export const DashboardPage: React.FC = () => {
                         onSaveToCollection={handleSaveToMyPlants}
                       />
                     </>
-                  ) : activeResult.topPrediction.detectionType === 'container_object' ? (
-                    <div className="p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-center space-y-3">
-                      <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-900/60 flex items-center justify-center text-amber-600 shadow-2xs">
-                        <AlertTriangle className="w-6 h-6" />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="text-base font-black text-amber-950 dark:text-amber-100">
-                          Container Detected • No Plant Foliage Clearly Visible
-                        </h4>
-                        <p className="text-xs text-amber-800 dark:text-amber-300 max-w-md mx-auto leading-relaxed">
-                          The vision model detected a flowerpot/container ({((activeResult.topPrediction.score || 0) * 100).toFixed(1)}%). Please capture a closer shot focused on the plant leaves or flowers.
-                        </p>
-                      </div>
-                    </div>
                   ) : (
-                    <div className="p-6 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-center space-y-3">
+                    <div className="p-6 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-center space-y-4">
                       <div className="w-12 h-12 mx-auto rounded-2xl bg-rose-100 dark:bg-rose-900/60 flex items-center justify-center text-rose-600 shadow-2xs">
                         <AlertTriangle className="w-6 h-6" />
                       </div>
@@ -378,8 +411,25 @@ export const DashboardPage: React.FC = () => {
                           No Plant Detected
                         </h4>
                         <p className="text-xs text-rose-800 dark:text-rose-300 max-w-md mx-auto leading-relaxed">
-                          We could not detect any plant in this picture (detected: <span className="font-semibold">"{activeResult.topPrediction.label}"</span>). Please upload a clear photo of a plant leaf, flower, or foliage.
+                          We could not detect any plant in this picture (detected: <span className="font-semibold">"{activeResult.topPrediction.label}"</span>). Please upload a clear photo of living foliage, or tap any cultivar below to explore its verified care guide.
                         </p>
+                      </div>
+                      <div className="pt-2 border-t border-rose-200/60 dark:border-rose-800/60 space-y-2">
+                        <span className="text-[11px] font-bold text-rose-900 dark:text-rose-200 block">
+                          Or select a plant species to explore its verified care guide:
+                        </span>
+                        <div className="flex flex-wrap justify-center gap-1.5">
+                          {POPULAR_CULTIVARS.slice(0, 8).map(cult => (
+                            <button
+                              key={cult.key}
+                              onClick={() => handleRefineCultivar(cult.key)}
+                              className="px-2.5 py-1 rounded-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:border-emerald-500 flex items-center gap-1 cursor-pointer"
+                            >
+                              <span>{cult.icon}</span>
+                              <span>{cult.name}</span>
+                            </button>
+                          ))}
+                        </div>
                       </div>
                       <div className="pt-1">
                         <button

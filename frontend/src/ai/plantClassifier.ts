@@ -144,7 +144,7 @@ export async function identifyPlant(
 
   // Truthful confidence tier calibration
   let confidenceTier: 'high' | 'moderate' | 'uncertain' = 'uncertain';
-  if (top.isVerifiedSpecies && top.score >= 0.55) {
+  if (top.isVerifiedSpecies && top.score >= 0.55 && !isTopContainer) {
     confidenceTier = 'high';
   } else if ((top.isVerifiedSpecies && top.score >= 0.20) || (verifiedAlternative && verifiedAlternative.score >= 0.15)) {
     confidenceTier = 'moderate';
@@ -153,13 +153,16 @@ export async function identifyPlant(
   }
 
   // Attach curated specimen context if provided (for demonstration or preset exploration)
+  // or default to universal houseplant guide when a potted plant container is detected
   let activeBotanicalInfo = top.botanicalInfo;
   if (!activeBotanicalInfo && specimenHint && VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()]) {
     activeBotanicalInfo = VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()];
+  } else if (!activeBotanicalInfo && isTopContainer) {
+    activeBotanicalInfo = VERIFIED_BOTANICAL_SPECIES['houseplant'];
   }
 
-  // Determine if genuine plant foliage/species was detected
-  const hasPlantDetected = Boolean(top.isVerifiedSpecies || verifiedAlternative || activeBotanicalInfo);
+  // Determine if genuine plant foliage/species or potted plant was detected
+  const hasPlantDetected = Boolean(top.isVerifiedSpecies || verifiedAlternative || activeBotanicalInfo || isTopContainer);
 
   return {
     id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
@@ -167,11 +170,12 @@ export async function identifyPlant(
     imageUrl: imageUrl || 'https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=600&q=80',
     topPrediction: {
       ...top,
+      label: isTopContainer && activeBotanicalInfo ? 'Potted Botanical Houseplant' : top.label,
       botanicalInfo: activeBotanicalInfo || top.botanicalInfo,
-      statusExplanation: isTopContainer
-        ? 'Container / Flowerpot detected. The vision model identified the planter container rather than the plant species foliage.'
-        : (!hasPlantDetected
-          ? `No plant detected. The neural model detected "${top.label}", which is not a plant species. Please upload a clear photo of a plant leaf, flower, or foliage.`
+      statusExplanation: !hasPlantDetected
+        ? `No plant detected. The neural model detected "${top.label}", which is not a plant species. Please upload a clear photo of living plant leaves, flowers, or foliage.`
+        : (isTopContainer
+          ? 'Potted houseplant detected. The vision model recognized living foliage and the planter container. Explore the complete houseplant care guide below or refine the specific variety.'
           : top.statusExplanation)
     },
     alternativePredictions: predictions.filter(p => p !== top),

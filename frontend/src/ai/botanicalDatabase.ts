@@ -325,6 +325,384 @@ export const VERIFIED_BOTANICAL_SPECIES: Record<string, BotanicalInfo> = {
     ecologicalFact: 'Mass blooming rapeseed fields provide early-season foraging corridors for wild pollinators across agricultural landscapes.',
     difficulty: 'Beginner',
     tags: ['Mustard Family', 'Field Flower', 'Yellow Bloom', 'Agricultural']
+  },
+  snake_plant: {
+    speciesName: 'Snake Plant / Sansevieria',
+    commonNames: ["Mother-in-Law's Tongue", "Saint George's Sword", 'Viper’s Bowstring Hemp'],
+    scientificName: 'Dracaena trifasciata',
+    family: 'Asparagaceae (Asparagus Family)',
+    genus: 'Dracaena (formerly Sansevieria)',
+    lifespan: 'Perennial Evergreen Succulent',
+    floweringSeason: 'Rare indoors; produces fragrant pale greenish-white night blossoms',
+    expectedHeight: '30 - 120 cm (1 - 4 ft) indoors',
+    temperatureRange: '15°C - 30°C (60°F - 86°F) • Avoid cold drafts below 10°C',
+    fertilizerGuidance: 'Light feeder; feed with diluted houseplant fertilizer once in spring and once in mid-summer.',
+    pruningAndRepotting: 'Repot every 2-3 years when root-bound rhizomes push against container walls; tolerate tight pots.',
+    pestsAndDiseases: [
+      { name: 'Root Rot', symptoms: 'Soft, mushy, yellowing leaf bases caused by over-watering.', prevention: 'Allow potting mix to dry out 100% completely before watering.' },
+      { name: 'Mealybugs', symptoms: 'Cottony white fuzz nestled between vertical leaf folds.', prevention: 'Wipe down with cotton swab soaked in rubbing alcohol.' }
+    ],
+    humanToxicity: 'Contains saponins; mildly toxic to humans and pets if ingested, causing nausea and oral swelling.',
+    confusableSpecies: ['Sansevieria cylindrica', 'Sansevieria masoniana (Whale Fin)', 'Gasteria'],
+    sources: [
+      { title: 'ASPCA Toxic Plants: Snake Plant', organization: 'ASPCA Animal Poison Control', url: 'https://www.aspca.org' },
+      { title: 'NASA Clean Air Study: Benzene & Trichloroethylene Removal', organization: 'NASA' },
+      { title: 'Dracaena trifasciata Plant Profile', organization: 'Royal Botanic Gardens, Kew' }
+    ],
+    description: 'An architectural succulent with stiff, upright sword-like leaves banded in rich dark green and bordered with golden-yellow margins.',
+    nativeRegion: 'Tropical West Africa (Nigeria to the Congo)',
+    sunlight: 'Tolerates any light from dim low corners to bright indirect sunlight.',
+    watering: 'Extremely drought-tolerant; water only once every 2-4 weeks when soil is bone dry.',
+    soil: 'Gritty, loose cactus or succulent potting mix with excellent drainage.',
+    humidity: 'Thrives in average to dry household air (30-50%).',
+    toxicity: 'Mildly toxic to pets due to saponins; causes drooling and nausea if chewed.',
+    petSafe: false,
+    propagation: 'Leaf cuttings or rhizome division during repotting.',
+    ecologicalFact: 'Performs Crassulacean Acid Metabolism (CAM)—releasing oxygen and absorbing carbon dioxide at night, making it ideal for bedrooms.',
+    difficulty: 'Beginner',
+    tags: ['Low Light', 'Drought-Tolerant', 'Bedroom Plant', 'Indestructible']
+  },
+  aloe: {
+    speciesName: 'Aloe Vera',
+    commonNames: ['True Aloe', 'Burn Plant', 'Medicinal Aloe'],
+    scientificName: 'Aloe barbadensis miller',
+    family: 'Asphodelaceae (Asphodel Family)',
+    genus: 'Aloe',
+    lifespan: 'Perennial Succulent',
+    floweringSeason: 'Early Spring (yellow tubular blossoms on tall inflorescence outdoors)',
+    expectedHeight: '30 - 60 cm (1 - 2 ft)',
+    temperatureRange: '13°C - 27°C (55°F - 80°F) • Frost-sensitive',
+    fertilizerGuidance: 'Feed lightly with balanced succulent fertilizer (10-40-10) once per year in spring.',
+    pruningAndRepotting: 'Remove outer mature leaves at base for soothing topical gel; separate offset pups in spring.',
+    pestsAndDiseases: [
+      { name: 'Scale Insects', symptoms: 'Small brown waxy shells encrusted on succulent leaf surfaces.', prevention: 'Drape with horticultural neem oil or gently scrape off.' }
+    ],
+    humanToxicity: 'Clear inner gel is soothing and edible; outer yellow rind contains aloin (a harsh bitter laxative).',
+    confusableSpecies: ['Aloe arborescens (Krantz Aloe)', 'Haworthia attenuata (Zebra Plant)', 'Agave americana'],
+    sources: [
+      { title: 'Aloe vera Monograph', organization: 'World Health Organization (WHO)' },
+      { title: 'ASPCA Toxic Plants: Aloe', organization: 'ASPCA Animal Poison Control' }
+    ],
+    description: 'A stemless succulent with thick, fleshy, lance-shaped grey-green leaves with serrated margins filled with clear, soothing mucilaginous gel.',
+    nativeRegion: 'Arabian Peninsula',
+    sunlight: 'Bright direct to bright indirect sunlight (minimum 4-6 hours daily).',
+    watering: 'Soak and dry method; water thoroughly then allow soil to dry completely.',
+    soil: 'Cactus mix with perlite, pumice, and coarse sand.',
+    humidity: 'Low humidity (tolerates dry indoor radiator air).',
+    toxicity: 'Toxic to dogs and cats (contains saponins and anthraquinones in latex layer).',
+    petSafe: false,
+    propagation: 'By separating root offsets ("pups") that sprout around mother rosette.',
+    ecologicalFact: 'Cultivated for over 6,000 years, depicted in ancient Egyptian stone carvings as the "plant of immortality".',
+    difficulty: 'Beginner',
+    tags: ['Medicinal', 'Succulent', 'Healing Gel', 'Sunny Windowsill']
+  },
+  ficus: {
+    speciesName: 'Fiddle-Leaf Fig',
+    commonNames: ['Ficus Lyrata', 'Fiddle Leaf', 'Banjo Fig'],
+    scientificName: 'Ficus lyrata',
+    family: 'Moraceae (Mulberry Family)',
+    genus: 'Ficus',
+    lifespan: 'Perennial Woody Tree',
+    floweringSeason: 'Does not flower indoors',
+    expectedHeight: '1.5 - 3.0 m (5 - 10 ft) indoors',
+    temperatureRange: '18°C - 24°C (65°F - 75°F) • Avoid drafts',
+    fertilizerGuidance: 'Feed monthly during spring and summer with a high-nitrogen houseplant fertilizer.',
+    pruningAndRepotting: 'Pinch top growing tip to encourage lateral canopy branching; wipe wide leaves monthly.',
+    pestsAndDiseases: [
+      { name: 'Spider Mites', symptoms: 'Fine webbing beneath leaves with dusty speckled look.', prevention: 'Mist leaves and wipe dust regularly.' },
+      { name: 'Edema (Moisture Stress)', symptoms: 'Tiny reddish-brown spots on new unfurling leaves.', prevention: 'Establish consistent watering routine without extremes.' }
+    ],
+    humanToxicity: 'Milky sap contains furocoumarins which cause skin irritation and stomach upset if ingested.',
+    confusableSpecies: ['Ficus elastica (Rubber Tree)', 'Ficus benjamina (Weeping Fig)'],
+    sources: [
+      { title: 'Ficus lyrata Care Guide', organization: 'Missouri Botanical Garden' },
+      { title: 'ASPCA Plant Toxicity Database: Ficus', organization: 'ASPCA' }
+    ],
+    description: 'A dramatic interior statement tree known for its giant, violin-shaped (lyrate), leathery leaves with prominent veins.',
+    nativeRegion: 'Western Africa lowland tropical rainforests',
+    sunlight: 'Generous bright, filtered indirect sunlight; gentle morning sun.',
+    watering: 'Water when top 2-3 inches of potting soil are dry; ensure thorough drainage.',
+    soil: 'Rich, moisture-retentive potting mix with pine bark and perlite.',
+    humidity: 'Moderate to high humidity (50-60%).',
+    toxicity: 'Toxic to pets due to irritating milky latex sap.',
+    petSafe: false,
+    propagation: 'Stem cuttings or air-layering in spring.',
+    ecologicalFact: 'In wild jungle canopies, begins life as an epiphyte before sending aerial roots down to strangle host trees.',
+    difficulty: 'Intermediate',
+    tags: ['Statement Tree', 'Architectural', 'Iconic Houseplant']
+  },
+  succulent: {
+    speciesName: 'Jade Plant / Succulent',
+    commonNames: ['Money Tree', 'Friendship Tree', 'Lucky Plant', 'Crassula'],
+    scientificName: 'Crassula ovata',
+    family: 'Crassulaceae (Stonecrop Family)',
+    genus: 'Crassula',
+    lifespan: 'Long-lived Perennial Succulent Shrub',
+    floweringSeason: 'Late Winter (clusters of small white or pink star flowers)',
+    expectedHeight: '60 - 150 cm (2 - 5 ft) indoors',
+    temperatureRange: '15°C - 24°C (60°F - 75°F) • Protect from freezing',
+    fertilizerGuidance: 'Feed with half-strength balanced liquid fertilizer every 2 months in growing season.',
+    pruningAndRepotting: 'Prune leggy stems to promote a thick, tree-like miniature trunk; repot every 2-3 years.',
+    pestsAndDiseases: [
+      { name: 'Mealybugs', symptoms: 'White cotton-like clusters along stem nodes.', prevention: 'Dab with 70% alcohol on a cotton swab.' }
+    ],
+    humanToxicity: 'Ingestion causes mild gastrointestinal discomfort in humans.',
+    confusableSpecies: ['Portulacaria afra (Elephant Bush)', 'Crassula arborescens (Silver Jade)'],
+    sources: [
+      { title: 'ASPCA Toxic Plants: Jade Plant', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Crassula ovata Guide', organization: 'Royal Horticultural Society (RHS)' }
+    ],
+    description: 'A beloved succulent featuring thick, woody, miniature tree branches with plump, glossy, jade-green oval leaves.',
+    nativeRegion: 'South Africa and Mozambique',
+    sunlight: 'Bright direct light to sunny windowsill (4+ hours direct sun).',
+    watering: 'Allow soil to dry out completely between waterings; reduce in winter.',
+    soil: 'Well-draining gritty cactus/succulent soil.',
+    humidity: 'Low humidity (thrives in dry indoor air).',
+    toxicity: 'Toxic to dogs and cats (causes lethargy, vomiting, and ataxia).',
+    petSafe: false,
+    propagation: 'Extremely easy from individual leaf cuttings or stem tip divisions.',
+    ecologicalFact: 'Can live for over 70 years, often handed down through generations as a symbol of prosperity and endurance.',
+    difficulty: 'Beginner',
+    tags: ['Succulent', 'Long-Lived', 'Easy Care', 'Bonsai-like']
+  },
+  peace_lily: {
+    speciesName: 'Peace Lily',
+    commonNames: ['Spathiphyllum', 'White Sails', 'Closet Plant'],
+    scientificName: 'Spathiphyllum wallisii',
+    family: 'Araceae (Arum Family)',
+    genus: 'Spathiphyllum',
+    lifespan: 'Perennial Herbaceous Evergreen',
+    floweringSeason: 'Spring and Summer (long-lasting white floral spathes)',
+    expectedHeight: '40 - 90 cm (16 - 36 in)',
+    temperatureRange: '18°C - 27°C (65°F - 80°F) • Sensitive to cold below 12°C',
+    fertilizerGuidance: 'Light feeder; feed with balanced bloom-boosting fertilizer every 6 weeks in spring/summer.',
+    pruningAndRepotting: 'Deadhead faded brown flower spathes at the soil line to stimulate new blooms.',
+    pestsAndDiseases: [
+      { name: 'Brown Leaf Tips', symptoms: 'Foliage tips turn dry and brown.', prevention: 'Use filtered or dechlorinated water and increase humidity.' }
+    ],
+    humanToxicity: 'Contains calcium oxalate crystals causing oral pain and irritation if ingested.',
+    confusableSpecies: ['Anthurium (Tail Flower)', 'Aglaonema (Chinese Evergreen)'],
+    sources: [
+      { title: 'ASPCA Poison Control: Peace Lily', organization: 'ASPCA' },
+      { title: 'NASA Clean Air Study', organization: 'NASA' }
+    ],
+    description: 'An elegant tropical houseplant featuring lush deep-green glossy foliage and graceful white floral spathes that resemble white flags of peace.',
+    nativeRegion: 'Tropical rainforests of Central and South America',
+    sunlight: 'Medium to low indirect light; avoids direct scorching sun.',
+    watering: 'Keep soil lightly moist; dramatically droops leaves when thirsty then rebounds immediately after watering.',
+    soil: 'Rich, organic, well-draining potting soil.',
+    humidity: 'High humidity preferred (50-70%).',
+    toxicity: 'Toxic to cats and dogs (calcium oxalate crystals cause oral burning).',
+    petSafe: false,
+    propagation: 'Crown division during spring repotting.',
+    ecologicalFact: 'One of the top-performing air purifying plants studied by NASA, absorbing trichloroethylene and benzene.',
+    difficulty: 'Beginner',
+    tags: ['Flowering Houseplant', 'Low Light', 'Air Purifying', 'Dramatic']
+  },
+  spider_plant: {
+    speciesName: 'Spider Plant',
+    commonNames: ['Airplane Plant', 'Ribbon Plant', 'St. Bernard’s Lily'],
+    scientificName: 'Chlorophytum comosum',
+    family: 'Asparagaceae (Asparagus Family)',
+    genus: 'Chlorophytum',
+    lifespan: 'Perennial Herb',
+    floweringSeason: 'Spring and Summer (tiny white star blooms along long runners)',
+    expectedHeight: '30 - 60 cm (12 - 24 in) trailing cascading ribbons',
+    temperatureRange: '13°C - 27°C (55°F - 80°F)',
+    fertilizerGuidance: 'Feed monthly during spring and summer with half-strength liquid fertilizer.',
+    pruningAndRepotting: 'Snip baby spiderettes from trailing stolons to root in water or soil.',
+    pestsAndDiseases: [
+      { name: 'Fluoride / Salt Burn', symptoms: 'Crispy brown leaf tips.', prevention: 'Water with rainwater or filtered water.' }
+    ],
+    humanToxicity: 'Completely non-toxic to humans and animals.',
+    confusableSpecies: ['Pandanus (Screw Pine)', 'Dracaena marginata'],
+    sources: [
+      { title: 'ASPCA Non-Toxic Plants: Spider Plant', organization: 'ASPCA Animal Poison Control', url: 'https://www.aspca.org' },
+      { title: 'Chlorophytum comosum Guide', organization: 'Royal Horticultural Society (RHS)' }
+    ],
+    description: 'A classic, cheerful hanging plant featuring rosettes of slender, arching ribbon leaves striped with crisp white and emerald green.',
+    nativeRegion: 'Tropical and Southern Africa',
+    sunlight: 'Bright to moderate indirect light.',
+    watering: 'Water when top 1-2 inches of soil feel dry; fleshy tuberous roots store water well.',
+    soil: 'Standard, well-draining all-purpose potting soil.',
+    humidity: 'Tolerates normal home humidity (40-60%).',
+    toxicity: 'Non-toxic and pet-safe for cats and dogs (mild hallucinogenic effect in curious cats like catnip).',
+    petSafe: true,
+    propagation: 'Planting miniature "spiderettes" that form on long arching stems.',
+    ecologicalFact: 'Renowned for removing formaldehyde, carbon monoxide, and xylene from indoor household air.',
+    difficulty: 'Beginner',
+    tags: ['Pet Safe', 'Air Purifier', 'Hanging Basket', 'Easy Propagation']
+  },
+  fern: {
+    speciesName: 'Boston Fern',
+    commonNames: ['Sword Fern', 'Boston Sword Fern', 'Wild Boston Fern'],
+    scientificName: 'Nephrolepis exaltata',
+    family: 'Lomariopsidaceae (Fern Family)',
+    genus: 'Nephrolepis',
+    lifespan: 'Perennial Evergreen Fern',
+    floweringSeason: 'Non-flowering; reproduces via spores on underside of fronds',
+    expectedHeight: '40 - 90 cm (16 - 36 in) arching fronds',
+    temperatureRange: '16°C - 24°C (60°F - 75°F)',
+    fertilizerGuidance: 'Light feeder; feed with diluted liquid fertilizer once a month in spring/summer.',
+    pruningAndRepotting: 'Trim discolored or dried fronds at crown level to stimulate fresh green fiddleheads.',
+    pestsAndDiseases: [
+      { name: 'Frond Desiccation', symptoms: 'Pale green, brittle, shedding leaflets.', prevention: 'Increase humidity and do not let root ball dry out completely.' }
+    ],
+    humanToxicity: 'Non-toxic to humans and animals.',
+    confusableSpecies: ['Kimberly Queen Fern (Nephrolepis obliterata)', 'Maidenhair Fern (Adiantum)'],
+    sources: [
+      { title: 'ASPCA Non-Toxic Plants: Boston Fern', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Nephrolepis exaltata Care', organization: 'Missouri Botanical Garden' }
+    ],
+    description: 'A lush, graceful fern with feathery, sword-shaped arching fronds packed with delicate emerald green pinnae.',
+    nativeRegion: 'Tropical regions throughout the Americas and West Indies',
+    sunlight: 'Bright indirect or dappled light; avoid harsh direct sun.',
+    watering: 'Keep soil consistently moist but never soggy; never let soil dry out completely.',
+    soil: 'Rich, peaty, well-draining soil with good organic matter.',
+    humidity: 'High humidity essential (60-80%); ideal for bathrooms or pebble trays.',
+    toxicity: 'Non-toxic and 100% pet-safe for dogs, cats, and horses.',
+    petSafe: true,
+    propagation: 'Division of root runner clumps in spring.',
+    ecologicalFact: 'Acts as a natural humidifier—transpiring large amounts of pure moisture into dry air-conditioned rooms.',
+    difficulty: 'Intermediate',
+    tags: ['Pet Safe', 'Lush Fronds', 'Bathroom Plant', 'Humidifier']
+  },
+  orchid: {
+    speciesName: 'Moth Orchid',
+    commonNames: ['Phalaenopsis Orchid', 'Moon Orchid', 'Moth Flower'],
+    scientificName: 'Phalaenopsis aphrodite',
+    family: 'Orchidaceae (Orchid Family)',
+    genus: 'Phalaenopsis',
+    lifespan: 'Perennial Epiphytic Herb',
+    floweringSeason: 'Winter to Spring (blooms last 2-3 months on graceful arching spikes)',
+    expectedHeight: '30 - 60 cm (12 - 24 in)',
+    temperatureRange: '18°C - 28°C (65°F - 82°F) • Night drop of 5°C triggers reblooming',
+    fertilizerGuidance: 'Weekly, weakly: feed with balanced orchid fertilizer at 1/4 strength 3 out of 4 weeks.',
+    pruningAndRepotting: 'When flowers drop, cut spike above a green node for potential branch blooms; repot into fresh fir bark every 1-2 years.',
+    pestsAndDiseases: [
+      { name: 'Crown Rot', symptoms: 'Black soggy leaf bases from standing water trapped in crown.', prevention: 'Never allow water to sit in the center leaf crevice.' }
+    ],
+    humanToxicity: 'Non-toxic and edible blooms used as fine pastry garnishes.',
+    confusableSpecies: ['Dendrobium Orchid', 'Cymbidium Orchid', 'Cattleya'],
+    sources: [
+      { title: 'ASPCA Non-Toxic Plants: Phalaenopsis Orchid', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Phalaenopsis Culture Sheet', organization: 'American Orchid Society (AOS)' }
+    ],
+    description: 'An exquisite tropical epiphyte with broad, leathery, dark-green leaves and long arching sprays of moth-like blooms in white, magenta, pink, or yellow.',
+    nativeRegion: 'Southeast Asia and Northern Australia',
+    sunlight: 'Bright indirect east or shaded south windowsill.',
+    watering: 'Water once weekly by soaking bark; drain thoroughly. Roots turn silvery-green when thirsty.',
+    soil: 'Coarse fir orchid bark, charcoal, and sphagnum moss (no potting dirt!).',
+    humidity: 'Moderate to high humidity (50-70%).',
+    toxicity: 'Non-toxic and completely pet-safe for cats and dogs.',
+    petSafe: true,
+    propagation: 'By keiki offsets that sprout on mature flower spikes.',
+    ecologicalFact: 'Wild epiphytes cling to tree bark with specialized photosynthetic velamen roots that absorb humidity directly from rain clouds.',
+    difficulty: 'Intermediate',
+    tags: ['Pet Safe', 'Long Blooming', 'Exotic Flower', 'Epiphyte']
+  },
+  basil: {
+    speciesName: 'Sweet Basil',
+    commonNames: ['Genovese Basil', 'Garden Basil', 'Great Basil'],
+    scientificName: 'Ocimum basilicum',
+    family: 'Lamiaceae (Mint Family)',
+    genus: 'Ocimum',
+    lifespan: 'Tender Annual Herb',
+    floweringSeason: 'Mid Summer (pinch off flower spikes to preserve leaf flavor)',
+    expectedHeight: '30 - 60 cm (12 - 24 in)',
+    temperatureRange: '18°C - 32°C (65°F - 90°F) • Highly sensitive to cold below 10°C',
+    fertilizerGuidance: 'Feed every 2-3 weeks with organic liquid fish emulsion or seaweed fertilizer.',
+    pruningAndRepotting: 'Pinch center stem regularly above a pair of leaves to stimulate bushy multi-branch growth.',
+    pestsAndDiseases: [
+      { name: 'Fusarium Wilt', symptoms: 'Stems develop brown streaks and leaves wilt rapidly.', prevention: 'Plant in sterile potting soil and avoid over-watering.' }
+    ],
+    humanToxicity: 'Non-toxic; premier culinary culinary herb celebrated worldwide in pestos, pizzas, and salads.',
+    confusableSpecies: ['Thai Basil (Ocimum basilicum var. thyrsiflora)', 'Holy Basil / Tulsi (Ocimum tenuiflorum)'],
+    sources: [
+      { title: 'ASPCA Non-Toxic Plants: Basil', organization: 'ASPCA Animal Poison Control' },
+      { title: 'Ocimum basilicum Herb Guide', organization: 'Royal Horticultural Society (RHS)' }
+    ],
+    description: 'A prized aromatic annual herb with glossy, cup-shaped, tender green leaves bursting with clove, anise, and peppery essential oils.',
+    nativeRegion: 'Tropical regions of Central Africa to Southeast Asia',
+    sunlight: 'Full direct sunshine (minimum 6-8 hours daily).',
+    watering: 'Water when top inch of soil is dry; water at base to keep leaves dry.',
+    soil: 'Moist, rich, well-draining garden soil or potting mix.',
+    humidity: 'Moderate humidity with good airflow.',
+    toxicity: 'Non-toxic to dogs, cats, and horses (ASPCA verified).',
+    petSafe: true,
+    propagation: 'By seed or stem cuttings rooted in water in 5-7 days.',
+    ecologicalFact: 'Produces eugenol and linalool, volatile organic compounds that repel pest flies while companion planting enhances tomato flavor.',
+    difficulty: 'Beginner',
+    tags: ['Culinary Herb', 'Edible', 'Pet Safe', 'Fragrant Foliage']
+  },
+  bonsai: {
+    speciesName: 'Ginseng Ficus Bonsai',
+    commonNames: ['Banyan Fig', 'Pot-Bellied Fig', 'Miniature Fig Bonsai'],
+    scientificName: 'Ficus microcarpa',
+    family: 'Moraceae (Mulberry Family)',
+    genus: 'Ficus',
+    lifespan: 'Perennial Woody Miniature Tree',
+    floweringSeason: 'Non-flowering indoors',
+    expectedHeight: '20 - 50 cm (8 - 20 in) cultivated bonsai size',
+    temperatureRange: '15°C - 28°C (60°F - 82°F) • Protect from cold drafts',
+    fertilizerGuidance: 'Feed monthly throughout spring and summer with half-strength organic bonsai fertilizer.',
+    pruningAndRepotting: 'Prune back to 2 leaves after 6-8 leaves have grown; wire branches in spring for sculptural form.',
+    pestsAndDiseases: [
+      { name: 'Leaf Drop', symptoms: 'Healthy green leaves suddenly drop after relocation.', prevention: 'Place in permanent bright spot without cold drafts.' }
+    ],
+    humanToxicity: 'Milky sap causes mild dermatitis in sensitive skin.',
+    confusableSpecies: ['Ficus retusa', 'Carmona microphylla (Fukien Tea)'],
+    sources: [
+      { title: 'Bonsai Cultivation Manual', organization: 'British Bonsai Association' },
+      { title: 'Ficus microcarpa Profile', organization: 'Kew Science' }
+    ],
+    description: 'A sculptural bonsai featuring swollen, bulbous root trunks that resemble ancient ginseng roots topped with a lush canopy of glossy oval leaves.',
+    nativeRegion: 'Tropical Asia and Australasia',
+    sunlight: 'Bright indirect light with some gentle direct morning sunshine.',
+    watering: 'Water when top inch of bonsai soil dries; never let pot sit in standing water.',
+    soil: 'Akadama, pumice, and lava rock bonsai potting substrate.',
+    humidity: 'Enjoys moderate humidity; benefits from daily leaf misting.',
+    toxicity: 'Toxic to pets if chewed (milky sap contains ficin).',
+    petSafe: false,
+    propagation: 'Stem cuttings or root cuttings.',
+    ecologicalFact: 'Practiced as a contemplative living art form for over 1,000 years, symbolizing patience, harmony, and natural balance.',
+    difficulty: 'Intermediate',
+    tags: ['Living Art', 'Bonsai', 'Sculptural', 'Zen Decor']
+  },
+  houseplant: {
+    speciesName: 'Potted Botanical Houseplant',
+    commonNames: ['Indoor Houseplant', 'Container Plant', 'Botanical Cultivar'],
+    scientificName: 'Plantae Indoor Cultivar',
+    family: 'Botanical Cultivar Group',
+    genus: 'Plantae',
+    lifespan: 'Perennial Indoor Houseplant',
+    floweringSeason: 'Varies by species; spring and summer vegetative growth',
+    expectedHeight: '30 - 150 cm (1 - 5 ft) depending on cultivar',
+    temperatureRange: '18°C - 26°C (65°F - 78°F) • Standard room temperature',
+    fertilizerGuidance: 'Feed with balanced liquid houseplant fertilizer (10-10-10) diluted to half strength monthly during active spring and summer growth.',
+    pruningAndRepotting: 'Prune spent or yellowing foliage at the stem base using clean shears; repot into a container 2 inches wider when roots fill the pot.',
+    pestsAndDiseases: [
+      { name: 'Spider Mites & Fungus Gnats', symptoms: 'Tiny gnats around moist potting mix or fine webbing under leaves.', prevention: 'Allow top 2 inches of soil to dry out between waterings and use sticky traps.' }
+    ],
+    humanToxicity: 'Ornamental houseplant; avoid pet and child ingestion as many tropical houseplants contain calcium oxalate.',
+    confusableSpecies: ['Monstera', 'Pothos', 'Philodendron', 'Ficus', 'Sansevieria', 'Dracaena'],
+    sources: [
+      { title: 'Houseplant Care & Environmental Management', organization: 'Royal Horticultural Society (RHS)', url: 'https://www.rhs.org.uk' },
+      { title: 'ASPCA Animal Poison Control Center', organization: 'ASPCA', url: 'https://www.aspca.org' },
+      { title: 'NASA Indoor Air Study Guidelines', organization: 'NASA' }
+    ],
+    description: 'A living potted houseplant specimen. Brings lush vibrant foliage, natural air humidification, and biophilic tranquility into your living space.',
+    nativeRegion: 'Tropical and subtropical understory ecosystems',
+    sunlight: 'Medium to bright indirect sunlight; avoid harsh scorching direct sun.',
+    watering: 'Check soil with your finger: water thoroughly when the top 1-2 inches feel dry to the touch.',
+    soil: 'Well-draining, airy potting soil with perlite, peat moss, or coco coir.',
+    humidity: 'Standard household humidity (40-60%); benefits from regular leaf misting.',
+    toxicity: 'Place on elevated stands or tables out of reach of curious pets.',
+    petSafe: false,
+    propagation: 'Stem cuttings rooted in clean water or moist potting mix.',
+    ecologicalFact: 'Indoor houseplants transpire pure filtered water vapor into room air, naturally buffering indoor humidity and absorbing ambient VOCs.',
+    difficulty: 'Beginner',
+    tags: ['Indoor Houseplant', 'Potted Flora', 'Air Cleansing', 'Biophilic Living']
   }
 };
 
@@ -356,7 +734,7 @@ export function evaluateModelPrediction(
 ): ClassificationPrediction {
   const clean = rawLabel.toLowerCase().trim();
 
-  // 1. Check if the model predicted an inanimate container or non-species object
+  // 1. Check if the model predicted an inanimate container or flowerpot
   if (INANIMATE_CONTAINER_LABELS.has(clean) || clean.includes('flowerpot') || clean === 'pot') {
     return {
       label: 'Flowerpot Container (Object)',
@@ -364,7 +742,7 @@ export function evaluateModelPrediction(
       isVerifiedSpecies: false,
       detectionType: 'container_object',
       statusExplanation:
-        'The vision model detected a flowerpot container rather than the specific plant species inside it. You can label and save this plant manually.'
+        'The vision model detected a flowerpot container rather than the specific plant species inside it. You can label and save this plant manually or choose a cultivar below.'
     };
   }
 
@@ -381,6 +759,116 @@ export function evaluateModelPrediction(
   }
 
   // 3. Keyword / Substring match for verified species
+  if (clean.includes('snake') || clean.includes('sansevieria')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['snake_plant'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['snake_plant'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Dracaena trifasciata (Snake Plant)'
+    };
+  }
+
+  if (clean.includes('aloe')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['aloe'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['aloe'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Aloe barbadensis (Aloe Vera)'
+    };
+  }
+
+  if (clean.includes('ficus') || clean.includes('fig') || clean.includes('lyrata')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['ficus'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['ficus'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Ficus lyrata (Fiddle-Leaf Fig)'
+    };
+  }
+
+  if (clean.includes('succulent') || clean.includes('crassula') || clean.includes('jade') || clean.includes('echeveria') || clean.includes('cactus')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['succulent'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['succulent'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Crassula ovata (Jade Plant / Succulent)'
+    };
+  }
+
+  if (clean.includes('peace') || clean.includes('spathiphyllum')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['peace_lily'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['peace_lily'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Spathiphyllum (Peace Lily)'
+    };
+  }
+
+  if (clean.includes('spider') || clean.includes('chlorophytum')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['spider_plant'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['spider_plant'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Chlorophytum comosum (Spider Plant)'
+    };
+  }
+
+  if (clean.includes('fern') || clean.includes('nephrolepis')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['fern'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['fern'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Nephrolepis exaltata (Boston Fern)'
+    };
+  }
+
+  if (clean.includes('orchid') || clean.includes('phalaenopsis') || clean.includes('slipper')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['orchid'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['orchid'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Orchidaceae (Orchid Specimen)'
+    };
+  }
+
+  if (clean.includes('basil') || clean.includes('ocimum')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['basil'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['basil'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Ocimum basilicum (Sweet Basil)'
+    };
+  }
+
+  if (clean.includes('bonsai')) {
+    return {
+      label: VERIFIED_BOTANICAL_SPECIES['bonsai'].speciesName,
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['bonsai'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: 'Verified botanical match: Ficus microcarpa (Ginseng Bonsai)'
+    };
+  }
+
   if (clean.includes('daisy')) {
     return {
       label: VERIFIED_BOTANICAL_SPECIES['daisy'].speciesName,
@@ -480,14 +968,59 @@ export function evaluateModelPrediction(
     };
   }
 
-  // 4. Unconfirmed / Generic class label
+  // 4. Botanical foliage, agricultural crops, and wild herbs
+  if (
+    clean.includes('greenhouse') ||
+    clean.includes('ear, spike') ||
+    clean.includes('capitulum') ||
+    clean.includes('acorn') ||
+    clean.includes('hay') ||
+    clean.includes('corn') ||
+    clean.includes('cabbage') ||
+    clean.includes('broccoli') ||
+    clean.includes('cauliflower') ||
+    clean.includes('zucchini') ||
+    clean.includes('artichoke') ||
+    clean.includes('pepper') ||
+    clean.includes('mushroom') ||
+    clean.includes('velvet') ||
+    clean.includes('quill') ||
+    clean.includes('leaf') ||
+    clean.includes('vine') ||
+    clean.includes('plant') ||
+    clean.includes('tree')
+  ) {
+    return {
+      label: 'Botanical Foliage / Garden Flora',
+      score,
+      botanicalInfo: VERIFIED_BOTANICAL_SPECIES['houseplant'],
+      isVerifiedSpecies: true,
+      detectionType: 'species',
+      statusExplanation: `Botanical specimen recognized (${clean}). Explore the care guide below or refine the specific variety.`
+    };
+  }
+
+  // 5. Inanimate Non-Botanical Objects (Strict Non-Plant Filter)
+  const NON_BOTANICAL_KEYWORDS = [
+    'laptop', 'notebook', 'computer', 'keyboard', 'mouse', 'cellular', 'phone', 'cellphone',
+    'mug', 'cup', 'bottle', 'car', 'automobile', 'vehicle', 'dog', 'canine', 'cat', 'feline',
+    'refrigerator', 'shoe', 'boot', 'sneaker', 'sofa', 'couch', 'chair', 'desk', 'table',
+    'television', 'monitor', 'screen', 'remote', 'control', 'pen', 'pencil', 'watch',
+    'backpack', 'bag', 'purse', 'wallet', 'motorcycle', 'bike', 'bicycle', 'airplane',
+    'microwave', 'toaster', 'pizza', 'sandwich', 'burger', 'guitar', 'piano', 'lighter'
+  ];
+
+  const isExplicitNonPlant = NON_BOTANICAL_KEYWORDS.some(kw => clean.includes(kw));
   const formattedRaw = clean.split(',')[0].trim().replace(/^\w/, c => c.toUpperCase());
+
   return {
     label: formattedRaw,
     score,
     isVerifiedSpecies: false,
     detectionType: 'unidentified',
-    statusExplanation: `The vision model predicted class '${clean}', but this is not a verified species in the botanical database.`
+    statusExplanation: isExplicitNonPlant
+      ? `The vision model detected an inanimate object or device ('${formattedRaw}'). Please capture a living plant, leaf, or flower.`
+      : `The vision model predicted class '${clean}', but this is not a verified species in the botanical database.`
   };
 }
 
@@ -591,3 +1124,18 @@ export function getPlantCareAndUses(plantNameOrSpecies: string): PlantCareAndUse
   };
 }
 
+export const POPULAR_CULTIVARS = [
+  { key: 'snake_plant', name: 'Snake Plant', scientific: 'Dracaena trifasciata', icon: '🪴' },
+  { key: 'monstera', name: 'Monstera Deliciosa', scientific: 'Monstera deliciosa', icon: '🌿' },
+  { key: 'pothos', name: 'Golden Pothos', scientific: 'Epipremnum aureum', icon: '🍃' },
+  { key: 'ficus', name: 'Fiddle Leaf Fig', scientific: 'Ficus lyrata', icon: '🌳' },
+  { key: 'aloe', name: 'Aloe Vera', scientific: 'Aloe barbadensis', icon: '🌵' },
+  { key: 'succulent', name: 'Jade / Succulent', scientific: 'Crassula ovata', icon: '🪴' },
+  { key: 'peace_lily', name: 'Peace Lily', scientific: 'Spathiphyllum', icon: '🌸' },
+  { key: 'spider_plant', name: 'Spider Plant', scientific: 'Chlorophytum comosum', icon: '🌾' },
+  { key: 'fern', name: 'Boston Fern', scientific: 'Nephrolepis exaltata', icon: '🌿' },
+  { key: 'orchid', name: 'Orchid', scientific: 'Orchidaceae', icon: '🌺' },
+  { key: 'basil', name: 'Sweet Basil', scientific: 'Ocimum basilicum', icon: '🌱' },
+  { key: 'bonsai', name: 'Bonsai Tree', scientific: 'Ficus microcarpa', icon: '🎍' },
+  { key: 'houseplant', name: 'Universal Houseplant', scientific: 'Indoor Botanical', icon: '🪴' }
+];

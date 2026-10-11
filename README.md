@@ -3,11 +3,43 @@
 > **"Discover nature. Grow with intelligence. Watch life unfold."**  
 > *Built for Hacktoberfest Open-Source AI Challenge, Week 1: Touch Grass.*
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://my-garden-world-tau.vercel.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/jaya030888/my-garden-world)
+[![Database](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-00e599?style=for-the-badge&logo=postgresql)](https://neon.tech)
+[![AI Model](https://img.shields.io/badge/Vision%20AI-ViT--Base--224-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/Xenova/vit-base-patch16-224)
+
 ---
 
 ## 🌟 Overview & Philosophy
 
 **My Garden World** connects outdoor mindfulness with intelligent plant care and a persistent virtual botanical sanctuary. The screen is deliberately designed to be the *shortest* part of your experience: stepping outside to touch grass, photograph plants, and log mindfulness sessions powers your progression in both the real world and your virtual sanctuary.
+
+---
+
+## ✅ What Has Been Done Till Now (Project Status)
+
+### 1. Cloud Infrastructure & Live Deployment
+* [x] **Frontend Deployed on Vercel:** Live and accessible at **[https://my-garden-world-tau.vercel.app/](https://my-garden-world-tau.vercel.app/)**.
+* [x] **Backend API Hosted on Render:** Express REST API configured with production security, rate limiting, and health checks (`/api/health`).
+* [x] **Database on Neon PostgreSQL:** Schema synchronized via Prisma ORM, migrations deployed, and seeded with 11 virtual shop items and 5 core nature quests.
+* [x] **Build & Typing Fixes for Cloud CI/CD:** Resolved production build issues on Render by structuring TypeScript and `@types/*` dependencies to build reliably in `NODE_ENV=production`.
+
+### 2. On-Device Vision AI (100% Free & Private)
+* [x] **Zero-Server Browser AI:** Embedded Google Vision Transformer (`google/vit-base-patch16-224` quantized) running via **Transformers.js** & **ONNX Runtime Web (WASM)**.
+* [x] **Client-Side Privacy:** Zero photographs leave the user's device. Inference runs locally on mobile or desktop browsers with $0 cloud API costs.
+* [x] **Container-to-Plant Promotion:** Decoupled container classes (`pot, flowerpot`) so photos of potted plants intelligently promote the verified plant species growing inside.
+* [x] **Botanical Presets & Specimen Hints:** Fixed the in-game Plant Scanner to resolve real botanical photographs directly with verified care guides and coin rewards.
+
+### 3. Core Gameplay & Botanical Features
+* [x] **🌿 Plant Discovery (`/discover`):** Real-time camera or photo upload identification with confidence tiers (`High`, `Moderate`, `Uncertain`).
+* [x] **🌱 Plant Care & Timeline (`/grow`):** Adopt real houseplants, log watering/misting activities, compare dated growth photos side-by-side, and view NASA air-filtering scores and ASPCA pet-safety advisories.
+* [x] **🎮 Virtual Garden Grid (`/garden`):** Interactive 8×8 grid sanctuary with collision detection, item rotation, and placement persistence.
+* [x] **🪙 Game Economy & Quests:** Earn Flora Coins and XP by completing outdoor activities and caring for real plants; spend coins in the Garden Shop.
+* [x] **💾 Local-First Persistence:** Dexie.js (IndexedDB) caching provides instant offline gameplay with cloud PostgreSQL sync when connected.
+
+### 4. Quality Assurance & Hackathon Submission
+* [x] **33+ Automated Tests Passing:** Complete Vitest suite covering the botanical knowledge base, economy rules, grid layout, and API endpoints.
+* [x] **Hacktoberfest Submission:** Prepared and validated the official challenge post for the *Open-Source AI* and *Touch Grass* prize categories.
 
 ---
 
@@ -24,59 +56,26 @@
 
 ---
 
-## 🚀 Key Features Across the 5 Modules
-
-1. **🌿 Discover (On-Device Vision AI):**
-   - 100% browser-based Vision Transformer (`vit-base-patch16-224`, INT8 quantized).
-   - Honest confidence tiering (`high` $\ge 70\%$, `moderate` $35\text{--}70\%$, `uncertain` $< 35\%$).
-   - Botanical facts, light/water recommendations, and ASPCA pet safety info.
-
-2. **🌱 Grow (My Plants & Growth Timelines):**
-   - Adopt real-world plants and log dated growth photos.
-   - Interactive side-by-side growth photo comparison slider.
-   - Care event logging (*Water*, *Mist*, *Fertilize*, *Prune*).
-
-3. **🧘 Play (Touch Grass Mindfulness & Quests):**
-   - **Go Outside Mode:** 5-minute outdoor mindfulness timer with sensory observation logger.
-   - Daily and weekly nature quests with server-authoritative anti-double-claim validation.
-   - Level progression curves, XP, and Flora Coins economy.
-
-4. **🌸 Virtual Garden Sanctuary:**
-   - Interactive 8×8 grid canvas with handcrafted scalable SVG vector plants, pots, and decorations.
-   - Item purchasing, placement bounds validation (`0..7`), collision detection, 90° rotation, and deletion.
-
-5. **⚙️ Settings & Full-Stack Control:**
-   - Sign In / Registration with persistent sessions and guest mode support.
-   - Live backend & database health monitor (`GET /api/health`).
-   - 1-Click JSON export and import for complete cross-device data portability.
-
----
-
 ## 🧪 Automated Test Suites
 
-The project features a **32-test automated suite** across 7 test files:
+The project features a comprehensive automated test suite across frontend and backend:
 
 ```bash
-# Run all tests (frontend + backend)
-npm run test:all
+# Run frontend tests
+npm --prefix frontend test
 
-# Run backend tests only
-npm run test:server
-
-# Run frontend tests only
-npm run test:client
+# Run backend tests
+npm --prefix backend test
 ```
 
-```
- Test Files  7 passed (7)
-      Tests  32 passed (32)
-   ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
-   ✓ src/__tests__/dataManagement.test.ts (2 tests)
-   ✓ src/__tests__/gardenLayout.test.ts (4 tests)
-   ✓ src/__tests__/plantRecordJourney.test.ts (4 tests)
-   ✓ src/__tests__/economyService.test.ts (4 tests)
-   ✓ src/__tests__/questEngine.test.ts (4 tests)
-   ✓ server/src/__tests__/api.test.ts (10 tests)
+```text
+ ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
+ ✓ src/__tests__/dataManagement.test.ts (2 tests)
+ ✓ src/__tests__/gardenLayout.test.ts (4 tests)
+ ✓ src/__tests__/plantRecordJourney.test.ts (4 tests)
+ ✓ src/__tests__/economyService.test.ts (4 tests)
+ ✓ src/__tests__/questEngine.test.ts (4 tests)
+ ✓ backend/src/__tests__/api.test.ts (11 tests)
 ```
 
 ---
@@ -85,30 +84,29 @@ npm run test:client
 
 ### 1. Prerequisites
 - Node.js v20+ / v22+
-- npm or pnpm
+- npm
 
 ### 2. Clone & Install
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/jaya030888/my-garden-world.git
 cd my-garden-world
 
-# Install frontend dependencies
+# Install root dependencies
 npm install
 
-# Install backend dependencies
-cd server
-npm install
-cd ..
+# Install frontend & backend workspaces
+npm --prefix frontend install
+npm --prefix backend install
 ```
 
 ### 3. Start Development Servers
 ```bash
 # Start backend API (Port 5000)
-npm run dev:server
+npm run dev:backend
 
 # In a separate terminal, start frontend (Port 5173)
-npm run dev:client
+npm run dev:frontend
 ```
 
 * Frontend: `http://localhost:5173/`
@@ -124,17 +122,14 @@ All in-depth architecture, design, and API documentation files are organized in 
 | Document | Description |
 | :--- | :--- |
 | **[`docs/documentation.md`](docs/documentation.md)** | Full-stack engineering documentation, system topology, and state flow |
-| **[`docs/FINAL_VERIFICATION_REPORT.md`](docs/FINAL_VERIFICATION_REPORT.md)** | Complete end-to-end verification report & test results (33/33 tests passing) |
+| **[`docs/FINAL_VERIFICATION_REPORT.md`](docs/FINAL_VERIFICATION_REPORT.md)** | Complete end-to-end verification report & test results |
 | **[`docs/api-documentation.md`](docs/api-documentation.md)** | Complete REST API specification, payloads, status codes, and security |
 | **[`docs/architecture.md`](docs/architecture.md)** | High-level system architecture and component integration diagrams |
 | **[`docs/deployment.md`](docs/deployment.md)** | Production deployment guide for Vercel, Render, and Neon PostgreSQL |
 | **[`docs/database-migrations.md`](docs/database-migrations.md)** | PostgreSQL relational schema models and Prisma migration guide |
 | **[`docs/performance.md`](docs/performance.md)** | Empirical AI benchmark methodology and multi-trial latency results |
 | **[`docs/design.md`](docs/design.md)** | Design tokens, color palette, and handcrafted SVG vector artwork |
-| **[`docs/idea.md`](docs/idea.md)** | Product concept and Hacktoberfest challenge alignment |
-| **[`docs/origin.md`](docs/origin.md)** | Origin story and philosophy behind "Touch Grass" |
-| **[`docs/solution.md`](docs/solution.md)** | Solution architecture and technical specifications |
-| **[`docs/code-quality.md`](docs/code-quality.md)** | Code review guidelines and security checklist |
+| **[`docs/AI_FINAL_AUDIT.md`](docs/AI_FINAL_AUDIT.md)** | Evidence-based model audit and container-decoupling analysis |
 | **[`docs/dev-to-submission.md`](docs/dev-to-submission.md)** | Ready-to-publish Dev.to challenge submission post |
 
 ---
@@ -144,3 +139,4 @@ All in-depth architecture, design, and API documentation files are organized in 
 - **Application Code:** [MIT License](LICENSE)
 - **AI Model Weights:** [Apache License 2.0](https://huggingface.co/Xenova/vit-base-patch16-224)
 - **Icons & Illustrations:** Custom hand-crafted SVG vector artwork
+

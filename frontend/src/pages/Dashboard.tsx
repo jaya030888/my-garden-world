@@ -19,7 +19,12 @@ import {
   Coins,
   Award,
   Layers,
-  BookOpen
+  BookOpen,
+  Sun,
+  Eye,
+  Check,
+  Zap,
+  Info
 } from 'lucide-react';
 import { useGarden } from '../context/GardenContext';
 import { identifyPlant, ModelLoadingProgress } from '../ai/plantClassifier';
@@ -71,12 +76,13 @@ const CURATED_SAMPLE_FLORA = [
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const { profile, plants, discoveries, saveDiscovery, addPlantRecord } = useGarden();
+  const { profile, plants, saveDiscovery, addPlantRecord, openScanner } = useGarden();
 
   const [loadingProgress, setLoadingProgress] = useState<ModelLoadingProgress>({ status: 'idle' });
   const [activeResult, setActiveResult] = useState<IdentificationResult | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -87,7 +93,7 @@ export const DashboardPage: React.FC = () => {
     setSavedSuccess(false);
 
     try {
-      setLoadingProgress({ status: 'downloading', message: 'Initializing on-device Vision Transformer...' });
+      setLoadingProgress({ status: 'downloading', message: 'Initializing on-device Vision Transformer (WASM)...' });
       const result = await identifyPlant(fileOrUrl, progress => {
         setLoadingProgress(progress);
       }, hint);
@@ -106,6 +112,18 @@ export const DashboardPage: React.FC = () => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       setErrorMsg('Please select a valid image file (JPG, PNG, or WebP).');
+      return;
+    }
+    handleScanImage(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setErrorMsg('Please drop a valid image file (JPG, PNG, or WebP).');
       return;
     }
     handleScanImage(file);
@@ -131,376 +149,529 @@ export const DashboardPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-12 sm:space-y-16 pb-16">
+    <div className="space-y-20 sm:space-y-28 pb-20">
       
       {/* ============================================================ */}
-      {/* 1. HERO SECTION: Plant Discovery Front & Center */}
+      {/* 1. HERO SECTION: Inspired by Editorial Reference Design */}
       {/* ============================================================ */}
-      <section className="relative overflow-hidden pt-6 sm:pt-10 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-emerald-50/70 via-stone-50/50 to-transparent dark:from-stone-900/90 dark:via-stone-950 dark:to-surface-bg border-b border-forest-100/60 dark:border-stone-800">
+      <section className="relative overflow-hidden pt-8 sm:pt-14 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8 border-b border-stone-200/70 dark:border-stone-800/80">
         
-        {/* Organic Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-r from-emerald-200/20 via-teal-200/20 to-amber-200/15 blur-3xl pointer-events-none -z-10" />
+        {/* Soft Ambient Radiance */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[520px] bg-gradient-to-b from-emerald-100/35 via-stone-100/20 to-transparent dark:from-emerald-950/20 dark:via-transparent -z-10 blur-3xl pointer-events-none" />
 
-        <div className="max-w-5xl mx-auto space-y-8 text-center">
+        <div className="max-w-5xl mx-auto space-y-10">
           
-          {/* Main Title Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-200 text-xs font-bold shadow-2xs">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>On-Device Open-Source Vision AI • 100% Private Client Inference</span>
+          {/* Top Pill Badge */}
+          <div className="flex items-center justify-center">
+            <div className="inline-flex items-center gap-2 rounded-[16px] bg-white dark:bg-stone-900 px-3.5 py-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.06)] border border-stone-200/80 dark:border-stone-800 text-xs font-bold text-forest-900 dark:text-emerald-300">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Open-Source Botanical Intelligence • 100% Client-Side Privacy</span>
+            </div>
           </div>
 
-          <div className="space-y-3">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-display text-forest-950 dark:text-emerald-50 tracking-tight leading-tight">
-              Discover Nature. Grow with Intelligence.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-700 via-teal-600 to-forest-800 dark:from-emerald-400 dark:to-teal-300">
-                Watch Life Unfold.
+          {/* Editorial Stacked Headline */}
+          <div className="text-center space-y-4">
+            <h1 className="space-y-1">
+              <span className="block text-[clamp(36px,6.8vw,74px)] font-black leading-[0.96] tracking-tight text-forest-950/40 dark:text-emerald-100/40">
+                Discover nature.
+              </span>
+              <span className="block text-[clamp(36px,6.8vw,74px)] font-black leading-[0.96] tracking-tight text-forest-950/75 dark:text-emerald-100/75">
+                Grow with intelligence.
+              </span>
+              <span className="block text-[clamp(36px,6.8vw,74px)] font-black leading-[0.96] tracking-tight text-forest-950 dark:text-emerald-300">
+                Watch life unfold.
               </span>
             </h1>
-            <p className="max-w-2xl mx-auto text-sm sm:text-base text-stone-600 dark:text-stone-300 leading-relaxed font-medium">
-              Identify plant species in your browser, unlock scientific cultivation advice with ASPCA pet safety, and build an isometric virtual garden.
+
+            <p className="max-w-2xl mx-auto text-base sm:text-lg text-stone-600 dark:text-stone-300 leading-relaxed font-medium pt-2">
+              Step away from screens and connect with the natural world. Identify wild flora on-device with zero cloud uploads, unlock practical soil-moisture care, and cultivate your virtual botanical sanctuary.
             </p>
           </div>
 
-          {/* PRIMARY CALL TO ACTION: Prominent Dropzone & Camera Trigger */}
-          <div className="max-w-2xl mx-auto p-5 sm:p-7 rounded-3xl bg-white/95 dark:bg-stone-900/95 border-2 border-dashed border-emerald-300 dark:border-emerald-800 shadow-xl space-y-5 transition-all hover:border-emerald-500">
-            
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-500 text-white flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform">
-                <Camera className="w-7 h-7" />
+          {/* Tactile Primary Action Buttons (Inspired by reference site's high-contrast pill CTA) */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-3 rounded-[20px] bg-forest-950 dark:bg-emerald-400 pl-6 pr-2.5 py-2.5 text-white dark:text-forest-950 shadow-[0_16px_40px_rgba(6,78,59,0.18)] hover:-translate-y-0.5 active:translate-y-0 transition-all font-extrabold text-sm sm:text-base cursor-pointer group"
+            >
+              <span>Scan a Plant Now</span>
+              <div className="w-10 h-10 rounded-[14px] bg-white/15 dark:bg-forest-950/15 text-white dark:text-forest-950 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Camera className="w-5 h-5 text-emerald-300 dark:text-forest-950" />
               </div>
-              <div>
-                <h3 className="text-base sm:text-lg font-black text-forest-950 dark:text-emerald-100">
-                  Scan Any Flower, Houseplant, or Leaf
-                </h3>
-                <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-                  Drag & drop a photo, browse files, or test with verified botanical specimens below
-                </p>
+            </button>
+
+            <Link
+              to="/garden"
+              className="flex items-center gap-2.5 rounded-[20px] bg-white dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 px-6 py-3.5 text-forest-950 dark:text-emerald-100 font-bold text-sm sm:text-base shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Launch Virtual Garden</span>
+            </Link>
+          </div>
+
+          {/* ============================================================ */}
+          {/* PINNED SHOWCASE: Interactive Scanning Station */}
+          {/* ============================================================ */}
+          <div
+            onDragOver={e => { e.preventDefault(); setIsDragOver(true); }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={handleDrop}
+            className={`max-w-3xl mx-auto rounded-[28px] bg-white dark:bg-stone-900 border-2 transition-all p-6 sm:p-8 shadow-[0_24px_70px_rgba(20,50,30,0.08)] space-y-6 ${
+              isDragOver
+                ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 scale-[1.01]'
+                : 'border-stone-200/90 dark:border-stone-800 hover:border-emerald-400/60'
+            }`}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-5 pb-5 border-b border-stone-100 dark:border-stone-800">
+              <div className="flex items-center gap-4 text-center sm:text-left">
+                <div className="w-13 h-13 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Camera className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-base sm:text-lg font-black text-forest-950 dark:text-emerald-50">
+                    Live Botanical Vision Scanner
+                  </h3>
+                  <p className="text-xs text-stone-500 dark:text-stone-400">
+                    Drop any plant photo, take a camera snapshot, or select verified specimens
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2.5 shrink-0">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-forest-900 hover:bg-forest-950 text-white font-bold text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+                >
+                  <Upload className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>Upload File</span>
+                </button>
+                <button
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 font-bold text-xs transition-all cursor-pointer active:scale-95"
+                >
+                  <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Camera</span>
+                </button>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              <input
-                ref={cameraInputRef}
-                type="file"
-                accept="image/*"
-                capture="environment"
-                onChange={handleFileChange}
-                className="hidden"
-              />
+            {/* Specimen Test Strip */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                  Test Instantly with Ground-Truth Botanical Samples:
+                </span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold hidden sm:inline">
+                  ⚡ Pre-calibrated
+                </span>
+              </div>
 
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-forest-800 hover:bg-forest-900 text-white font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer ring-1 ring-forest-700"
-              >
-                <Upload className="w-4 h-4 text-emerald-300" />
-                <span>Upload Plant Image</span>
-              </button>
-
-              <button
-                onClick={() => cameraInputRef.current?.click()}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-emerald-50 dark:bg-stone-800 hover:bg-emerald-100 text-forest-900 dark:text-emerald-200 border border-emerald-200 dark:border-stone-700 font-extrabold text-xs shadow-2xs transition-all active:scale-95 cursor-pointer"
-              >
-                <Camera className="w-4 h-4 text-emerald-600" />
-                <span>Use Device Camera</span>
-              </button>
-            </div>
-
-            {/* Curated Sample Flower Picks for Instant Verification */}
-            <div className="pt-3 border-t border-stone-200/80 dark:border-stone-800">
-              <span className="text-[10px] font-bold text-stone-400 dark:text-stone-500 uppercase tracking-wider block mb-2.5">
-                Or click to test with verified botanical specimens:
-              </span>
-              <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {CURATED_SAMPLE_FLORA.map(specimen => (
                   <button
                     key={specimen.speciesKey}
                     onClick={() => handleScanImage(specimen.photoUrl, specimen.speciesKey)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 hover:border-emerald-500 text-stone-800 dark:text-stone-200 text-xs font-bold transition-all shadow-2xs hover:scale-102 cursor-pointer"
+                    className="flex flex-col items-start p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/80 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 border border-stone-200/80 dark:border-stone-700 hover:border-emerald-400 text-left transition-all group cursor-pointer"
                   >
-                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: specimen.color }} />
-                    <span>{specimen.name}</span>
+                    <div className="w-full h-14 rounded-lg overflow-hidden mb-2 bg-stone-200 dark:bg-stone-700">
+                      <img
+                        src={specimen.photoUrl}
+                        alt={specimen.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <span className="text-xs font-black text-forest-950 dark:text-emerald-100 truncate w-full">
+                      {specimen.name}
+                    </span>
+                    <span className="text-[10px] text-stone-500 italic truncate w-full">
+                      {specimen.scientific}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
 
-          </div>
-
-          {/* Loading State Banner */}
-          {loadingProgress.status === 'downloading' && (
-            <div className="max-w-md mx-auto p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-center space-y-2">
-              <div className="w-6 h-6 mx-auto border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
-              <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200">{loadingProgress.message}</p>
-            </div>
-          )}
-
-          {/* Error Message */}
-          {errorMsg && (
-            <div className="max-w-md mx-auto p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 text-xs font-bold text-rose-800 dark:text-rose-200 flex items-center justify-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
-              <span>{errorMsg}</span>
-            </div>
-          )}
-
-          {/* LIVE SCAN RESULT PRESENTATION (EMBEDDED FACT SHEET) */}
-          <AnimatePresence>
-            {activeResult && activeResult.topPrediction.botanicalInfo && (
-              <motion.div
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                className="max-w-4xl mx-auto text-left pt-4"
-              >
-                <div className="flex items-center justify-between mb-3 px-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-forest-900 dark:text-emerald-300">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                    <span>AI Identification Result ({activeResult.inferenceTimeMs}ms)</span>
-                  </div>
-                  <span className="text-[11px] text-stone-500 font-mono">
-                    Model: {activeResult.modelName.split('/').pop()}
-                  </span>
-                </div>
-
-                <BotanicalGuideFactSheet
-                  botanicalInfo={activeResult.topPrediction.botanicalInfo}
-                  prediction={activeResult.topPrediction}
-                  imageUrl={activeResult.imageUrl}
-                  isSaved={savedSuccess}
-                  onSaveToCollection={handleSaveToMyPlants}
-                />
-              </motion.div>
+            {/* Loading / Status State */}
+            {loadingProgress.status === 'downloading' && (
+              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/80 flex items-center justify-center gap-3">
+                <div className="w-5 h-5 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin shrink-0" />
+                <span className="text-xs font-bold text-emerald-900 dark:text-emerald-200">
+                  {loadingProgress.message}
+                </span>
+              </div>
             )}
-          </AnimatePresence>
 
-          {/* ============================================================ */}
-          {/* WHAT USERS LEARN FROM A SCAN (4-Column Illustrated Bar) */}
-          {/* ============================================================ */}
-          <div className="pt-8 max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left">
-              
-              <div className="p-4 rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800 space-y-1 shadow-2xs">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold mb-2">
-                  <Globe className="w-4 h-4" />
-                </div>
-                <h4 className="text-xs font-extrabold text-forest-950 dark:text-emerald-100">
-                  Taxonomic Identity
-                </h4>
-                <p className="text-[11px] text-stone-500 leading-snug">
-                  Confirmed binomial scientific nomenclature, genus, botanical family, and common regional names.
-                </p>
+            {/* Error Banner */}
+            {errorMsg && (
+              <div className="p-4 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 text-xs font-bold text-rose-800 dark:text-rose-200 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
+                <span>{errorMsg}</span>
               </div>
+            )}
 
-              <div className="p-4 rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800 space-y-1 shadow-2xs">
-                <div className="w-8 h-8 rounded-xl bg-sky-100 dark:bg-sky-950/60 flex items-center justify-center text-sky-700 dark:text-sky-400 font-bold mb-2">
-                  <Droplets className="w-4 h-4" />
-                </div>
-                <h4 className="text-xs font-extrabold text-forest-950 dark:text-emerald-100">
-                  Moisture & Soil Guidance
-                </h4>
-                <p className="text-[11px] text-stone-500 leading-snug">
-                  Practical soil moisture regimes, aeration guidelines, drainage metrics, and seasonal feeding.
-                </p>
-              </div>
+            {/* Embedded Live Scan Results */}
+            <AnimatePresence>
+              {activeResult && activeResult.topPrediction.botanicalInfo && (
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  className="pt-2 text-left"
+                >
+                  <div className="flex items-center justify-between pb-3 px-1">
+                    <div className="flex items-center gap-2 text-xs font-bold text-forest-900 dark:text-emerald-300">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>Vision Transformer Output ({activeResult.inferenceTimeMs}ms)</span>
+                    </div>
+                    <span className="text-[11px] text-stone-500 font-mono">
+                      Model: {activeResult.modelName.split('/').pop()}
+                    </span>
+                  </div>
 
-              <div className="p-4 rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800 space-y-1 shadow-2xs">
-                <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-amber-700 dark:text-amber-400 font-bold mb-2">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <h4 className="text-xs font-extrabold text-forest-950 dark:text-emerald-100">
-                  ASPCA Pet Toxicity
-                </h4>
-                <p className="text-[11px] text-stone-500 leading-snug">
-                  Verified safety status for cats, dogs, and horses, including handling precautions for children.
-                </p>
-              </div>
+                  <BotanicalGuideFactSheet
+                    botanicalInfo={activeResult.topPrediction.botanicalInfo}
+                    prediction={activeResult.topPrediction}
+                    imageUrl={activeResult.imageUrl}
+                    isSaved={savedSuccess}
+                    onSaveToCollection={handleSaveToMyPlants}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-              <div className="p-4 rounded-2xl bg-white/80 dark:bg-stone-900/80 border border-stone-200/80 dark:border-stone-800 space-y-1 shadow-2xs">
-                <div className="w-8 h-8 rounded-xl bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-teal-700 dark:text-teal-400 font-bold mb-2">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <h4 className="text-xs font-extrabold text-forest-950 dark:text-emerald-100">
-                  Ecological Synergy
-                </h4>
-                <p className="text-[11px] text-stone-500 leading-snug">
-                  Pollinator value for native solitary bees, phytoremediation traits, and companion planting.
-                </p>
-              </div>
-
-            </div>
           </div>
 
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/* 2. THE THREE CORE PILLARS OF MY GARDEN WORLD */}
+      {/* 2. WHAT USERS LEARN FROM A SCAN (Curated Magazine Strip) */}
       {/* ============================================================ */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
-        <div className="text-center space-y-2 max-w-xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-black font-display text-forest-950 dark:text-emerald-50">
-            Explore the Ecosystem
-          </h2>
-          <p className="text-xs sm:text-sm text-stone-500">
-            Three seamlessly connected experiences bridging real-world botanical observation and cozy virtual play.
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-stone-200 dark:border-stone-800 pb-5">
+          <div className="space-y-1">
+            <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+              Botanical Intelligence
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black font-display text-forest-950 dark:text-emerald-50">
+              What You Learn from Every Scan
+            </h2>
+          </div>
+          <p className="text-xs sm:text-sm text-stone-500 max-w-md">
+            Beyond a label and a percentage: structured, scientific insights verified by authoritative horticultural databases.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           
-          {/* Pillar 1: Plant Discovery */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-md space-y-4 flex flex-col justify-between hover:shadow-lg transition-all group">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center font-bold">
-                <Camera className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold text-emerald-600 uppercase tracking-wider block">Feature Pillar 1</span>
-                <h3 className="text-lg font-black text-forest-950 dark:text-emerald-100">AI Plant Discovery</h3>
-              </div>
-              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                Identify wild flowers and garden plants using open-weight Vision Transformers. View honest confidence ratings and verified taxonomic records without sending photos to cloud APIs.
-              </p>
-            </div>
-            <Link
-              to="/discover"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 group-hover:gap-2.5 transition-all"
-            >
-              <span>Explore Explorer Mode</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          {/* Pillar 2: Garden Care & Design */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-md space-y-4 flex flex-col justify-between hover:shadow-lg transition-all group">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 flex items-center justify-center font-bold">
-                <Sprout className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold text-teal-600 uppercase tracking-wider block">Feature Pillar 2</span>
-                <h3 className="text-lg font-black text-forest-950 dark:text-emerald-100">Garden Care & Design</h3>
-              </div>
-              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                Log real houseplant records, record watering cadences, compare growth photo timelines, and diagnose common plant issues with customized treatment plans.
-              </p>
-            </div>
-            <Link
-              to="/grow"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-700 dark:text-teal-400 group-hover:gap-2.5 transition-all"
-            >
-              <span>Open Plant Care Collection</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-          {/* Pillar 3: Virtual Garden & Nature Quests */}
-          <div className="p-6 rounded-3xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-md space-y-4 flex flex-col justify-between hover:shadow-lg transition-all group">
-            <div className="space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 flex items-center justify-center font-bold">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold text-amber-600 uppercase tracking-wider block">Feature Pillar 3</span>
-                <h3 className="text-lg font-black text-forest-950 dark:text-emerald-100">Virtual Garden & Quests</h3>
-              </div>
-              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
-                Step away from screens, complete "Touch Grass" outdoor challenges, earn Flora Coins, and cultivate your own cozy isometric garden with dynamic weather and ambient lo-fi soundscapes.
-              </p>
-            </div>
-            <Link
-              to="/garden"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 dark:text-amber-400 group-hover:gap-2.5 transition-all"
-            >
-              <span>Enter Virtual Garden Canvas</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ============================================================ */}
-      {/* 3. VIRTUAL GARDEN TEASER & QUICK STATS */}
-      {/* ============================================================ */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-forest-900 via-emerald-950 to-stone-900 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          <div className="space-y-2 text-center md:text-left">
-            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-extrabold uppercase tracking-wider inline-block">
-              Your Garden Sanctuary
+          <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_8px_30px_rgba(0,0,0,0.04)] space-y-3">
+            <span className="rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-xs font-black text-stone-600 dark:text-stone-300 inline-block">
+              01
             </span>
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight">
-              Ready to cultivate your virtual botanical tiles?
+            <h3 className="text-base font-black text-forest-950 dark:text-emerald-100">
+              Taxonomic Binomial
             </h3>
-            <p className="text-xs sm:text-sm text-emerald-200/80 max-w-xl">
-              You have {profile?.floraCoins ?? 0} Flora Coins and Level {profile?.level ?? 1} botanist ranking. Enter the full-screen canvas to design paths, plant unlocked seeds, and listen to relaxing rain.
+            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+              Official binomial scientific nomenclature, genus, botanical family, and recognized regional common names.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
-            <Link
-              to="/garden"
-              className="px-6 py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-forest-950 font-black text-xs shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-forest-950" />
-              <span>Launch Virtual Garden</span>
-            </Link>
+          <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_8px_30px_rgba(0,0,0,0.04)] space-y-3">
+            <span className="rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-xs font-black text-stone-600 dark:text-stone-300 inline-block">
+              02
+            </span>
+            <h3 className="text-base font-black text-forest-950 dark:text-emerald-100">
+              Soil-Moisture Protocol
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+              Practical top-inch finger test guidance, pot drainage criteria, and seasonal watering schedules rather than vague estimates.
+            </p>
+          </div>
 
-            <Link
-              to="/play"
-              className="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
-            >
-              <Compass className="w-4 h-4 text-emerald-300" />
-              <span>View Nature Quests</span>
-            </Link>
+          <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_8px_30px_rgba(0,0,0,0.04)] space-y-3">
+            <span className="rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-xs font-black text-stone-600 dark:text-stone-300 inline-block">
+              03
+            </span>
+            <h3 className="text-base font-black text-forest-950 dark:text-emerald-100">
+              ASPCA Safety Ratings
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+              Documented toxicity ratings for cats, dogs, and horses, including human sap handling precautions and emergency steps.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_8px_30px_rgba(0,0,0,0.04)] space-y-3">
+            <span className="rounded-full bg-stone-100 dark:bg-stone-800 px-3 py-1 text-xs font-black text-stone-600 dark:text-stone-300 inline-block">
+              04
+            </span>
+            <h3 className="text-base font-black text-forest-950 dark:text-emerald-100">
+              Ecological Synergy
+            </h3>
+            <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed">
+              Native solitary bee pollination value, companion planting combinations, and evidence-based garden ecosystem benefits.
+            </p>
           </div>
 
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/* 4. RECENT USER DISCOVERIES & MY PLANTS OVERVIEW */}
+      {/* 3. THE THREE MAIN EXPERIENCES (Varied Curated Layouts) */}
+      {/* ============================================================ */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        
+        <div className="space-y-2">
+          <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+            Ecosystem Overview
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-black font-display text-forest-950 dark:text-emerald-50">
+            Three Interconnected Experiences
+          </h2>
+        </div>
+
+        <div className="space-y-8">
+          
+          {/* Showcase 01: AI Plant Discovery (Split Magazine Card) */}
+          <div className="rounded-[28px] bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_16px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
+            <div className="lg:col-span-6 p-8 sm:p-12 space-y-5">
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-forest-900 dark:bg-emerald-400 text-white dark:text-forest-950 px-3.5 py-1 text-xs font-black">
+                  01
+                </span>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-600">
+                  Real-World AI Vision
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black font-display text-forest-950 dark:text-emerald-50 leading-tight">
+                AI-Powered Plant Discovery
+              </h3>
+              <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                Take a photograph of any leaf or blossom. Our client-side Vision Transformer performs local inference directly inside WebAssembly. Your photos never touch a remote server, guaranteeing 100% personal data privacy and offline capability.
+              </p>
+              <div className="pt-2">
+                <Link
+                  to="/discover"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-forest-900 dark:bg-emerald-500 hover:bg-forest-950 text-white dark:text-forest-950 px-5 py-3 text-xs font-black shadow-xs transition-all hover:scale-102"
+                >
+                  <span>Open Plant Discovery</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 h-72 lg:h-full min-h-[300px] bg-stone-100 dark:bg-stone-800 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1545241047-6083a3684587?w=1200&q=80"
+                alt="Plant Discovery"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
+                <div className="text-white space-y-1">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-300">
+                    On-Device Inference
+                  </span>
+                  <p className="text-xs font-semibold">
+                    ViT Transformer running directly in your browser with zero latency.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Showcase 02: Garden Care & Design (Split Magazine Card Reversible) */}
+          <div className="rounded-[28px] bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-[0_16px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
+            <div className="lg:col-span-6 order-2 lg:order-1 h-72 lg:h-full min-h-[300px] bg-stone-100 dark:bg-stone-800 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1599818817739-1662a5b6d910?w=1200&q=80"
+                alt="Garden Care"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end p-6">
+                <div className="text-white space-y-1">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-teal-300">
+                    Growth Photologging
+                  </span>
+                  <p className="text-xs font-semibold">
+                    Compare historical photos across growth stages to verify leaf health.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 order-1 lg:order-2 p-8 sm:p-12 space-y-5">
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-forest-900 dark:bg-emerald-400 text-white dark:text-forest-950 px-3.5 py-1 text-xs font-black">
+                  02
+                </span>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-teal-600">
+                  Care & Growth Journal
+                </span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black font-display text-forest-950 dark:text-emerald-50 leading-tight">
+                AI Garden Care & Design
+              </h3>
+              <p className="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+                Log real houseplant records, record watering cadences, compare growth photo timelines, and diagnose common pests with verified non-toxic treatments.
+              </p>
+              <div className="pt-2">
+                <Link
+                  to="/grow"
+                  className="inline-flex items-center gap-2 rounded-2xl bg-teal-800 dark:bg-teal-500 hover:bg-teal-900 text-white dark:text-forest-950 px-5 py-3 text-xs font-black shadow-xs transition-all hover:scale-102"
+                >
+                  <span>Explore Garden Care</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Showcase 03: Virtual Garden & Nature Quests */}
+          <div className="rounded-[28px] bg-gradient-to-br from-forest-950 via-stone-900 to-emerald-950 text-white border border-forest-900/40 p-8 sm:p-12 space-y-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-emerald-500 text-forest-950 px-3.5 py-1 text-xs font-black">
+                  03
+                </span>
+                <span className="text-xs font-extrabold uppercase tracking-wider text-emerald-300">
+                  Virtual Ecosystem
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-200">
+                <Sparkles className="w-4 h-4 text-amber-300" />
+                <span>Level {profile?.level ?? 1} Botanist • {profile?.floraCoins ?? 0} Flora Coins</span>
+              </div>
+            </div>
+
+            <div className="max-w-2xl space-y-3">
+              <h3 className="text-2xl sm:text-4xl font-black font-display tracking-tight text-white">
+                Cozy Virtual Garden & Nature Quests
+              </h3>
+              <p className="text-sm text-emerald-100/80 leading-relaxed">
+                Complete outdoor "Touch Grass" challenges, observe wildlife, earn Flora Coins, and plant unlocked botanical seeds on your interactive isometric canvas with dynamic weather and ambient rain soundscapes.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <Link
+                to="/garden"
+                className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-forest-950 px-6 py-3 text-xs font-black shadow-md transition-all active:scale-95 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Launch Virtual Garden</span>
+              </Link>
+              <Link
+                to="/play"
+                className="inline-flex items-center gap-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-3 text-xs font-bold transition-all active:scale-95 cursor-pointer"
+              >
+                <Compass className="w-4 h-4 text-emerald-300" />
+                <span>View Nature Quests</span>
+              </Link>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ============================================================ */}
+      {/* 4. TRACKED LIVING HOUSEPLANTS (Personal Collection Preview) */}
       {/* ============================================================ */}
       {plants.length > 0 && (
         <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between border-b border-stone-200 dark:border-stone-800 pb-3">
             <div>
-              <h3 className="text-lg font-black text-forest-950 dark:text-emerald-50">Your Tracked Houseplants</h3>
-              <p className="text-xs text-stone-500">Living plants in your personal collection</p>
+              <h3 className="text-lg font-black text-forest-950 dark:text-emerald-50">
+                Your Tracked Living Houseplants
+              </h3>
+              <p className="text-xs text-stone-500">
+                Plants actively monitored in your Care Collection
+              </p>
             </div>
             <Link to="/grow" className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
               View All ({plants.length}) →
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5">
             {plants.slice(0, 5).map(p => (
               <div
                 key={p.id}
                 onClick={() => navigate('/grow')}
-                className="p-3 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-2xs hover:shadow-md transition-all cursor-pointer space-y-2 group"
+                className="p-3.5 rounded-2xl bg-white dark:bg-stone-900 border border-stone-200/80 dark:border-stone-800 shadow-2xs hover:shadow-md transition-all cursor-pointer space-y-2.5 group"
               >
                 <div className="w-full h-28 rounded-xl overflow-hidden bg-stone-100 dark:bg-stone-800">
-                  <img src={p.primaryPhotoUrl} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  <img
+                    src={p.primaryPhotoUrl}
+                    alt={p.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  />
                 </div>
                 <div>
-                  <h4 className="text-xs font-black text-forest-950 dark:text-emerald-100 truncate">{p.name}</h4>
-                  <p className="text-[10px] text-stone-500 italic truncate">{p.species}</p>
+                  <h4 className="text-xs font-black text-forest-950 dark:text-emerald-100 truncate">
+                    {p.name}
+                  </h4>
+                  <p className="text-[10px] text-stone-500 italic truncate">
+                    {p.species}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         </section>
       )}
+
+      {/* ============================================================ */}
+      {/* 5. DRAMATIC CLOSING SECTION (Inspired by reference site's #contact) */}
+      {/* ============================================================ */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 pt-6">
+        <div className="space-y-4">
+          <h2 className="text-[36px] sm:text-[68px] font-black leading-[0.94] tracking-tight text-forest-950 dark:text-emerald-50">
+            Ready to step outside<br />
+            <span className="text-forest-950/40 dark:text-emerald-100/40">
+              and explore the wild?
+            </span>
+          </h2>
+          <p className="text-base sm:text-lg text-stone-600 dark:text-stone-400 max-w-lg mx-auto font-medium">
+            Scan your first outdoor plant, earn Flora Coins, and grow your botanical knowledge with every discovery.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="flex items-center gap-3 rounded-[20px] bg-forest-950 dark:bg-emerald-400 pl-6 pr-2.5 py-2.5 text-white dark:text-forest-950 shadow-[0_16px_40px_rgba(6,78,59,0.18)] hover:-translate-y-0.5 active:translate-y-0 transition-all font-black text-sm sm:text-base cursor-pointer group"
+          >
+            <span>Scan Plant Now</span>
+            <div className="w-10 h-10 rounded-[14px] bg-white/15 dark:bg-forest-950/15 text-white dark:text-forest-950 flex items-center justify-center group-hover:scale-105 transition-transform">
+              <Camera className="w-5 h-5 text-emerald-300 dark:text-forest-950" />
+            </div>
+          </button>
+
+          <Link
+            to="/play"
+            className="flex items-center gap-2.5 rounded-[20px] bg-stone-100 dark:bg-stone-800 border border-stone-200/90 dark:border-stone-700 px-6 py-3.5 text-forest-950 dark:text-emerald-100 font-bold text-sm sm:text-base shadow-2xs hover:-translate-y-0.5 active:translate-y-0 transition-all"
+          >
+            <Compass className="w-4 h-4 text-emerald-600" />
+            <span>Outdoor Touch-Grass Quests</span>
+          </Link>
+        </div>
+      </section>
 
     </div>
   );

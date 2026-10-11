@@ -5,7 +5,7 @@
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-success?style=for-the-badge&logo=vercel)](https://my-garden-world-tau.vercel.app/)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/jaya030888/my-garden-world)
-[![Tests](https://img.shields.io/badge/Tests-43%20Passing-brightgreen?style=for-the-badge&logo=vitest)](https://github.com/jaya030888/my-garden-world)
+[![Tests](https://img.shields.io/badge/Tests-46%20Passing-brightgreen?style=for-the-badge&logo=vitest)](https://github.com/jaya030888/my-garden-world)
 [![AI Model](https://img.shields.io/badge/Vision%20AI-ViT--Base--224%20(WASM)-orange?style=for-the-badge&logo=huggingface)](https://huggingface.co/Xenova/vit-base-patch16-224)
 [![Database](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-00e599?style=for-the-badge&logo=postgresql)](https://neon.tech)
 
@@ -47,6 +47,12 @@
 * **OS Preference Auto-Detection:** Automatically synchronizes with system `prefers-color-scheme: dark/light`.
 * **Zero Flicker Local Storage:** Persists preference in `localStorage ('my_garden_theme')` with smooth CSS transitions across all cards, modals, and charts.
 
+### 6. 📱 Installable Progressive Web App (PWA) & Mobile Native UX
+* **Installable on Android & iOS:** Add directly to home screen via Chrome, Samsung Internet, Safari, or desktop browsers with standalone app experience.
+* **Safe Offline Service Worker:** Pre-caches app shell, fonts, and assets while deliberately excluding authenticated APIs and large neural weights.
+* **Mobile-Optimized Touch Controls:** Safe-area padding (`env(safe-area-inset-bottom)`), touch manipulation optimizations, and floating bottom navigation.
+* **Capacitor Android Support:** Includes standalone `capacitor.config.ts` allowing direct generation of a native Android APK (`.apk`) without Expo Go.
+
 ---
 
 ## 🎨 Editorial UI/UX Redesign
@@ -76,7 +82,7 @@ Inspired by modern editorial and minimalist luxury design principles (such as [r
 
 ## 🧪 Automated Quality Gates & Testing
 
-The project maintains **43 automated tests** across 8 suites (32 frontend unit/integration tests + 11 backend REST API tests):
+The project maintains **46 automated tests** across 9 suites (35 frontend unit/integration/PWA tests + 11 backend REST API tests):
 
 ```bash
 # Run all automated test suites
@@ -90,6 +96,7 @@ npm run test:backend
 ```
 
 ```text
+✓ src/__tests__/pwa.test.ts (3 tests)
 ✓ src/__tests__/botanicalDatabase.test.ts (4 tests)
 ✓ src/__tests__/dataManagement.test.ts (2 tests)
 ✓ src/__tests__/gardenLayout.test.ts (4 tests)
@@ -99,8 +106,8 @@ npm run test:backend
 ✓ src/__tests__/auditMatrix.test.ts (10 tests)
 ✓ backend/src/__tests__/api.test.ts (11 tests)
 
-Test Files  8 passed (8)
-Tests       43 passed (43)
+Test Files  9 passed (9)
+Tests       46 passed (46)
 ```
 
 ---

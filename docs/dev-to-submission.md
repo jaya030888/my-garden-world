@@ -1,6 +1,13 @@
 # My Garden World: An Open-Weight AI Companion That Gets You to Touch Grass 🌿
 
-*Built for the Hacktoberfest Open-Source AI Challenge, Week 1: Touch Grass*
+*This is a submission for the [Hacktoberfest Open-Source AI Challenge Week 1: Touch Grass](https://dev.to/challenges/hacktoberfest-week1-2026-10-05)*
+
+---
+
+## 🌐 Demo & Code
+
+* **Live Demo:** [https://my-garden-world-tau.vercel.app/](https://my-garden-world-tau.vercel.app/)
+* **GitHub Repository:** [https://github.com/jaya030888/my-garden-world](https://github.com/jaya030888/my-garden-world)
 
 ---
 

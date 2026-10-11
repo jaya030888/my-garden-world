@@ -296,9 +296,9 @@ export const DiscoverPage: React.FC = () => {
                         Container / Pot Detected (Unconfirmed Plant)
                       </span>
                     ) : (
-                      <span className="px-3 py-1 rounded-full bg-stone-100 text-stone-800 border border-stone-200 text-xs font-bold flex items-center gap-1.5">
-                        <HelpCircle className="w-3.5 h-3.5 text-stone-500" />
-                        Unconfirmed Plant Species
+                      <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-900 border border-rose-200 text-xs font-bold flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-rose-600" />
+                        No Plant Detected
                       </span>
                     )}
 
@@ -309,33 +309,40 @@ export const DiscoverPage: React.FC = () => {
 
                   {/* Title & Scientific Taxonomy */}
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-extrabold font-display text-forest-950">
-                      {customPlantName || (isVerified ? topBotanical?.speciesName : result.topPrediction.label)}
+                    <h2 className="text-xl sm:text-2xl font-extrabold font-display text-forest-950 dark:text-emerald-50">
+                      {customPlantName || (isVerified ? topBotanical?.speciesName : (isContainerObject ? 'Planter Container Detected' : 'No Plant Detected'))}
                     </h2>
                     {isVerified && topBotanical?.scientificName ? (
                       <p className="text-xs text-stone-500 italic mt-0.5">
                         {topBotanical.scientificName} • {topBotanical.family}
                       </p>
                     ) : (
-                      <p className="text-xs text-amber-800 font-medium mt-0.5">
-                        Model Output: <span className="font-mono">{result.topPrediction.label}</span> ({(result.topPrediction.score * 100).toFixed(1)}% softmax score)
+                      <p className="text-xs text-stone-500 font-medium mt-0.5">
+                        Model Output: <span className="font-mono">{result.topPrediction.label}</span> ({(result.topPrediction.score * 100).toFixed(1)}% confidence)
                       </p>
                     )}
                   </div>
 
                   {/* Explanation / Botanical Description */}
                   {isVerified && topBotanical?.description ? (
-                    <p className="text-xs text-stone-600 leading-relaxed">
+                    <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
                       {topBotanical.description}
                     </p>
-                  ) : (
-                    <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 text-xs text-amber-950 space-y-2">
+                  ) : isContainerObject ? (
+                    <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800 text-xs text-amber-950 dark:text-amber-200 space-y-2">
                       <p className="leading-relaxed">
                         {result.topPrediction.statusExplanation ||
-                          'The neural model detected visual characteristics associated with this class, but it does not map to a verified single botanical species.'}
+                          'The neural model detected a plant pot or container rather than the plant foliage. Please zoom in on the plant leaf or flower.'}
                       </p>
-                      <p className="text-[11px] text-amber-800 italic">
-                        Tip: You can manually label the cultivar below (e.g. "French Marigold") before adding it to your collection.
+                    </div>
+                  ) : (
+                    <div className="p-3.5 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-xs text-rose-950 dark:text-rose-200 space-y-2">
+                      <p className="leading-relaxed font-semibold">
+                        No plant detected in this photo.
+                      </p>
+                      <p className="text-[11px] text-stone-600 dark:text-stone-300">
+                        {result.topPrediction.statusExplanation ||
+                          `The vision model classified "${result.topPrediction.label}", which is not a plant species. Please upload a clear photo of a plant leaf, flower, or foliage.`}
                       </p>
                     </div>
                   )}

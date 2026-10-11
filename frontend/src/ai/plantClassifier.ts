@@ -158,6 +158,9 @@ export async function identifyPlant(
     activeBotanicalInfo = VERIFIED_BOTANICAL_SPECIES[specimenHint.toLowerCase()];
   }
 
+  // Determine if genuine plant foliage/species was detected
+  const hasPlantDetected = Boolean(top.isVerifiedSpecies || verifiedAlternative || activeBotanicalInfo);
+
   return {
     id: `id-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
     timestamp: new Date().toISOString(),
@@ -167,13 +170,16 @@ export async function identifyPlant(
       botanicalInfo: activeBotanicalInfo || top.botanicalInfo,
       statusExplanation: isTopContainer
         ? 'Container / Flowerpot detected. The vision model identified the planter container rather than the plant species foliage.'
-        : top.statusExplanation
+        : (!hasPlantDetected
+          ? `No plant detected. The neural model detected "${top.label}", which is not a plant species. Please upload a clear photo of a plant leaf, flower, or foliage.`
+          : top.statusExplanation)
     },
     alternativePredictions: predictions.filter(p => p !== top),
     inferenceTimeMs,
     modelName: MODEL_ID,
     confidenceTier,
     isSaved: false,
-    isUnidentified: !top.isVerifiedSpecies && !activeBotanicalInfo
+    hasPlantDetected,
+    isUnidentified: !hasPlantDetected
   };
 }

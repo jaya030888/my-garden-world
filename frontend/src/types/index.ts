@@ -86,7 +86,7 @@ export interface ClassificationPrediction {
   score: number; // 0.0 to 1.0 (raw logit softmax probability)
   botanicalInfo?: BotanicalInfo;
   isVerifiedSpecies?: boolean;
-  detectionType?: 'species' | 'container_object' | 'unidentified';
+  detectionType?: 'species' | 'container_object' | 'no_plant' | 'unidentified';
   statusExplanation?: string;
 }
 
@@ -102,6 +102,7 @@ export interface IdentificationResult {
   notes?: string;
   isSaved: boolean;
   isUnidentified?: boolean;
+  hasPlantDetected?: boolean;
   userAssignedSpecies?: string;
 }
 

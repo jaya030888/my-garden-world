@@ -327,30 +327,71 @@ export const DashboardPage: React.FC = () => {
 
             {/* Embedded Live Scan Results */}
             <AnimatePresence>
-              {activeResult && activeResult.topPrediction.botanicalInfo && (
+              {activeResult && (
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   className="pt-2 text-left"
                 >
-                  <div className="flex items-center justify-between pb-3 px-1">
-                    <div className="flex items-center gap-2 text-xs font-bold text-forest-900 dark:text-emerald-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Vision Transformer Output ({activeResult.inferenceTimeMs}ms)</span>
-                    </div>
-                    <span className="text-[11px] text-stone-500 font-mono">
-                      Model: {activeResult.modelName.split('/').pop()}
-                    </span>
-                  </div>
+                  {activeResult.topPrediction.botanicalInfo ? (
+                    <>
+                      <div className="flex items-center justify-between pb-3 px-1">
+                        <div className="flex items-center gap-2 text-xs font-bold text-forest-900 dark:text-emerald-300">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                          <span>Vision Transformer Output ({activeResult.inferenceTimeMs}ms)</span>
+                        </div>
+                        <span className="text-[11px] text-stone-500 font-mono">
+                          Model: {activeResult.modelName.split('/').pop()}
+                        </span>
+                      </div>
 
-                  <BotanicalGuideFactSheet
-                    botanicalInfo={activeResult.topPrediction.botanicalInfo}
-                    prediction={activeResult.topPrediction}
-                    imageUrl={activeResult.imageUrl}
-                    isSaved={savedSuccess}
-                    onSaveToCollection={handleSaveToMyPlants}
-                  />
+                      <BotanicalGuideFactSheet
+                        botanicalInfo={activeResult.topPrediction.botanicalInfo}
+                        prediction={activeResult.topPrediction}
+                        imageUrl={activeResult.imageUrl}
+                        isSaved={savedSuccess}
+                        onSaveToCollection={handleSaveToMyPlants}
+                      />
+                    </>
+                  ) : activeResult.topPrediction.detectionType === 'container_object' ? (
+                    <div className="p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-center space-y-3">
+                      <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-900/60 flex items-center justify-center text-amber-600 shadow-2xs">
+                        <AlertTriangle className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-black text-amber-950 dark:text-amber-100">
+                          Container Detected • No Plant Foliage Clearly Visible
+                        </h4>
+                        <p className="text-xs text-amber-800 dark:text-amber-300 max-w-md mx-auto leading-relaxed">
+                          The vision model detected a flowerpot/container ({((activeResult.topPrediction.score || 0) * 100).toFixed(1)}%). Please capture a closer shot focused on the plant leaves or flowers.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-6 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-center space-y-3">
+                      <div className="w-12 h-12 mx-auto rounded-2xl bg-rose-100 dark:bg-rose-900/60 flex items-center justify-center text-rose-600 shadow-2xs">
+                        <AlertTriangle className="w-6 h-6" />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="text-base font-black text-rose-950 dark:text-rose-100">
+                          No Plant Detected
+                        </h4>
+                        <p className="text-xs text-rose-800 dark:text-rose-300 max-w-md mx-auto leading-relaxed">
+                          We could not detect any plant in this picture (detected: <span className="font-semibold">"{activeResult.topPrediction.label}"</span>). Please upload a clear photo of a plant leaf, flower, or foliage.
+                        </p>
+                      </div>
+                      <div className="pt-1">
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="px-4 py-2 rounded-xl bg-forest-900 hover:bg-forest-950 text-white font-bold text-xs shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+                        >
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>Try Another Photo</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>

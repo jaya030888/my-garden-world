@@ -247,14 +247,18 @@ export const AIScannerModal: React.FC<AIScannerModalProps> = ({ isOpen, onClose 
                 </div>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 space-y-2 text-xs">
-                <div className="flex items-center gap-2 font-bold text-stone-800 dark:text-stone-200">
-                  <HelpCircle className="w-4 h-4 text-stone-500" />
-                  <span>Unconfirmed Botanical Classification ({result.topPrediction.label})</span>
+              <div className="p-5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 space-y-2.5 text-xs text-center">
+                <div className="w-10 h-10 mx-auto rounded-full bg-rose-100 dark:bg-rose-900/60 flex items-center justify-center text-rose-600">
+                  <AlertTriangle className="w-5 h-5" />
                 </div>
-                <p className="text-stone-600 dark:text-stone-300 leading-relaxed">
-                  The model predicted "{result.topPrediction.label}" ({((result.topPrediction.score || 0) * 100).toFixed(1)}%), which is not mapped to a verified species in our botanical taxonomy. For the best accuracy, capture a closer view of the plant's flower blossom or leaf pattern in good natural lighting.
-                </p>
+                <div className="space-y-1">
+                  <h4 className="font-black text-rose-950 dark:text-rose-100 text-sm">
+                    No Plant Detected
+                  </h4>
+                  <p className="text-rose-800 dark:text-rose-300 leading-relaxed max-w-md mx-auto">
+                    We could not detect any plant in this picture (detected: <span className="font-semibold">"{result.topPrediction.label}"</span>). Please upload a clear photo of a plant leaf, flower, or foliage in good lighting.
+                  </p>
+                </div>
               </div>
             )}
           </div>

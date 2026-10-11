@@ -66,6 +66,14 @@ describe('Audit Matrix: AI Pipeline, Botanical Knowledge, and Persistence Qualit
       expect(lighterPrediction.detectionType).toBe('unidentified');
       expect(lighterPrediction.botanicalInfo).toBeUndefined();
     });
+
+    it('identifies no plant detected when an image contains non-plant objects', () => {
+      const carPrediction = evaluateModelPrediction('sports car', 0.92);
+      expect(carPrediction.isVerifiedSpecies).toBe(false);
+      expect(carPrediction.botanicalInfo).toBeUndefined();
+      const hasPlant = Boolean(carPrediction.isVerifiedSpecies || carPrediction.botanicalInfo);
+      expect(hasPlant).toBe(false);
+    });
   });
 
   describe('3. Authoritative Botanical Attribution & ASPCA Safety Verification', () => {
